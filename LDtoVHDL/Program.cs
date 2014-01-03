@@ -17,64 +17,57 @@ namespace LDtoVHDL
 
 			var blockBuilder = new BlockBuilder();
 
-			var blocks = GetAllBlocks(xdoc.Root)
-				.Select(xBlock =>
-					new
-					{
-						XBlock = xBlock,
-						Position = GetBlockPosition(xBlock),
-						Block = blockBuilder.CreateBlock(xBlock)
-					});
+			CreateBlocksAndPorts(xdoc, blockBuilder);
+			ConnectPorts();
 
-			foreach (var block in blocks)
-			{
-				var ports = GetAllPorts(block.XBlock)
-					.Select(xPort =>
-						new
-						{
-							XPort = xPort,
-							Offset = GetPortOffset(xPort),
-							Port = new Port
-							{
-								Direction = xPort.Name.LocalName == "connectionPointIn" ? PortDirection.Input : PortDirection.Output,
-								Name = GetPortName(xPort)
-							}
-						})
-					.OrderBy(port => port.Offset.Y);
-
-				foreach (var port in ports)
-				{
-					_ports.Add(port.XPort, port.Port);
-					_xPorts.Add(block.Position + port.Offset, port.XPort);
-					block.Block.AddPort(port.Port);
-				}
-				_blocks.Add(block.XBlock, block.Block);
-			}
-			foreach (var port in _ports)
-			{
-				foreach (var otherSideXPort in GetOtherSideXPorts(port.Key))
-				{
-					port.Value.Connect(_ports[otherSideXPort]);
-				}
-			}
-
-			if (_blocks.Values.Count(block => block.Type == BaseBlock.LEFT_RAIL) > 1)
-			{
-				Console.WriteLine("Only one left rail is allowed");
-				return;
-			}
-
-			if (_blocks.Values.Count(block => block.Type == BaseBlock.RIGHT_RAIL) > 1)
-			{
-				Console.WriteLine("Only one right rail is allowed");
-				return;
-			}
 			_allBlocks = new HashSet<BaseBlock>(_blocks.Values);
 
-			_leftRail = _blocks.Values.First(block => block.Type == BaseBlock.LEFT_RAIL);
-			_rightRail = _blocks.Values.First(block => block.Type == BaseBlock.RIGHT_RAIL);
+			IdentifyRails();
 
+			foreach (var compositeSignal in Signal.CompositeSignals)
+			{
+				BaseBlock orBlock = new InternalBlock("power_or");
+				var outputPort = new Port(PortDirection.Output);
+				orBlock.AddPort(outputPort);
+				foreach (var orredSignal in compositeSignal.Value.OrredSignals)
+				{
+					var port = new Port(PortDirection.Input);
+					port.Connect(orredSignal.InputPort);
+					orBlock.AddPort(port);
+				}
+				foreach (var signalOutputPort in compositeSignal.Value.OutputPorts)
+				{
+					signalOutputPort.Disconnect();
+					outputPort.Connect(signalOutputPort);
+				}
+				_allBlocks.Add(orBlock);
+			}
 
+			DivideBlocksIntoRungs();
+
+			Signal.CompositeSignals.Clear();
+
+			foreach (var rung in _rungs)
+			{
+				Console.WriteLine("Rung {0}:", _rungs.IndexOf(rung));
+				foreach (var block in rung)
+				{
+					Console.WriteLine(block);
+					foreach (var port in block.Ports)
+					{
+						Console.WriteLine("    {0}", port);
+						foreach (var otherSide in port.OtherSidePorts)
+						{
+							Console.WriteLine("        --- {0}", otherSide.ParentBaseBlock);
+						}
+					}
+				}
+			}
+			Console.ReadKey();
+		}
+
+		private static void DivideBlocksIntoRungs()
+		{
 			foreach (var otherSideBlock in _leftRail.Ports.Select(p => p.OtherSidePorts).SelectMany(op => op.Select(p => p.ParentBaseBlock)))
 			{
 				if (otherSideBlock.Type == BaseBlock.RIGHT_RAIL)
@@ -105,23 +98,69 @@ namespace LDtoVHDL
 					}
 				}
 			}
-			foreach (var rung in _rungs)
+		}
+
+		private static void IdentifyRails()
+		{
+			if (_blocks.Values.Count(block => block.Type == BaseBlock.LEFT_RAIL) > 1)
 			{
-				Console.WriteLine("Rung {0}:", _rungs.IndexOf(rung));
-				foreach (var block in rung)
+				throw new InvalidOperationException("Only one left rail is allowed");
+			}
+
+			if (_blocks.Values.Count(block => block.Type == BaseBlock.RIGHT_RAIL) > 1)
+			{
+				throw new InvalidOperationException("Only one right rail is allowed");
+			}
+
+			_leftRail = _blocks.Values.First(block => block.Type == BaseBlock.LEFT_RAIL);
+			_rightRail = _blocks.Values.First(block => block.Type == BaseBlock.RIGHT_RAIL);
+		}
+
+		private static void ConnectPorts()
+		{
+			foreach (var port in _ports)
+			{
+				foreach (var otherSideXPort in GetOtherSideXPorts(port.Key))
 				{
-					Console.WriteLine(block);
-					foreach (var port in block.Ports)
-					{
-						Console.WriteLine("    {0}", port);
-						foreach (var otherSide in port.OtherSidePorts)
-						{
-							Console.WriteLine("        --- {0}", otherSide.ParentBaseBlock);
-						}
-					}
+					port.Value.Connect(_ports[otherSideXPort]);
 				}
 			}
-			Console.ReadKey();
+		}
+
+		private static void CreateBlocksAndPorts(XDocument xdoc, BlockBuilder blockBuilder)
+		{
+			var blocks = GetAllBlocks(xdoc.Root)
+				.Select(xBlock =>
+					new
+					{
+						XBlock = xBlock,
+						Position = GetBlockPosition(xBlock),
+						Block = blockBuilder.CreateBlock(xBlock)
+					});
+
+			foreach (var block in blocks)
+			{
+				var ports = GetAllPorts(block.XBlock)
+					.Select(xPort =>
+						new
+						{
+							XPort = xPort,
+							Offset = GetPortOffset(xPort),
+							Port = new Port(xPort.Name.LocalName == "connectionPointIn" ? PortDirection.Input : PortDirection.Output)
+							{
+								Name = GetPortName(xPort)
+							}
+						})
+					.OrderBy(port => port.Offset.Y);
+
+				foreach (var port in ports)
+				{
+					_ports.Add(port.XPort, port.Port);
+					_xPorts.Add(block.Position + port.Offset, port.XPort);
+					block.Block.AddPort(port.Port);
+				}
+				_blocks.Add(block.XBlock, block.Block);
+			}
 		}
 
 		private static string GetPortName(XElement xPort)
