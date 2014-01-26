@@ -175,12 +175,30 @@ namespace LDtoVHDL
 			var signalBus = new BusCreator(writingBlocks.Select(blk => blk.MemoryOutput));
 			var controlBus = new BusCreator(writingBlocks.Select(blk => blk.WriteCondition.InputPort));
 			selector.MemoryInput.Connect(memoryVariable.Output);
-			selector.Inputs.Connect(controlBus.Output);
+			selector.Inputs.Connect(signalBus.Output);
 			selector.Controls.Connect(controlBus.Output);
 			destinationBlocksCollection.Add(selector);
 			destinationBlocksCollection.Add(signalBus);
 			destinationBlocksCollection.Add(controlBus);
 			return selector;
+		}
+
+		public void ComputeSignalWidths()
+		{
+			var toProcess = new HashSet<BaseBlock>(AllBlocks);
+			bool changed = true;
+			while (changed)
+			{
+				changed = false;
+				foreach (var block in toProcess.ToList())
+					if (block.CanComputePortWidths)
+					{
+						changed = true;
+						block.ComputePortWidths();
+						block.PropagatePortWidths();
+						toProcess.Remove(block);
+					}
+			}
 		}
 	}
 }

@@ -122,7 +122,12 @@ namespace LDtoVHDL.Blocks
 
 		public void PropagatePortWidths()
 		{
-			
+			foreach (var port in Ports.Values.Where(port => port.ConnectedSignal != null))
+			{
+				port.ConnectedSignal.Width = port.Width;
+				foreach (var otherSidePort in port.OtherSidePorts)
+					otherSidePort.Width = port.Width;
+			}
 		}
 	}
 }

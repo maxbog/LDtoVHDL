@@ -19,6 +19,7 @@ namespace LDtoVHDL
 			environment.DivideBlocksIntoRungs();
 			environment.AccumulateOutVariables();
 			environment.CreateSelectors();
+			environment.ComputeSignalWidths();
 
 			foreach (var rung in environment.Rungs)
 			{

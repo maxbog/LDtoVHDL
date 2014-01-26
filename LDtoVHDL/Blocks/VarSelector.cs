@@ -31,7 +31,7 @@ namespace LDtoVHDL.Blocks
 		{
 			if (Controls.Width != 0 && Inputs.Width != 0)
 			{
-				var variableWidth = Controls.Width/Inputs.Width;
+				var variableWidth = Inputs.Width/Controls.Width;
 				MemoryInput.Width = Output.Width = variableWidth;
 			}
 			else

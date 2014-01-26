@@ -7,8 +7,22 @@ namespace LDtoVHDL
 {
 	public class Signal
 	{
+		public string Name { get; internal set; }
+
+		public int Width
+		{
+			get { return m_width; }
+			set
+			{
+				if (m_width != 0 && value != m_width)
+					throw new InvalidOperationException("Incompatible port widths");
+				m_width = value;
+			}
+		}
+
 		private static int _nextId;
 		private readonly IEnumerable<Signal> m_orredSignals;
+		private int m_width;
 
 		public Signal()
 		{
@@ -58,12 +72,22 @@ namespace LDtoVHDL
 
 		public override string ToString()
 		{
-			return string.Format("[s.{0}]",Hash);
+			return string.Format("[s.{0}/{1}]",Hash,Width);
 		}
 
 		public string VhdlName { get { return string.Format("signal_{0}", Hash); }}
 
-		public string VhdlType { get { return "STD_LOGIC"; } }
+		public string VhdlType
+		{
+			get
+			{
+				if (Width == 0)
+					return "!!! ERROR !!!";
+				if (Width == 1)
+					return "STD_LOGIC";
+				return string.Format("STD_LOGIC_VECTOR({0} downto {1})", Width-1, 0);
+			}
+		}
 
 		public string VhdlDeclaration
 		{

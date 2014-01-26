@@ -25,12 +25,14 @@ namespace LDtoVHDL.Blocks
 			{
 				if (Output.ConnectedSignal == null)
 					return "";
+				if (Output.Width == 1)
+					return string.Format("{0} <= {1};", Output.ConnectedSignal.VhdlName, Ports.Single(port => port.Key.StartsWith("IN")).Value.ConnectedSignal.VhdlName);
 				var builder = new StringBuilder();
 				var startingBit = 0;
 				foreach (var port in Ports.Where(port => port.Key.StartsWith("IN")))
 				{
-					var endingBit = startingBit + port.Value.Width;
-					builder.AppendFormat("{0}({1} to {2}) <= {3};\n", Output.ConnectedSignal.VhdlName, startingBit, endingBit, port.Value.ConnectedSignal.VhdlName);
+					var endingBit = startingBit + port.Value.Width-1;
+					builder.AppendFormat("{0}({1} to {2}) <= {3}; ", Output.ConnectedSignal.VhdlName, startingBit, endingBit, port.Value.ConnectedSignal.VhdlName);
 					startingBit += port.Value.Width;
 				}
 				return builder.ToString();
