@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using LDtoVHDL.Blocks;
 
@@ -10,17 +9,20 @@ namespace LDtoVHDL
 		public Rung()
 		{
 			Blocks = new HashSet<BaseBlock>();
+			AccumulatedOutVariables = new Dictionary<string, List<OutVariableBlock>>();
 		}
 
 		public HashSet<BaseBlock> Blocks { get; private set; }
+		public Dictionary<string, List<OutVariableBlock>> AccumulatedOutVariables { get; private set; }
 
-		public IEnumerable<Tuple<OutVariableBlock, Signal>> OutVariables
+		public void AccumulateVariables()
 		{
-			get
+			foreach (var currentRungVar in Blocks.OfType<OutVariableBlock>())
 			{
-				return Blocks
-					.OfType<OutVariableBlock>()
-					.Select(blk => Tuple.Create(blk, blk.Input.OtherSidePorts.Single().ParentBaseBlock.EnablePort.ConnectedSignal)); 
+				if (AccumulatedOutVariables.ContainsKey(currentRungVar.VariableName))
+					AccumulatedOutVariables[currentRungVar.VariableName].Add(currentRungVar);
+				else
+					AccumulatedOutVariables.Add(currentRungVar.VariableName, new List<OutVariableBlock> {currentRungVar});
 			}
 		}
 	}

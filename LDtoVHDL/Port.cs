@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LDtoVHDL.Blocks;
 
 namespace LDtoVHDL
@@ -25,10 +23,11 @@ namespace LDtoVHDL
 			SignalWidth = 0;
 
 		}
-		public Port(PortDirection direction, string name, int signalWidth) : this(direction, name)
-		{
-			SignalWidth = signalWidth;
-		}
+
+		//public Port(PortDirection direction, string name, int signalWidth) : this(direction, name)
+		//{
+		//	SignalWidth = signalWidth;
+		//}
 
 		public int Id { get; private set; }
 		public Signal ConnectedSignal { get; private set; }
@@ -50,7 +49,7 @@ namespace LDtoVHDL
 		}
 		public string Name { get; private set; }
 
-		public int SignalWidth { get; private set; }
+		public int SignalWidth { get; set; }
 
 		public void Connect(Port otherPort)
 		{

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Xml.Linq;
 using LDtoVHDL.BlockFactories;
 using LDtoVHDL.Blocks;
@@ -50,8 +50,9 @@ namespace LDtoVHDL
 				if (variable.Item1 == "localVars")
 				{
 					var varName = GetVariableName(variable.Item2);
-					env.Variables.Add(varName,
-						new VariableBlock(InternalBlock.GetNextId(), varName, GetVariableWidth(variable.Item2), "_local_" + varName));
+					var varBlock = new MemoryVariable("_local_" + varName, varName, GetVariableWidth(variable.Item2));
+					env.Variables.Add(varName, varBlock);
+					env.BlocksWithoutRung.Add(varBlock);
 				}
 			}
 		}
@@ -69,7 +70,11 @@ namespace LDtoVHDL
 
 		private IEnumerable<Tuple<string, XElement>> GetAllVariables()
 		{
-			return m_xdoc.Descendants("interface".XName()).First().Descendants("variable".XName()).Select(xelm => Tuple.Create(xelm.Parent.Name.LocalName, xelm));
+			return m_xdoc.Descendants("interface".XName()).First().Descendants("variable".XName()).Select(xelm =>
+			{
+				Debug.Assert(xelm.Parent != null, "xelm.Parent != null");
+				return Tuple.Create(xelm.Parent.Name.LocalName, xelm);
+			});
 		}
 
 		public void ConnectPorts()
@@ -114,12 +119,13 @@ namespace LDtoVHDL
 					m_xPorts.Add(block.Position + port.Offset, port.XPort);
 					block.Block.AddPort(port.Port);
 				}
-				env.AllBlocks.Add(block.Block);
+				env.BlocksWithoutRung.Add(block.Block);
 			}
 		}
 
 		private static string GetPortName(XElement xPort)
 		{
+			Debug.Assert(xPort.Parent != null, "xPort.Parent != null");
 			if (xPort.Parent.Name != "variable".XName())
 				return null;
 			var formalParameter = xPort.Parent.Attribute("formalParameter");
@@ -150,17 +156,20 @@ namespace LDtoVHDL
 		private static Point GetBlockPosition(XElement xBlock)
 		{
 			var xPosition = xBlock.Element("position".XName());
+			Debug.Assert(xPosition != null, "xPosition != null");
 			return new Point((int)xPosition.Attribute("x"), (int)xPosition.Attribute("y"));
 		}
 
 		private static Offset GetPortOffset(XElement xPort)
 		{
 			var xOffset = xPort.Element("relPosition".XName());
+			Debug.Assert(xOffset != null, "xOffset != null");
 			return new Offset((int)xOffset.Attribute("x"), (int)xOffset.Attribute("y"));
 		}
 
 		private IEnumerable<XElement> GetAllBlocks()
 		{
+			Debug.Assert(m_xdoc.Root != null, "m_xdoc.Root != null");
 			return m_xdoc.Root.Descendants("LD".XName()).First().Elements();
 		}
 

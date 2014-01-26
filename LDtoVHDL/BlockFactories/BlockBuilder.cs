@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
@@ -18,7 +18,9 @@ namespace LDtoVHDL.BlockFactories
 			var types = Assembly.GetExecutingAssembly().GetTypes();
 			foreach (var factoryType in types.Where(typeof(IBlockFactory).IsAssignableFrom).Except(Enumerable.Repeat(typeof(IBlockFactory), 1)))
 			{
-				var factory = (IBlockFactory)factoryType.GetConstructor(new Type[] {}).Invoke(new object[] {});
+				var constructorInfo = factoryType.GetConstructor(new Type[] {});
+				Debug.Assert(constructorInfo != null, "constructorInfo != null");
+				var factory = (IBlockFactory)constructorInfo.Invoke(new object[] {});
 				foreach (var type in factory.BlockTypes)
 					m_factories.Add(type, factory);
 			}

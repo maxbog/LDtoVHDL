@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace LDtoVHDL.Blocks
 {
 	public class BaseBlock
 	{
-		public const String LEFT_RAIL = "leftPowerRail";
-		public const String RIGHT_RAIL = "rightPowerRail";
-		public const String CONTACT = "contact";
-		public const String COIL = "coil";
-		public const String ADD = "ADD";
-		public const String POWER_OR = "_power_or";
-		public const String OUT_VARIABLE = "outVariable";
-		public const String IN_VARIABLE = "inVariable";
-		public const String VAR_SELECTOR = "_var_selector";
+		public const string LEFT_RAIL = "leftPowerRail";
+		public const string RIGHT_RAIL = "rightPowerRail";
+		public const string CONTACT = "contact";
+		public const string COIL = "coil";
+		public const string ADD = "ADD";
+		public const string POWER_OR = "_power_or";
+		public const string OUT_VARIABLE = "outVariable";
+		public const string IN_VARIABLE = "inVariable";
+		public const string VAR_SELECTOR = "_var_selector";
+		public const string MEMORY_VARIABLE = "_memory_variable";
+		public const string BUS_CREATOR = "_bus_creator";
 
 		public BaseBlock(string id, string type)
 		{
@@ -34,7 +35,7 @@ namespace LDtoVHDL.Blocks
 			{
 				return Ports.ContainsKey("EN") 
 					? Ports["EN"] 
-					: Ports.Values.Single(port => port.Direction == PortDirection.Input);
+					: null;
 			}
 		}
 
@@ -83,6 +84,16 @@ namespace LDtoVHDL.Blocks
 				return string.Format("{0}: {1} port map ({2});", VhdlName, VhdlType, portMapping);
 			}
 		}
+
+		public virtual string VhdlDeclaration
+		{
+			get { return null; }
+		}
+
+		public virtual List<string> VerifyPortWidths()
+		{
+			return null;
+		}
 	}
 
 	public class VariableBlock : BaseBlock
@@ -102,16 +113,33 @@ namespace LDtoVHDL.Blocks
 		}
 	}
 
+	public class MemoryVariable : VariableBlock
+	{
+		public MemoryVariable(string id, string variableName, int signalWidth)
+			: base(id, variableName, signalWidth, MEMORY_VARIABLE)
+		{
+			AddPort(new Port(PortDirection.Input, "IN"));
+			AddPort(new Port(PortDirection.Input, "LOAD"));
+			AddPort(new Port(PortDirection.Output, "OUT"));
+		}
+
+		public Port Input { get { return Ports["IN"]; }}
+		public Port Output { get { return Ports["OUT"]; } }
+		public Port Load { get { return Ports["LOAD"]; } }
+	}
+
+
 	public class OutVariableBlock : VariableBlock
 	{
 		public OutVariableBlock(string id, string variableName, int signalWidth)
 			: base(id, variableName, signalWidth, OUT_VARIABLE)
 		{
-			AddPort(new Port(PortDirection.Output, "MEM_OUT", signalWidth));
+			AddPort(new Port(PortDirection.Output, "MEM_OUT"));
 		}
 
 		public Port Input { get { return Ports.Values.Single(port => port.Direction == PortDirection.Input); } }
 		public Port MemoryOutput { get { return Ports["MEM_OUT"]; }}
+		public Signal WriteCondition { get { return Input.OtherSidePorts.Single().ParentBaseBlock.EnablePort.ConnectedSignal; }}
 	}
 
 	public class InVariableBlock : VariableBlock
@@ -119,7 +147,7 @@ namespace LDtoVHDL.Blocks
 		public InVariableBlock(string id, string variableName, int signalWidth)
 			: base(id, variableName, signalWidth, IN_VARIABLE)
 		{
-			AddPort(new Port(PortDirection.Input, "MEM_IN", signalWidth));
+			AddPort(new Port(PortDirection.Input, "MEM_IN"));
 		}
 
 		public Port Output { get { return Ports.Values.Single(port => port.Direction == PortDirection.Output); } }

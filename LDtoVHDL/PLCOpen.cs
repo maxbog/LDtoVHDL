@@ -2,7 +2,7 @@
 
 namespace LDtoVHDL
 {
-	public static class PLCOpen
+	public static class PlcOpen
 	{
 		public static XNamespace Ns = XNamespace.Get(@"http://www.plcopen.org/xml/tc6.xsd");
 

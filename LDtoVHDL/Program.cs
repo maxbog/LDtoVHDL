@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using LDtoVHDL.BlockFactories;
 using LDtoVHDL.Blocks;
 using Environment = LDtoVHDL.BlockFactories.Environment;
 
@@ -21,6 +18,8 @@ namespace LDtoVHDL
 			environment.IdentifyRails();
 			environment.ReplaceCompositeSignalsWithOrs();
 			environment.DivideBlocksIntoRungs();
+			environment.AccumulateOutVariables();
+			environment.CreateSelectors();
 
 			foreach (var rung in environment.Rungs)
 			{
@@ -37,8 +36,8 @@ namespace LDtoVHDL
 					}
 				}
 				Console.WriteLine("WrittenVariables:");
-				foreach (var variable in rung.OutVariables)
-					Console.WriteLine("Var: {0} Condition: {1}", variable.Item1.VariableName, variable.Item2);
+				foreach (var variable in rung.Blocks.OfType<OutVariableBlock>())
+					Console.WriteLine("Var: {0} Condition: {1}", variable.VariableName, variable.WriteCondition);
 				Console.WriteLine();
 			}
 
@@ -56,13 +55,13 @@ namespace LDtoVHDL
 
 			foreach (var signal in env.AllSignals)
 				Console.WriteLine("    {0}", signal.VhdlDeclaration);
+			foreach (var block in env.AllBlocks.Where(blk => blk.VhdlDeclaration != null))
+				Console.WriteLine("    {0}", block.VhdlDeclaration);
 
 			Console.WriteLine("begin");
 
 			foreach (var block in env.AllBlocks)
-			{
 				Console.WriteLine("    {0}", block.VhdlCode);
-			}
 
 			Console.WriteLine("end behavioral;");
 		}
