@@ -24,13 +24,13 @@ namespace LDtoVHDL.BlockFactories
 			}
 		}
 
-		public BaseBlock CreateBlock(XElement xBlock)
+		public BaseBlock CreateBlock(XElement xBlock, Environment env)
 		{
 			var elementName = xBlock.Name.LocalName;
 			var elementType = elementName == "block" 
 				? (string) xBlock.Attribute("typeName") 
 				: elementName;
-			return m_factories[elementType].CreateBlock(xBlock);
+			return m_factories[elementType].CreateBlock(xBlock, env);
 		}
 
 

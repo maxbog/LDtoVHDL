@@ -1,230 +1,70 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using LDtoVHDL.BlockFactories;
 using LDtoVHDL.Blocks;
+using Environment = LDtoVHDL.BlockFactories.Environment;
 
 namespace LDtoVHDL
 {
 	public class Program
 	{
-		static readonly XNamespace ns = XNamespace.Get(@"http://www.plcopen.org/xml/tc6.xsd");
 		public static void Main(string[] args)
 		{
-			var xdoc = XDocument.Load(File.OpenRead(@"d:\Dokumenty\studia\praca magisterska\test_ber\plc.xml"));
+			var parser = new PlcOpenParser(XDocument.Load(File.OpenRead(@"d:\Dropbox\praca magisterska\test_ber\plc.xml")));
 
-			var blockBuilder = new BlockBuilder();
+			var environment = parser.Parse();
 
-			CreateBlocksAndPorts(xdoc, blockBuilder);
-			ConnectPorts();
+			environment.IdentifyRails();
+			environment.ReplaceCompositeSignalsWithOrs();
+			environment.DivideBlocksIntoRungs();
 
-			_allBlocks = new HashSet<BaseBlock>(_blocks.Values);
-
-			IdentifyRails();
-
-			foreach (var compositeSignal in Signal.CompositeSignals)
+			foreach (var rung in environment.Rungs)
 			{
-				BaseBlock orBlock = new InternalBlock("power_or");
-				var outputPort = new Port(PortDirection.Output);
-				orBlock.AddPort(outputPort);
-				foreach (var orredSignal in compositeSignal.Value.OrredSignals)
-				{
-					var port = new Port(PortDirection.Input);
-					port.Connect(orredSignal.InputPort);
-					orBlock.AddPort(port);
-				}
-				foreach (var signalOutputPort in compositeSignal.Value.OutputPorts)
-				{
-					signalOutputPort.Disconnect();
-					outputPort.Connect(signalOutputPort);
-				}
-				_allBlocks.Add(orBlock);
-			}
-
-			DivideBlocksIntoRungs();
-
-			Signal.CompositeSignals.Clear();
-
-			foreach (var rung in _rungs)
-			{
-				Console.WriteLine("Rung {0}:", _rungs.IndexOf(rung));
-				foreach (var block in rung)
+				Console.WriteLine("Rung {0}:", environment.Rungs.IndexOf(rung));
+				Console.WriteLine("Blocks:");
+				foreach (var block in rung.Blocks)
 				{
 					Console.WriteLine(block);
-					foreach (var port in block.Ports)
+					foreach (var port in block.Ports.Values)
 					{
 						Console.WriteLine("    {0}", port);
 						foreach (var otherSide in port.OtherSidePorts)
-						{
 							Console.WriteLine("        --- {0}", otherSide.ParentBaseBlock);
-						}
 					}
 				}
+				Console.WriteLine("WrittenVariables:");
+				foreach (var variable in rung.OutVariables)
+					Console.WriteLine("Var: {0} Condition: {1}", variable.Item1.VariableName, variable.Item2);
+				Console.WriteLine();
 			}
+
+			WriteVhdlCode(environment);
+
 			Console.ReadKey();
 		}
 
-		private static void DivideBlocksIntoRungs()
+		private static void WriteVhdlCode(Environment env)
 		{
-			foreach (var otherSideBlock in _leftRail.Ports.Select(p => p.OtherSidePorts).SelectMany(op => op.Select(p => p.ParentBaseBlock)))
-			{
-				if (otherSideBlock.Type == BaseBlock.RIGHT_RAIL)
-					continue;
-				if (otherSideBlock.Type == BaseBlock.LEFT_RAIL)
-					continue;
-				if (_rungs.Any(set => set.Contains(otherSideBlock)))
-					continue;
-				var currentRung = new HashSet<BaseBlock>();
-				_rungs.Add(currentRung);
-				var blocksToProcess = new Queue<BaseBlock>();
-				blocksToProcess.Enqueue(otherSideBlock);
-				while (blocksToProcess.Count > 0)
-				{
-					var currentBlock = blocksToProcess.Dequeue();
-					if (currentBlock.Type == BaseBlock.RIGHT_RAIL)
-						continue;
-					if (currentBlock.Type == BaseBlock.LEFT_RAIL)
-						continue;
-					currentRung.Add(currentBlock);
-					foreach (var block in currentBlock.Ports
-						.Select(p => p.OtherSidePorts)
-						.SelectMany(op => op.Select(p => p.ParentBaseBlock)))
-					{
-						if (_rungs.Any(set => set.Contains(block)))
-							continue;
-						blocksToProcess.Enqueue(block);
-					}
-				}
-			}
-		}
+			Console.WriteLine("VHDL CODE:");
+			Console.WriteLine("entity vhdl_code is port();");
+			Console.WriteLine("end vhdl_code;");
+			Console.WriteLine("architecture behavioral of vhdl_code is");
 
-		private static void IdentifyRails()
-		{
-			if (_blocks.Values.Count(block => block.Type == BaseBlock.LEFT_RAIL) > 1)
+			foreach (var signal in env.AllSignals)
+				Console.WriteLine("    {0}", signal.VhdlDeclaration);
+
+			Console.WriteLine("begin");
+
+			foreach (var block in env.AllBlocks)
 			{
-				throw new InvalidOperationException("Only one left rail is allowed");
+				Console.WriteLine("    {0}", block.VhdlCode);
 			}
 
-			if (_blocks.Values.Count(block => block.Type == BaseBlock.RIGHT_RAIL) > 1)
-			{
-				throw new InvalidOperationException("Only one right rail is allowed");
-			}
-
-			_leftRail = _blocks.Values.First(block => block.Type == BaseBlock.LEFT_RAIL);
-			_rightRail = _blocks.Values.First(block => block.Type == BaseBlock.RIGHT_RAIL);
+			Console.WriteLine("end behavioral;");
 		}
-
-		private static void ConnectPorts()
-		{
-			foreach (var port in _ports)
-			{
-				foreach (var otherSideXPort in GetOtherSideXPorts(port.Key))
-				{
-					port.Value.Connect(_ports[otherSideXPort]);
-				}
-			}
-		}
-
-		private static void CreateBlocksAndPorts(XDocument xdoc, BlockBuilder blockBuilder)
-		{
-			var blocks = GetAllBlocks(xdoc.Root)
-				.Select(xBlock =>
-					new
-					{
-						XBlock = xBlock,
-						Position = GetBlockPosition(xBlock),
-						Block = blockBuilder.CreateBlock(xBlock)
-					});
-
-			foreach (var block in blocks)
-			{
-				var ports = GetAllPorts(block.XBlock)
-					.Select(xPort =>
-						new
-						{
-							XPort = xPort,
-							Offset = GetPortOffset(xPort),
-							Port = new Port(xPort.Name.LocalName == "connectionPointIn" ? PortDirection.Input : PortDirection.Output)
-							{
-								Name = GetPortName(xPort)
-							}
-						})
-					.OrderBy(port => port.Offset.Y);
-
-				foreach (var port in ports)
-				{
-					_ports.Add(port.XPort, port.Port);
-					_xPorts.Add(block.Position + port.Offset, port.XPort);
-					block.Block.AddPort(port.Port);
-				}
-				_blocks.Add(block.XBlock, block.Block);
-			}
-		}
-
-		private static string GetPortName(XElement xPort)
-		{
-			if (xPort.Parent.Name != ns + "variable")
-				return null;
-			var formalParameter = xPort.Parent.Attribute("formalParameter");
-			if (formalParameter == null)
-				return null;
-			return (string)formalParameter;
-		}
-
-		private static IEnumerable<XElement> GetOtherSideXPorts(XElement xPort)
-		{
-			if (!HasConnection(xPort))
-				return Enumerable.Empty<XElement>();
-			return GetOtherSidePositions(xPort).Select(p => _xPorts[p]);
-		}
-
-		private static bool HasConnection(XElement xPort)
-		{
-			return xPort.Elements(ns + "connection").Any();
-		}
-
-		private static IEnumerable<Point> GetOtherSidePositions(XElement xPort)
-		{
-			var xPositions = xPort.Elements(ns + "connection").Select(conn => conn.Elements(ns + "position").Last());
-			return xPositions.Select(xPosition => new Point((int)xPosition.Attribute("x"), (int)xPosition.Attribute("y")));
-
-		}
-
-		private static Point GetBlockPosition(XElement xBlock)
-		{
-			var xPosition = xBlock.Element(ns + "position");
-			return new Point((int)xPosition.Attribute("x"), (int)xPosition.Attribute("y"));
-		}
-
-		private static Offset GetPortOffset(XElement xPort)
-		{
-			var xOffset = xPort.Element(ns + "relPosition");
-			return new Offset((int)xOffset.Attribute("x"), (int)xOffset.Attribute("y"));
-		}
-
-		private static IEnumerable<XElement> GetAllBlocks(XElement root)
-		{
-			return root.Descendants(ns + "LD").First().Elements();
-		}
-
-		private static IEnumerable<XElement> GetAllPorts(XElement root)
-		{
-			return root.Descendants(ns + "connectionPointIn").Concat(root.Descendants(ns + "connectionPointOut"));
-		}
-
-		private static readonly Dictionary<XElement, BaseBlock> _blocks = new Dictionary<XElement, BaseBlock>();
-
-		private static readonly Dictionary<XElement, Port> _ports = new Dictionary<XElement, Port>();
-
-		private static readonly Dictionary<Point, XElement> _xPorts = new Dictionary<Point, XElement>();
-
-		private static readonly List<HashSet<BaseBlock>> _rungs = new List<HashSet<BaseBlock>>();
-
-		private static HashSet<BaseBlock> _allBlocks;
-		private static BaseBlock _leftRail;
-		private static BaseBlock _rightRail;
-
 	}
 }

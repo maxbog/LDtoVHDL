@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using LDtoVHDL.Blocks;
 
@@ -6,27 +7,55 @@ namespace LDtoVHDL.BlockFactories
 {
 	public class BaseBlockFactory : IBlockFactory
 	{
-		public IEnumerable<string> BlockTypes
+		public virtual IEnumerable<string> BlockTypes
 		{
 			get
 			{
-				yield return "coil";
-				yield return "contact";
-				yield return "leftPowerRail";
-				yield return "rightPowerRail";
-				yield return "inVariable";
-				yield return "outVariable";
-				yield return "ADD";
+				yield return BaseBlock.COIL;
+				yield return BaseBlock.CONTACT;
+				yield return BaseBlock.LEFT_RAIL;
+				yield return BaseBlock.RIGHT_RAIL;
+				yield return BaseBlock.ADD;
 			}
 		}
-		public BaseBlock CreateBlock(XElement xBlock)
+		public virtual BaseBlock CreateBlock(XElement xBlock, Environment env)
 		{
 			return new BaseBlock(GetBlockLocalId(xBlock), xBlock.Name.LocalName);
 		}
 
-		protected int GetBlockLocalId(XElement xBlock)
+		protected string GetBlockLocalId(XElement xBlock)
 		{
-			return (int)xBlock.Attribute("localId");
+			return (string)xBlock.Attribute("localId");
+		}
+	}
+
+	class OutVariableBlockFactory : BaseBlockFactory
+	{
+		public override IEnumerable<string> BlockTypes { get { yield return BaseBlock.OUT_VARIABLE; } }
+		public override BaseBlock CreateBlock(XElement xBlock, Environment env)
+		{
+			var varName = GetVariableName(xBlock);
+			return new OutVariableBlock(GetBlockLocalId(xBlock), varName, env.Variables[varName].SignalWidth);
+		}
+
+		private string GetVariableName(XElement xBlock)
+		{
+			return (string)xBlock.Descendants("expression".XName()).Single();
+		}
+	}
+
+	class InVariableBlockFactory : BaseBlockFactory
+	{
+		public override IEnumerable<string> BlockTypes { get { yield return BaseBlock.IN_VARIABLE; } }
+		public override BaseBlock CreateBlock(XElement xBlock, Environment env)
+		{
+			var varName = GetVariableName(xBlock);
+			return new InVariableBlock(GetBlockLocalId(xBlock), varName, env.Variables[varName].SignalWidth);
+		}
+
+		private string GetVariableName(XElement xBlock)
+		{
+			return (string)xBlock.Descendants("expression".XName()).Single();
 		}
 	}
 }

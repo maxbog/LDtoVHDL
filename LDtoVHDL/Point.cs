@@ -1,5 +1,9 @@
-﻿namespace LDtoVHDL
+﻿using System.Diagnostics;
+using System.Linq.Expressions;
+
+namespace LDtoVHDL
 {
+	[DebuggerDisplay("({X},{Y})")]
 	public struct Point
 	{
 		public readonly int X;

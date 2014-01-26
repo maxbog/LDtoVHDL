@@ -7,7 +7,6 @@ namespace LDtoVHDL
 {
 	public class Signal
 	{
-		public static readonly Dictionary<string, Signal> CompositeSignals = new Dictionary<string, Signal>(); 
 		private static int _nextId;
 		private readonly IEnumerable<Signal> m_orredSignals;
 
@@ -19,7 +18,7 @@ namespace LDtoVHDL
 			OutputPorts = new List<Port>();
 		}
 
-		private Signal(IEnumerable<Signal> orredSignals)
+		public Signal(IEnumerable<Signal> orredSignals)
 		{
 			m_orredSignals = orredSignals;
 			Hash = ComputeHash(m_orredSignals);
@@ -62,15 +61,13 @@ namespace LDtoVHDL
 			return string.Format("[s.{0}]",Hash);
 		}
 
+		public string VhdlName { get { return string.Format("signal_{0}", Hash); }}
 
-		public static Signal Get(IEnumerable<Signal> orredSignals)
+		public string VhdlType { get { return "STD_LOGIC"; } }
+
+		public string VhdlDeclaration
 		{
-			var signal = new Signal(orredSignals);
-			Signal foundSignal;
-			if (CompositeSignals.TryGetValue(signal.Hash, out foundSignal))
-				return foundSignal;
-			CompositeSignals.Add(signal.Hash, signal);
-			return signal;
+			get { return string.Format("signal {0} : {1};", VhdlName, VhdlType); }
 		}
 	}
 }

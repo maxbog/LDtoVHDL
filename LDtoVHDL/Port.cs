@@ -16,17 +16,25 @@ namespace LDtoVHDL
 	public class Port
 	{
 		private static int _nextId;
-		public Port(PortDirection direction)
+
+		public Port(PortDirection direction, string name)
 		{
 			Direction = direction;
 			Id = _nextId++;
+			Name = string.IsNullOrEmpty(name) ? string.Format("port_{0}", Id) : name;
+			SignalWidth = 0;
+
+		}
+		public Port(PortDirection direction, string name, int signalWidth) : this(direction, name)
+		{
+			SignalWidth = signalWidth;
 		}
 
 		public int Id { get; private set; }
 		public Signal ConnectedSignal { get; private set; }
 		public PortDirection Direction { get; private set; }
 		public BaseBlock ParentBaseBlock { get; set; }
-
+		
 		public IEnumerable<Port> OtherSidePorts
 		{
 			get
@@ -40,7 +48,9 @@ namespace LDtoVHDL
 				return ConnectedSignal.OutputPorts;
 			}
 		}
-		public string Name { get; set; }
+		public string Name { get; private set; }
+
+		public int SignalWidth { get; private set; }
 
 		public void Connect(Port otherPort)
 		{
@@ -62,7 +72,7 @@ namespace LDtoVHDL
 			}
 			else if (ConnectedSignal.IsComposite)
 			{
-				ConnectedSignal = Signal.Get(ConnectedSignal.OrredSignals.Concat(Enumerable.Repeat(otherPort.ConnectedSignal, 1)));
+				ConnectedSignal = new Signal(ConnectedSignal.OrredSignals.Concat(Enumerable.Repeat(otherPort.ConnectedSignal, 1)));
 				if(ConnectedSignal.OutputPorts.IndexOf(this) == -1)
 					ConnectedSignal.OutputPorts.Add(this);
 				foreach (var orredSignal in ConnectedSignal.OrredSignals)
@@ -70,7 +80,7 @@ namespace LDtoVHDL
 			}
 			else
 			{
-				ConnectedSignal = Signal.Get(new[] { ConnectedSignal, otherPort.ConnectedSignal });
+				ConnectedSignal = new Signal(new[] { ConnectedSignal, otherPort.ConnectedSignal });
 
 				if (ConnectedSignal.OutputPorts.IndexOf(this) == -1)
 					ConnectedSignal.OutputPorts.Add(this);
