@@ -1,40 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using JetBrains.Annotations;
 
 namespace LDtoVHDL.Blocks
 {
-	public class BaseBlock
+	public abstract class BaseBlock
 	{
-		public const string LEFT_RAIL = "leftPowerRail";
-		public const string RIGHT_RAIL = "rightPowerRail";
-		public const string CONTACT = "contact";
-		public const string COIL = "coil";
-		public const string ADD = "ADD";
-		public const string POWER_OR = "_power_or";
-		public const string OUT_VARIABLE = "outVariable";
-		public const string IN_VARIABLE = "inVariable";
-		public const string VAR_SELECTOR = "_var_selector";
-		public const string MEMORY_VARIABLE = "_memory_variable";
-		public const string BUS_CREATOR = "_bus_creator";
-
-		public BaseBlock(string id, string type)
+		protected BaseBlock(string id)
 		{
-			Type = type;
 			Ports = new Dictionary<string, Port>();
 			Id = id;
 		}
 
 		public virtual string Id { get; private set; }
 		public Dictionary<string, Port> Ports { get; private set; }
-		public string Type { get; private set; }
 
-		public virtual Port EnablePort
+		public virtual Port Enable
 		{
 			get
 			{
 				return Ports.ContainsKey("EN") 
 					? Ports["EN"] 
+					: null;
+			}
+		}
+
+		public virtual Port EnableOut
+		{
+			get
+			{
+				return Ports.ContainsKey("ENO")
+					? Ports["ENO"]
 					: null;
 			}
 		}
@@ -49,15 +47,20 @@ namespace LDtoVHDL.Blocks
 			}
 		}
 
-		public void AddPort(Port port)
+		private void AddPort(Port port)
 		{
 			Ports.Add(port.Name, port);
 			port.ParentBaseBlock = this;
 		}
 
+		protected virtual string GetNewPortName(PortDirection direction)
+		{
+			return null;
+		}
+
 		public override string ToString()
 		{
-			return String.Format("[b.{0}]{1}", Id, Type);
+			return String.Format("[b.{0}]{1}", Id, VhdlType);
 		}
 
 		protected virtual IEnumerable<Tuple<string, Signal>> VhdlPortMapping
@@ -72,7 +75,7 @@ namespace LDtoVHDL.Blocks
 
 		protected virtual string VhdlType
 		{
-			get { return Type; }
+			get { return GetType().GetField("TYPE", BindingFlags.Static | BindingFlags.Public).GetValue(null) as string; }
 		}
 
 		public virtual string VhdlCode
@@ -94,63 +97,32 @@ namespace LDtoVHDL.Blocks
 		{
 			return null;
 		}
-	}
 
-	public class VariableBlock : BaseBlock
-	{
-		public VariableBlock(string id, string variableName, int signalWidth, string blockName) : base(id, blockName)
+		[StringFormatMethod("format")]
+		public Port CreateInputPort(string format, params object[] args)
 		{
-			VariableName = variableName;
-			SignalWidth = signalWidth;
+			var name = format == null ? GetNewPortName(PortDirection.Input) : string.Format(format, args);
+			var port = new Port(PortDirection.Input, name);
+			AddPort(port);
+			return port;
 		}
 
-		public string VariableName { get; private set; }
-		public int SignalWidth { get; set; }
-
-		public override string ToString()
+		[StringFormatMethod("format")]
+		public Port CreateOutputPort(string format, params object[] args)
 		{
-			return String.Format("[b.{0}]{1}: {2}", Id, Type, VariableName);
-		}
-	}
-
-	public class MemoryVariable : VariableBlock
-	{
-		public MemoryVariable(string id, string variableName, int signalWidth)
-			: base(id, variableName, signalWidth, MEMORY_VARIABLE)
-		{
-			AddPort(new Port(PortDirection.Input, "IN"));
-			AddPort(new Port(PortDirection.Input, "LOAD"));
-			AddPort(new Port(PortDirection.Output, "OUT"));
+			var name = format == null ? GetNewPortName(PortDirection.Output) : string.Format(format, args);
+			var port = new Port(PortDirection.Output, name);
+			AddPort(port);
+			return port;
 		}
 
-		public Port Input { get { return Ports["IN"]; }}
-		public Port Output { get { return Ports["OUT"]; } }
-		public Port Load { get { return Ports["LOAD"]; } }
-	}
+		public abstract bool CanComputePortWidths { get; }
 
+		public abstract void ComputePortWidths();
 
-	public class OutVariableBlock : VariableBlock
-	{
-		public OutVariableBlock(string id, string variableName, int signalWidth)
-			: base(id, variableName, signalWidth, OUT_VARIABLE)
+		public void PropagatePortWidths()
 		{
-			AddPort(new Port(PortDirection.Output, "MEM_OUT"));
+			
 		}
-
-		public Port Input { get { return Ports.Values.Single(port => port.Direction == PortDirection.Input); } }
-		public Port MemoryOutput { get { return Ports["MEM_OUT"]; }}
-		public Signal WriteCondition { get { return Input.OtherSidePorts.Single().ParentBaseBlock.EnablePort.ConnectedSignal; }}
-	}
-
-	public class InVariableBlock : VariableBlock
-	{
-		public InVariableBlock(string id, string variableName, int signalWidth)
-			: base(id, variableName, signalWidth, IN_VARIABLE)
-		{
-			AddPort(new Port(PortDirection.Input, "MEM_IN"));
-		}
-
-		public Port Output { get { return Ports.Values.Single(port => port.Direction == PortDirection.Output); } }
-		public Port MemoryInput { get { return Ports["MEM_IN"]; } }
 	}
 }

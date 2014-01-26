@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LDtoVHDL.Blocks;
 
-namespace LDtoVHDL.BlockFactories
+namespace LDtoVHDL
 {
 	public class Environment
 	{
@@ -27,18 +27,18 @@ namespace LDtoVHDL.BlockFactories
 
 		public void IdentifyRails()
 		{
-			if (AllBlocks.Count(block => block.Type == BaseBlock.LEFT_RAIL) > 1)
+			if (AllBlocks.OfType<LeftRailBlock>().Count() > 1)
 			{
 				throw new InvalidOperationException("Only one left rail is allowed");
 			}
 
-			if (AllBlocks.Count(block => block.Type == BaseBlock.RIGHT_RAIL) > 1)
+			if (AllBlocks.OfType<RightRailBlock>().Count() > 1)
 			{
 				throw new InvalidOperationException("Only one right rail is allowed");
 			}
 
-			LeftRail = AllBlocks.First(block => block.Type == BaseBlock.LEFT_RAIL);
-			RightRail = AllBlocks.First(block => block.Type == BaseBlock.RIGHT_RAIL);
+			LeftRail = AllBlocks.OfType<RightRailBlock>().First();
+			RightRail = AllBlocks.OfType<RightRailBlock>().First();
 		}
 
 		public IEnumerable<Signal> AllCompositeSignals
@@ -56,12 +56,8 @@ namespace LDtoVHDL.BlockFactories
 			foreach (var compositeSignal in AllCompositeSignals.ToList())
 			{            
 				var orBlock = new PowerOrBlock();
-				foreach (var orredSignal in compositeSignal.OrredSignals.Select((sig, idx) => new {Signal = sig, Index = idx}))
-				{
-					var port = new Port(PortDirection.Input, string.Format("IN{0}", orredSignal.Index));
-					port.Connect(orredSignal.Signal.InputPort);
-					orBlock.AddPort(port);
-				}
+				foreach (var orredSignal in compositeSignal.OrredSignals)
+					orBlock.AddOrredSignal(orredSignal);
 
 				foreach (var signalOutputPort in compositeSignal.OutputPorts)
 				{
@@ -76,7 +72,7 @@ namespace LDtoVHDL.BlockFactories
 
 		public void DivideBlocksIntoRungs()
 		{
-			foreach (var startingBlocks in LeftRail.ConnectedBlocks.Where(blk => blk.Type != BaseBlock.RIGHT_RAIL && blk.Type != BaseBlock.LEFT_RAIL))
+			foreach (var startingBlocks in LeftRail.ConnectedBlocks.Where(blk => !(blk is RailBlock)))
 			{
 				if (Rungs.Any(rung => rung.Blocks.Contains(startingBlocks)))
 					continue;
@@ -93,9 +89,7 @@ namespace LDtoVHDL.BlockFactories
 			while (blocksToProcess.Count > 0)
 			{
 				var currentBlock = blocksToProcess.Dequeue();
-				if (currentBlock.Type == BaseBlock.RIGHT_RAIL)
-					continue;
-				if (currentBlock.Type == BaseBlock.LEFT_RAIL)
+				if (currentBlock is RailBlock)
 					continue;
 				currentRung.Blocks.Add(currentBlock);
 				BlocksWithoutRung.Remove(currentBlock);

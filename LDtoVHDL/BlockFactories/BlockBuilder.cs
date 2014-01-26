@@ -16,7 +16,7 @@ namespace LDtoVHDL.BlockFactories
 		{
 			m_factories = new Dictionary<string, IBlockFactory>();
 			var types = Assembly.GetExecutingAssembly().GetTypes();
-			foreach (var factoryType in types.Where(typeof(IBlockFactory).IsAssignableFrom).Except(Enumerable.Repeat(typeof(IBlockFactory), 1)))
+			foreach (var factoryType in types.Where(type => typeof (IBlockFactory).IsAssignableFrom(type) && !type.IsAbstract).Except(Enumerable.Repeat(typeof(IBlockFactory), 1)))
 			{
 				var constructorInfo = factoryType.GetConstructor(new Type[] {});
 				Debug.Assert(constructorInfo != null, "constructorInfo != null");
@@ -34,7 +34,6 @@ namespace LDtoVHDL.BlockFactories
 				: elementName;
 			return m_factories[elementType].CreateBlock(xBlock, env);
 		}
-
 
 	}
 }

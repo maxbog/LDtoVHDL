@@ -14,19 +14,20 @@ namespace LDtoVHDL
 	public class Port
 	{
 		private static int _nextId;
+		private int m_width;
 
 		public Port(PortDirection direction, string name)
 		{
 			Direction = direction;
 			Id = _nextId++;
 			Name = string.IsNullOrEmpty(name) ? string.Format("port_{0}", Id) : name;
-			SignalWidth = 0;
+			Width = 0;
 
 		}
 
 		//public Port(PortDirection direction, string name, int signalWidth) : this(direction, name)
 		//{
-		//	SignalWidth = signalWidth;
+		//	Width = signalWidth;
 		//}
 
 		public int Id { get; private set; }
@@ -47,9 +48,18 @@ namespace LDtoVHDL
 				return ConnectedSignal.OutputPorts;
 			}
 		}
-		public string Name { get; private set; }
+		public string Name { get; internal set; }
 
-		public int SignalWidth { get; set; }
+		public int Width
+		{
+			get { return m_width; }
+			set
+			{
+				if(m_width != 0 && value != m_width)
+					throw new InvalidOperationException("Incompatible port widths");
+				m_width = value;
+			}
+		}
 
 		public void Connect(Port otherPort)
 		{

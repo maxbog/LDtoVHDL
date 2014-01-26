@@ -5,7 +5,6 @@ using System.Linq;
 using System.Xml.Linq;
 using LDtoVHDL.BlockFactories;
 using LDtoVHDL.Blocks;
-using Environment = LDtoVHDL.BlockFactories.Environment;
 
 namespace LDtoVHDL
 {
@@ -47,10 +46,10 @@ namespace LDtoVHDL
 		{
 			foreach (var variable in GetAllVariables())
 			{
-				if (variable.Item1 == "localVars")
+				//if (variable.Item1 == "localVars")
 				{
 					var varName = GetVariableName(variable.Item2);
-					var varBlock = new MemoryVariable("_local_" + varName, varName, GetVariableWidth(variable.Item2));
+					var varBlock = new MemoryVariable(varName, GetVariableWidth(variable.Item2));
 					env.Variables.Add(varName, varBlock);
 					env.BlocksWithoutRung.Add(varBlock);
 				}
@@ -109,15 +108,18 @@ namespace LDtoVHDL
 						{
 							XPort = xPort,
 							Offset = GetPortOffset(xPort),
-							Port = new Port(xPort.Name.LocalName == "connectionPointIn" ? PortDirection.Input : PortDirection.Output, GetPortName(xPort))
+							Direction = xPort.Name.LocalName == "connectionPointIn" ? PortDirection.Input : PortDirection.Output,
+							Name = GetPortName(xPort)
 						})
 					.OrderBy(port => port.Offset.Y);
 
 				foreach (var port in ports)
 				{
-					m_ports.Add(port.XPort, port.Port);
+					var newPort = port.Direction == PortDirection.Input 
+						? block.Block.CreateInputPort(port.Name) 
+						: block.Block.CreateOutputPort(port.Name);
+					m_ports.Add(port.XPort, newPort);
 					m_xPorts.Add(block.Position + port.Offset, port.XPort);
-					block.Block.AddPort(port.Port);
 				}
 				env.BlocksWithoutRung.Add(block.Block);
 			}

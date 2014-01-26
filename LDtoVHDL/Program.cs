@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using LDtoVHDL.Blocks;
-using Environment = LDtoVHDL.BlockFactories.Environment;
 
 namespace LDtoVHDL
 {
