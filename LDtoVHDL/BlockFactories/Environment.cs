@@ -114,10 +114,10 @@ namespace LDtoVHDL.BlockFactories
 			{
 				if (i != 0)
 				{
-					foreach (var previousRungVar in Rungs[i - 1].AccumulatedOutVariables)
-						Rungs[i].AccumulatedOutVariables.Add(previousRungVar.Key, new List<OutVariableBlock>(previousRungVar.Value));
+					foreach (var previousRungWriters in Rungs[i - 1].WritingBlocks)
+						Rungs[i].WritingBlocks.Add(previousRungWriters.Key, new List<OutVariableBlock>(previousRungWriters.Value));
 				}
-				Rungs[i].AccumulateVariables();
+				Rungs[i].AddThisRungWriters();
 			}
 		}
 
@@ -134,8 +134,8 @@ namespace LDtoVHDL.BlockFactories
 			for (int i = 0; i < Rungs.Count; ++i)
 			{
 				var blocks = Rungs[i].Blocks;
-				var accumulatedOutVariables = i != 0
-					? Rungs[i - 1].AccumulatedOutVariables
+				var writingBlocks = i != 0
+					? Rungs[i - 1].WritingBlocks
 					: new Dictionary<string, List<OutVariableBlock>>();
 				var createdSelectors = new Dictionary<string, VarSelector>();
 
@@ -143,10 +143,10 @@ namespace LDtoVHDL.BlockFactories
 				{
 					if(createdSelectors.ContainsKey(inVarBlock.VariableName))
 						inVarBlock.MemoryInput.Connect(createdSelectors[inVarBlock.VariableName].Output);
-					else if (accumulatedOutVariables.ContainsKey(inVarBlock.VariableName))
+					else if (writingBlocks.ContainsKey(inVarBlock.VariableName))
 					{
 						var selector = CreateSelector(
-							accumulatedOutVariables[inVarBlock.VariableName], 
+							writingBlocks[inVarBlock.VariableName], 
 							Variables[inVarBlock.VariableName],
 							blocks);
 						createdSelectors.Add(inVarBlock.VariableName, selector);
@@ -162,9 +162,9 @@ namespace LDtoVHDL.BlockFactories
 			var lastRung = Rungs.Last();
 			foreach (var memoryVariable in Variables.Values)
 			{
-				if (lastRung.AccumulatedOutVariables.ContainsKey(memoryVariable.VariableName))
+				if (lastRung.WritingBlocks.ContainsKey(memoryVariable.VariableName))
 				{
-					var selector = CreateSelector(lastRung.AccumulatedOutVariables[memoryVariable.VariableName], memoryVariable, BlocksWithoutRung);
+					var selector = CreateSelector(lastRung.WritingBlocks[memoryVariable.VariableName], memoryVariable, BlocksWithoutRung);
 					memoryVariable.Input.Connect(selector.Output);
 				}
 				else
@@ -174,18 +174,18 @@ namespace LDtoVHDL.BlockFactories
 			}
 		}
 
-		private static VarSelector CreateSelector(List<OutVariableBlock> accumulatedOutVariables, MemoryVariable memoryVariable,
-			HashSet<BaseBlock> blocksCollection)
+		private static VarSelector CreateSelector(List<OutVariableBlock> writingBlocks, MemoryVariable memoryVariable,
+			HashSet<BaseBlock> destinationBlocksCollection)
 		{
 			var selector = new VarSelector();
-			var signalBus = new BusCreator(accumulatedOutVariables.Select(blk => blk.MemoryOutput));
-			var controlBus = new BusCreator(accumulatedOutVariables.Select(blk => blk.WriteCondition.InputPort));
+			var signalBus = new BusCreator(writingBlocks.Select(blk => blk.MemoryOutput));
+			var controlBus = new BusCreator(writingBlocks.Select(blk => blk.WriteCondition.InputPort));
 			selector.MemoryInput.Connect(memoryVariable.Output);
 			selector.Inputs.Connect(controlBus.Output);
 			selector.Controls.Connect(controlBus.Output);
-			blocksCollection.Add(selector);
-			blocksCollection.Add(signalBus);
-			blocksCollection.Add(controlBus);
+			destinationBlocksCollection.Add(selector);
+			destinationBlocksCollection.Add(signalBus);
+			destinationBlocksCollection.Add(controlBus);
 			return selector;
 		}
 	}
