@@ -23,17 +23,15 @@ namespace LDtoVHDL.Blocks
 			}
 		}
 
-		public override bool CanComputePortWidths
+		public override bool CanComputePortTypes
 		{
 			get { return true; }
 		}
 
-		public override void ComputePortWidths()
+		public override void ComputePortTypes()
 		{
 			foreach (var port in Ports.Values)
-			{
-				port.Width = 1;
-			}
+				port.SignalType = BuiltinType.Boolean;
 		}
 
 		public const string TYPE = "_power_or";

@@ -12,16 +12,16 @@ namespace LDtoVHDL.Blocks
 		public Port Input2 { get { return Ports["IN2"]; } }
 		public Port Output { get { return Ports["OUT"]; } }
 
-		public override bool CanComputePortWidths
+		public override bool CanComputePortTypes
 		{
-			get { return Input1.Width != 0 || Input2.Width != 0 || Output.Width != 0; }
+			get { return Input1.SignalType != null || Input2.SignalType != null || Output.SignalType != null; }
 		}
 
-		public override void ComputePortWidths()
+		public override void ComputePortTypes()
 		{
-			var variableWidth = Input1.Width != 0 ? Input1.Width : (Input2.Width != 0 ? Input2.Width : Output.Width);
-			Input1.Width = Input2.Width = Output.Width = variableWidth;
-			Enable.Width = EnableOut.Width = 1;
+			var variableWidth = Input1.SignalType ?? (Input2.SignalType ?? Output.SignalType);
+			Input1.SignalType = Input2.SignalType = Output.SignalType = variableWidth;
+			Enable.SignalType = EnableOut.SignalType = BuiltinType.Boolean;
 		}
 	}
 }

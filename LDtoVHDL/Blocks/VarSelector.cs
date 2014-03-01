@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using System.Linq;
+
 namespace LDtoVHDL.Blocks
 {
 	class VarSelector : InternalBlock
@@ -16,37 +19,39 @@ namespace LDtoVHDL.Blocks
 		public Port MemoryInput { get { return Ports["MEMORY_IN"]; } }
 		public const string TYPE = "_var_selector";
 
-		public override bool CanComputePortWidths
+		public override bool CanComputePortTypes
 		{
 			get
 			{
-				if (Controls.Width != 0 && Inputs.Width != 0)
+				if (Controls.SignalType != null && Inputs.SignalType != null)
 					return true;
 
-				return (Controls.Width != 0 || Inputs.Width != 0) && (MemoryInput.Width != 0 || Output.Width != 0);
+				return (Controls.SignalType != null || Inputs.SignalType != null) && (MemoryInput.SignalType != null || Output.SignalType != null);
 			}
 		}
 
-		public override void ComputePortWidths()
+		public override void ComputePortTypes()
 		{
-			if (Controls.Width != 0 && Inputs.Width != 0)
+			var inputsBus = Inputs.SignalType is BusType ? ((BusType) Inputs.SignalType) : null;
+			var controlsBus = Controls.SignalType is BusType ? ((BusType) Controls.SignalType) : null;
+			if (Controls.SignalType != null && Inputs.SignalType != null)
 			{
-				var variableWidth = Inputs.Width/Controls.Width;
-				MemoryInput.Width = Output.Width = variableWidth;
+				Debug.Assert(inputsBus != null);
+				Debug.Assert(controlsBus != null);
+				Debug.Assert(controlsBus.BaseType == BuiltinType.Boolean);
+
+				MemoryInput.SignalType = inputsBus.BaseType;
+			}
+			else if (Controls.SignalType != null)
+			{
+				Debug.Assert(controlsBus != null);
+				Debug.Assert(controlsBus.BaseType == BuiltinType.Boolean);
+				Inputs.SignalType = new BusType(MemoryInput.SignalType, controlsBus.Width);
 			}
 			else
 			{
-				var variableWidth = MemoryInput.Width != 0 ? MemoryInput.Width : Output.Width;
-				MemoryInput.Width = Output.Width = variableWidth;
-				if (Controls.Width == 0)
-				{
-					Controls.Width = Inputs.Width/variableWidth;
-
-				}
-				else
-				{
-					Inputs.Width = Controls.Width * variableWidth;
-				}
+				Debug.Assert(inputsBus != null);
+				Controls.SignalType = new BusType(BuiltinType.Boolean, inputsBus.Width);	
 			}
 		}
 	}

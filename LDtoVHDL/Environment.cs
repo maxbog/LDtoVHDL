@@ -109,7 +109,7 @@ namespace LDtoVHDL
 				if (i != 0)
 				{
 					foreach (var previousRungWriters in Rungs[i - 1].WritingBlocks)
-						Rungs[i].WritingBlocks.Add(previousRungWriters.Key, new List<OutVariableBlock>(previousRungWriters.Value));
+						Rungs[i].WritingBlocks.Add(previousRungWriters.Key, new List<IOutVariableBlock>(previousRungWriters.Value));
 				}
 				Rungs[i].AddThisRungWriters();
 			}
@@ -130,10 +130,10 @@ namespace LDtoVHDL
 				var blocks = Rungs[i].Blocks;
 				var writingBlocks = i != 0
 					? Rungs[i - 1].WritingBlocks
-					: new Dictionary<string, List<OutVariableBlock>>();
+					: new Dictionary<string, List<IOutVariableBlock>>();
 				var createdSelectors = new Dictionary<string, VarSelector>();
 
-				foreach (var inVarBlock in blocks.OfType<InVariableBlock>())
+				foreach (var inVarBlock in blocks.OfType<IInVariableBlock>())
 				{
 					if(createdSelectors.ContainsKey(inVarBlock.VariableName))
 						inVarBlock.MemoryInput.Connect(createdSelectors[inVarBlock.VariableName].Output);
@@ -168,7 +168,7 @@ namespace LDtoVHDL
 			}
 		}
 
-		private static VarSelector CreateSelector(List<OutVariableBlock> writingBlocks, MemoryVariable memoryVariable,
+		private static VarSelector CreateSelector(List<IOutVariableBlock> writingBlocks, MemoryVariable memoryVariable,
 			HashSet<BaseBlock> destinationBlocksCollection)
 		{
 			var selector = new VarSelector();
@@ -191,10 +191,10 @@ namespace LDtoVHDL
 			{
 				changed = false;
 				foreach (var block in toProcess.ToList())
-					if (block.CanComputePortWidths)
+					if (block.CanComputePortTypes)
 					{
 						changed = true;
-						block.ComputePortWidths();
+						block.ComputePortTypes();
 						block.PropagatePortWidths();
 						toProcess.Remove(block);
 					}

@@ -2,16 +2,21 @@
 
 namespace LDtoVHDL.Blocks
 {
+	public interface IVariableBlock
+	{
+		string VariableName { get; }
+	}
+
 	public abstract class VariableBlock : BaseBlock
 	{
-		protected VariableBlock(string id, string variableName, int signalWidth) : base(id)
+		protected VariableBlock(string id, string variableName, SignalType signalType) : base(id)
 		{
 			VariableName = variableName;
-			SignalWidth = signalWidth;
+			SignalType = signalType;
 		}
 
 		public string VariableName { get; private set; }
-		public int SignalWidth { get; private set; }
+		public SignalType SignalType { get; private set; }
 
 		public override string ToString()
 		{

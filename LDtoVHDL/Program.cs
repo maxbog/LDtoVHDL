@@ -36,7 +36,7 @@ namespace LDtoVHDL
 					}
 				}
 				Console.WriteLine("WrittenVariables:");
-				foreach (var variable in rung.Blocks.OfType<OutVariableBlock>())
+				foreach (var variable in rung.Blocks.OfType<IOutVariableBlock>())
 					Console.WriteLine("Var: {0} Condition: {1}", variable.VariableName, variable.WriteCondition);
 				Console.WriteLine();
 			}

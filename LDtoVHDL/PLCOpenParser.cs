@@ -26,15 +26,16 @@ namespace LDtoVHDL
 			return environment;
 		}
 
-		private static readonly Dictionary<string, int> VarWidths = new Dictionary<string, int>
+		private static readonly Dictionary<string, SignalType> VarTypes = new Dictionary<string, SignalType>
 		{
-			{"BOOL", 1},
-			{"SINT", 8},
-			{"INT", 16},
-			{"DINT", 32},
-			{"USINT", 8},
-			{"UINT", 16},
-			{"UDINT", 32}
+			{"BOOL", BuiltinType.Boolean},
+			{"SINT", BuiltinType.SInt8},
+			{"INT", BuiltinType.SInt16},
+			{"DINT", BuiltinType.SInt32},
+			{"USINT", BuiltinType.UInt8},
+			{"UINT", BuiltinType.UInt16},
+			{"UDINT", BuiltinType.UInt32},
+			{"TON", BuiltinType.TimerOn}
 		};
 
 		private readonly Dictionary<XElement, Port> m_ports = new Dictionary<XElement, Port>();
@@ -49,17 +50,18 @@ namespace LDtoVHDL
 				//if (variable.Item1 == "localVars")
 				{
 					var varName = GetVariableName(variable.Item2);
-					var varBlock = new MemoryVariable(varName, GetVariableWidth(variable.Item2));
+					var varBlock = new MemoryVariable(varName, GetVariableType(variable.Item2));
 					env.Variables.Add(varName, varBlock);
 					env.BlocksWithoutRung.Add(varBlock);
 				}
 			}
 		}
 
-		private static int GetVariableWidth(XElement varElem)
+		private static SignalType GetVariableType(XElement varElem)
 		{
-			var typeName = varElem.Descendants("type".XName()).First().Descendants().First().Name.LocalName;
-			return VarWidths[typeName];
+			var typeTag = varElem.Descendants("type".XName()).First().Descendants().First();
+			var typeName = typeTag.Name.LocalName == "derived" ? typeTag.Attribute("name").Value : typeTag.Name.LocalName;
+			return VarTypes[typeName];
 		}
 
 		private static string GetVariableName(XElement varElem)

@@ -4,7 +4,7 @@
 	{
 		public new const string TYPE = "coil";
 		public CoilBlock(string id, string variableName)
-			: base(id, variableName, 1)
+			: base(id, variableName, BuiltinType.Boolean)
 		{
 		}
 		public override Signal WriteCondition { get { return Enable.ConnectedSignal; } }

@@ -2,8 +2,8 @@
 {
 	public class MemoryVariable : VariableBlock
 	{
-		public MemoryVariable(string variableName, int signalWidth)
-			: base("_var_local_"+variableName, variableName, signalWidth)
+		public MemoryVariable(string variableName, SignalType signalType)
+			: base("_var_local_"+variableName, variableName, signalType)
 		{
 			CreateInputPort("IN");
 			CreateInputPort("LOAD");
@@ -15,16 +15,16 @@
 		public Port Load { get { return Ports["LOAD"]; } }
 		public const string TYPE = "_memory_variable"; 
 
-		public override bool CanComputePortWidths
+		public override bool CanComputePortTypes
 		{
 			get { return true; }
 		}
 
-		public override void ComputePortWidths()
+		public override void ComputePortTypes()
 		{
-			Ports["IN"].Width = SignalWidth;
-			Ports["OUT"].Width = SignalWidth;
-			Ports["LOAD"].Width = 1;
+			Ports["IN"].SignalType = SignalType;
+			Ports["OUT"].SignalType = SignalType;
+			Ports["LOAD"].SignalType = BuiltinType.Boolean;
 		}
 	}
 }

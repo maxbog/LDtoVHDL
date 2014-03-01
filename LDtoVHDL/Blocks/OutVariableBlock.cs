@@ -3,11 +3,16 @@ using System.Linq;
 
 namespace LDtoVHDL.Blocks
 {
-	public class OutVariableBlock : VariableBlock
+	public interface IOutVariableBlock : IVariableBlock
+	{
+		Port MemoryOutput { get; }
+		Signal WriteCondition { get; }
+	}
+	public class OutVariableBlock : VariableBlock, IOutVariableBlock
 	{
 		public const string TYPE = "outVariable";
-		public OutVariableBlock(string id, string variableName, int signalWidth)
-			: base(id, variableName, signalWidth)
+		public OutVariableBlock(string id, string variableName, SignalType signalType)
+			: base(id, variableName, signalType)
 		{
 			CreateOutputPort("MEM_OUT");
 		}
@@ -16,17 +21,15 @@ namespace LDtoVHDL.Blocks
 		public Port MemoryOutput { get { return Ports["MEM_OUT"]; }}
 		public virtual Signal WriteCondition { get { return Input.OtherSidePorts.Single().ParentBaseBlock.Enable.ConnectedSignal; }}
 
-		public override bool CanComputePortWidths
+		public override bool CanComputePortTypes
 		{
 			get { return true; }
 		}
 
-		public override void ComputePortWidths()
+		public override void ComputePortTypes()
 		{
 			foreach (var port in Ports.Values)
-			{
-				port.Width = SignalWidth;
-			}
+				port.SignalType = SignalType;
 		}
 
 		protected override string GetNewPortName(PortDirection direction)

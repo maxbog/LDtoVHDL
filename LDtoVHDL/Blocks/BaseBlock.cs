@@ -75,7 +75,13 @@ namespace LDtoVHDL.Blocks
 
 		protected virtual string VhdlType
 		{
-			get { return GetType().GetField("TYPE", BindingFlags.Static | BindingFlags.Public).GetValue(null) as string; }
+			get
+			{
+				var fieldInfo = GetType().GetField("TYPE", BindingFlags.Static | BindingFlags.Public);
+				if (fieldInfo != null)
+					return fieldInfo.GetValue(null) as string;
+				return null;
+			}
 		}
 
 		public virtual string VhdlCode
@@ -116,17 +122,17 @@ namespace LDtoVHDL.Blocks
 			return port;
 		}
 
-		public abstract bool CanComputePortWidths { get; }
+		public abstract bool CanComputePortTypes { get; }
 
-		public abstract void ComputePortWidths();
+		public abstract void ComputePortTypes();
 
 		public void PropagatePortWidths()
 		{
 			foreach (var port in Ports.Values.Where(port => port.ConnectedSignal != null))
 			{
-				port.ConnectedSignal.Width = port.Width;
+				port.ConnectedSignal.Type = port.SignalType;
 				foreach (var otherSidePort in port.OtherSidePorts)
-					otherSidePort.Width = port.Width;
+					otherSidePort.SignalType = port.SignalType;
 			}
 		}
 	}
