@@ -6,9 +6,11 @@ namespace LDtoVHDL.Blocks
 {
 	public class PowerOrBlock : InternalBlock
 	{
-		public PowerOrBlock()
+		public PowerOrBlock(IEnumerable<Signal> orredSignals)
 		{
 			CreateOutputPort("OUT");
+			foreach (var orredSignal in orredSignals)
+				AddOrredSignal(orredSignal);
 		}
 
 		public Port Output { get { return Ports["OUT"]; } }

@@ -66,6 +66,15 @@
     <Compile Include="Blocks\TonBlock.cs" />
     <Compile Include="Blocks\VariableBlock.cs" />
     <Compile Include="Blocks\VarSelector.cs" />
+    <Compile Include="Compiler.cs" />
+    <Compile Include="CompilerPhases\P0_IdentifyRails.cs" />
+    <Compile Include="CompilerPhases\IPhase.cs" />
+    <Compile Include="CompilerPhases\P10_ReplaceCompositeSignalsWithOrs.cs" />
+    <Compile Include="CompilerPhases\P20_DivideBlockIntoRungs.cs" />
+    <Compile Include="CompilerPhases\P25_ConnectTimersToVariables.cs" />
+    <Compile Include="CompilerPhases\P30_AccumulateOutVariables.cs" />
+    <Compile Include="CompilerPhases\P40_CreateSelectors.cs" />
+    <Compile Include="CompilerPhases\P50_ComputeSignalTypes.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="JetBrains\Annotations.cs" />
     <Compile Include="Offset.cs" />

@@ -10,16 +10,11 @@ namespace LDtoVHDL
 	{
 		public static void Main(string[] args)
 		{
-			var parser = new PlcOpenParser(XDocument.Load(File.OpenRead(@"d:\Dropbox\praca magisterska\test_ber\plc.xml")));
+			var parser = new PlcOpenParser(XDocument.Load(File.OpenRead(@"d:\dokumenty\copy\praca magisterska\test_ber\plc.xml")));
 
 			var environment = parser.Parse();
-
-			environment.IdentifyRails();
-			environment.ReplaceCompositeSignalsWithOrs();
-			environment.DivideBlocksIntoRungs();
-			environment.AccumulateOutVariables();
-			environment.CreateSelectors();
-			environment.ComputeSignalWidths();
+			var compiler = new Compiler();
+			compiler.Transform(environment);
 
 			foreach (var rung in environment.Rungs)
 			{
