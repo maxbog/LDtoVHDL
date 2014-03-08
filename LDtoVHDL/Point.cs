@@ -42,5 +42,15 @@ namespace LDtoVHDL
 				return (X*397) ^ Y;
 			}
 		}
+
+		public static bool operator ==(Point lhs, Point rhs)
+		{
+			return lhs.Equals(rhs);
+		}
+
+		public static bool operator !=(Point lhs, Point rhs)
+		{
+			return !(lhs == rhs);
+		}
 	}
 }

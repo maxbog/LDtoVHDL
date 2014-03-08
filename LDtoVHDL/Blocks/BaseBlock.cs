@@ -89,7 +89,7 @@ namespace LDtoVHDL.Blocks
 			get
 			{
 				var portMapping = string.Join(", ",
-					VhdlPortMapping.Select(mapping => string.Format("{0} => {1}", mapping.Item1, mapping.Item2 == null ? "open" : mapping.Item2 )));
+					VhdlPortMapping.Select(mapping => string.Format("{0} => {1}", mapping.Item1, mapping.Item2 ?? "open" )));
 				return string.Format("{0}: {1} port map ({2});", VhdlName, VhdlType, portMapping);
 			}
 		}

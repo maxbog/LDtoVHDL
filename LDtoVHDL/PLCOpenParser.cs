@@ -10,6 +10,7 @@ using LDtoVHDL.Blocks;
 
 namespace LDtoVHDL
 {
+	[Serializable]
 	public class PlcOpenParserException : Exception
 	{
 		public PlcOpenParserException()

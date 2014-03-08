@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LDtoVHDL
+﻿namespace LDtoVHDL
 {
 	public abstract class SignalType
 	{
@@ -16,34 +14,6 @@ namespace LDtoVHDL
 			}
 		}
 		public abstract int Width { get; }
-
-		protected bool Equals(SignalType other)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(null, obj)) return false;
-			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != GetType()) return false;
-			return Equals((SignalType) obj);
-		}
-
-		public override int GetHashCode()
-		{
-			throw new NotImplementedException();
-		}
-
-		public static bool operator ==(SignalType lhs, SignalType rhs)
-		{
-			return Equals(lhs, rhs);
-		}
-
-		public static bool operator !=(SignalType lhs, SignalType rhs)
-		{
-			return !(lhs == rhs);
-		}
 
 		public bool IsSigned { get { return this == BuiltinType.SInt8 || this == BuiltinType.SInt16 || this == BuiltinType.SInt32; } }
 		public bool IsUnsigned { get { return this == BuiltinType.UInt8 || this == BuiltinType.UInt16 || this == BuiltinType.UInt32; } }
@@ -97,8 +67,7 @@ namespace LDtoVHDL
 		{
 			unchecked
 			{
-				var hashCode = base.GetHashCode();
-				hashCode = (hashCode*397) ^ m_width;
+				var hashCode =  m_width;
 				hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
 				return hashCode;
 			}
@@ -151,8 +120,7 @@ namespace LDtoVHDL
 
 		public override int GetHashCode()
 		{
-			var hashCode = base.GetHashCode();
-			hashCode = (hashCode*397) ^ m_busWidth;
+			var hashCode = m_busWidth;
 			hashCode = (hashCode*397) ^ (BaseType != null ? BaseType.GetHashCode() : 0);
 			return hashCode;
 		}
