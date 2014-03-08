@@ -7,3 +7,12 @@ D:\Dropbox\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\nunit.framework.xm
 D:\Dropbox\praca magisterska\LDtoVHDL\LDtoHVDL.Test\obj\Debug\LDtoHVDL.Test.csprojResolveAssemblyReference.cache
 D:\Dropbox\praca magisterska\LDtoVHDL\LDtoHVDL.Test\obj\Debug\LDtoHVDL.Test.dll
 D:\Dropbox\praca magisterska\LDtoVHDL\LDtoHVDL.Test\obj\Debug\LDtoHVDL.Test.pdb
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\LDtoHVDL.Test.dll
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\LDtoHVDL.Test.pdb
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\LDtoVHDL.exe
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\nunit.framework.dll
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\LDtoVHDL.pdb
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\nunit.framework.xml
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\obj\Debug\LDtoHVDL.Test.csprojResolveAssemblyReference.cache
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\obj\Debug\LDtoHVDL.Test.dll
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\obj\Debug\LDtoHVDL.Test.pdb

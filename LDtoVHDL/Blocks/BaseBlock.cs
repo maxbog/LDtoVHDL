@@ -99,9 +99,9 @@ namespace LDtoVHDL.Blocks
 			get { return null; }
 		}
 
-		public virtual List<string> VerifyPortWidths()
+		public virtual List<ValidationMessage> Validate()
 		{
-			return null;
+			return new List<ValidationMessage>();
 		}
 
 		[StringFormatMethod("format")]

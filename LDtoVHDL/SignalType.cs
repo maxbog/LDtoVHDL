@@ -44,6 +44,10 @@ namespace LDtoVHDL
 		{
 			return !(lhs == rhs);
 		}
+
+		public bool IsSigned { get { return this == BuiltinType.SInt8 || this == BuiltinType.SInt16 || this == BuiltinType.SInt32; } }
+		public bool IsUnsigned { get { return this == BuiltinType.UInt8 || this == BuiltinType.UInt16 || this == BuiltinType.UInt32; } }
+		public bool IsInteger { get { return IsSigned || IsUnsigned; } }
 	}
 
 	public class BuiltinType : SignalType

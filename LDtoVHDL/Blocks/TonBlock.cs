@@ -9,8 +9,8 @@
 		{
 			VariableName = variableName;
 
-			CreateInputPort("VAR_WRITE");
-			CreateOutputPort("VAR_READ");
+			CreateOutputPort("VAR_WRITE");
+			CreateInputPort("VAR_READ");
 		}
 
 		public Port Input { get { return Ports["IN"]; } }

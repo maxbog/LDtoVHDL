@@ -87,6 +87,7 @@
     <Compile Include="Rung.cs" />
     <Compile Include="Signal.cs" />
     <Compile Include="SignalType.cs" />
+    <Compile Include="ValidationMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
