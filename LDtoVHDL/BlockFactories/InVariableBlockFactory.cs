@@ -11,7 +11,7 @@ namespace LDtoVHDL.BlockFactories
 		public override BaseBlock CreateBlock(XElement xBlock, Environment env)
 		{
 			var varName = GetVariableName(xBlock);
-			return new InVariableBlock(GetBlockLocalId(xBlock), varName, env.Variables[varName].SignalType);
+			return new InVariableBlock(GetBlockLocalId(xBlock), varName, env.ReadableVariables[varName].SignalType);
 		}
 
 		private string GetVariableName(XElement xBlock)

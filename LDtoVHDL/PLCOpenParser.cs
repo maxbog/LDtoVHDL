@@ -2,12 +2,33 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Xml.Linq;
+using JetBrains.Annotations;
 using LDtoVHDL.BlockFactories;
 using LDtoVHDL.Blocks;
 
 namespace LDtoVHDL
 {
+	public class PlcOpenParserException : Exception
+	{
+		public PlcOpenParserException()
+		{
+		}
+
+		public PlcOpenParserException(string message) : base(message)
+		{
+		}
+
+		public PlcOpenParserException(string message, Exception innerException) : base(message, innerException)
+		{
+		}
+
+		protected PlcOpenParserException([NotNull] SerializationInfo info, StreamingContext context) : base(info, context)
+		{
+		}
+	}
+
 	public class PlcOpenParser
 	{
 		private readonly XDocument m_xdoc;
@@ -47,14 +68,20 @@ namespace LDtoVHDL
 		{
 			foreach (var variable in GetAllVariables())
 			{
-				//if (variable.Item1 == "localVars")
-				{
-					var varName = GetVariableName(variable.Item2);
-					var varBlock = new MemoryVariable(varName, GetVariableType(variable.Item2));
-					env.Variables.Add(varName, varBlock);
-					env.BlocksWithoutRung.Add(varBlock);
-				}
+				var varBlock = CreateMemoryVariableBlock(variable, GetVariableName(variable.Item2));
+				env.AddVariable(varBlock);
 			}
+		}
+
+		private static MemoryVariable CreateMemoryVariableBlock(Tuple<string, XElement> variable, string varName)
+		{
+			if (variable.Item1 == "localVars")
+				return new LocalVariable(varName, GetVariableType(variable.Item2));
+			if (variable.Item1 == "inputVars")
+				return new InputVariable(varName, GetVariableType(variable.Item2));
+			if (variable.Item1 == "outputVars")
+				return new OutputVariable(varName, GetVariableType(variable.Item2));
+			throw new PlcOpenParserException("Unrecognized variable type: " + variable.Item1);
 		}
 
 		private static SignalType GetVariableType(XElement varElem)

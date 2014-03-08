@@ -63,9 +63,9 @@ namespace LDtoVHDL.Blocks
 			return String.Format("[b.{0}]{1}", Id, VhdlType);
 		}
 
-		protected virtual IEnumerable<Tuple<string, Signal>> VhdlPortMapping
+		protected virtual IEnumerable<Tuple<string, string>> VhdlPortMapping
 		{
-			get { return Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal)); }
+			get { return Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal == null ? null : port.Value.ConnectedSignal.VhdlName)); }
 		}
 
 		protected virtual string VhdlName
@@ -89,7 +89,7 @@ namespace LDtoVHDL.Blocks
 			get
 			{
 				var portMapping = string.Join(", ",
-					VhdlPortMapping.Select(mapping => string.Format("{0} => {1}", mapping.Item1, mapping.Item2== null ? "open" : mapping.Item2.VhdlName )));
+					VhdlPortMapping.Select(mapping => string.Format("{0} => {1}", mapping.Item1, mapping.Item2 == null ? "open" : mapping.Item2 )));
 				return string.Format("{0}: {1} port map ({2});", VhdlName, VhdlType, portMapping);
 			}
 		}

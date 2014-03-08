@@ -20,7 +20,7 @@ namespace LDtoVHDL.CompilerPhases
 			}
 
 			var lastRung = env.Rungs.Last();
-			foreach (var memoryVariable in env.Variables.Values)
+			foreach (var memoryVariable in env.WritableVariables.Values)
 			{
 				if (lastRung.WritingBlocks.ContainsKey(memoryVariable.VariableName))
 				{
@@ -53,7 +53,7 @@ namespace LDtoVHDL.CompilerPhases
 
 		private static void ConnectVariableDirectly(Environment env, IInVariableBlock inVarBlock)
 		{
-			inVarBlock.MemoryInput.Connect(env.Variables[inVarBlock.VariableName].Output);
+			inVarBlock.MemoryInput.Connect(env.ReadableVariables[inVarBlock.VariableName].Output);
 		}
 
 		private static void ConnectSelectorToReader(IInVariableBlock inVarBlock, VarSelector selector)
@@ -66,7 +66,7 @@ namespace LDtoVHDL.CompilerPhases
 		{
 			var selector = CreateSelector(
 				previousRungWritingBlocks[inVarBlock.VariableName],
-				env.Variables[inVarBlock.VariableName],
+				env.ReadableVariables[inVarBlock.VariableName],
 				currentRungBlocks);
 			createdSelectors.Add(inVarBlock.VariableName, selector);
 			return selector;
@@ -82,7 +82,7 @@ namespace LDtoVHDL.CompilerPhases
 			return createdSelectors.ContainsKey(inVarBlock.VariableName);
 		}
 
-		private static VarSelector CreateSelector(List<IOutVariableBlock> writingBlocks, MemoryVariable memoryVariable, HashSet<BaseBlock> destinationBlocksCollection)
+		private static VarSelector CreateSelector(List<IOutVariableBlock> writingBlocks, IReadableVariable memoryVariable, HashSet<BaseBlock> destinationBlocksCollection)
 		{
 			var selector = new VarSelector();
 			var signalBus = new BusCreator(writingBlocks.Select(blk => blk.MemoryOutput));
