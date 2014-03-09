@@ -12,45 +12,14 @@ namespace LDtoVHDL.VhdlWriter
 	{
 		private readonly TextWriter m_writer;
 
-		private readonly Dictionary<Type, BaseBlockWriter> m_blockWriters = new Dictionary<Type, BaseBlockWriter>();
-		private readonly Dictionary<Type, SignalTypeWriter> m_signalTypeWriters = new Dictionary<Type, SignalTypeWriter>();
+		private readonly ObjectDictionary<Type, BaseBlockWriter, WriterForAttribute> m_blockWriters;
+		private readonly ObjectDictionary<Type, SignalTypeWriter, WriterForAttribute> m_signalTypeWriters;
 
 		public ProgramWriter(TextWriter writer)
 		{
 			m_writer = writer;
-			FindWriters(m_blockWriters);
-			FindWriters(m_signalTypeWriters);
-		}
-
-		private void FindWriters<T>(IDictionary<Type, T> writersDictionary)
-		{
-			var types = Assembly.GetExecutingAssembly().GetTypes();
-			foreach (var writerType in types.Where(type => typeof(T).IsAssignableFrom(type) && !type.IsAbstract))
-			{
-				var writerAttributes = (WriterForAttribute[])writerType.GetCustomAttributes(typeof(WriterForAttribute), false);
-				if (!writerAttributes.Any())
-					continue;
-				var constructorInfo = writerType.GetConstructor(new[] { typeof(TextWriter) });
-				Debug.Assert(constructorInfo != null, "constructorInfo != null");
-				var factory = (T)constructorInfo.Invoke(new object[] { m_writer });
-				foreach (var type in writerAttributes.Select(ffa => ffa.FormattedType))
-					writersDictionary.Add(type, factory);
-			}
-		}
-
-		private T GetWriter<T>(IDictionary<Type, T> writersDictionary, Type formattedType)
-		{
-			if (writersDictionary.ContainsKey(formattedType))
-				return writersDictionary[formattedType];
-
-			var baseType = formattedType;
-			while (baseType != null && !writersDictionary.ContainsKey(baseType))
-				baseType = baseType.BaseType;
-
-			if (baseType != null)
-				writersDictionary.Add(formattedType, writersDictionary[baseType]);
-
-			return writersDictionary[formattedType];
+			m_blockWriters = ObjectDictionary<Type, BaseBlockWriter, WriterForAttribute>.FromExecutingAssembly(type => type.BaseType, ffa => ffa.FormattedType, new object[] { m_writer });
+			m_signalTypeWriters = ObjectDictionary<Type, SignalTypeWriter, WriterForAttribute>.FromExecutingAssembly(type => type.BaseType, ffa => ffa.FormattedType, new object[] { m_writer });
 		}
 
 		public void WriteVhdlCode(Environment env)
@@ -117,7 +86,7 @@ namespace LDtoVHDL.VhdlWriter
 
 		private string GetSignalTypeName(SignalType signalType)
 		{
-			var writer = GetWriter(m_signalTypeWriters, signalType.GetType());
+			var writer = m_signalTypeWriters.Get(signalType.GetType());
 			return writer != null ? writer.GetName(signalType) : null;
 		}
 
@@ -133,14 +102,14 @@ namespace LDtoVHDL.VhdlWriter
 
 		private void WriteBlockDeclaration(BaseBlock block)
 		{
-			var writer = GetWriter(m_blockWriters, block.GetType());
+			var writer = m_blockWriters.Get(block.GetType());
 			if(writer != null)
 				writer.WriteDeclaration(block);
 		}
 
 		private void WriteBlockCode(BaseBlock block)
 		{
-			var writer = GetWriter(m_blockWriters, block.GetType());
+			var writer = m_blockWriters.Get(block.GetType());
 			if (writer != null)
 				writer.WriteCode(block);
 		}

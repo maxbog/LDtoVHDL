@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
 using LDtoVHDL.Blocks;
 
@@ -10,23 +9,11 @@ namespace LDtoVHDL.BlockFactories
 {
 	public class BlockBuilder
 	{
-		private readonly Dictionary<string, IBlockFactory> m_factories;
+		private readonly ObjectDictionary<string, IBlockFactory, FactoryForAttribute> m_factories;
 
 		public BlockBuilder()
 		{
-			m_factories = new Dictionary<string, IBlockFactory>();
-			var types = Assembly.GetExecutingAssembly().GetTypes();
-			foreach (var factoryType in types.Where(type => typeof (IBlockFactory).IsAssignableFrom(type) && !type.IsAbstract))
-			{
-				var factoryAttributes = (FactoryForAttribute[])factoryType.GetCustomAttributes(typeof(FactoryForAttribute), false);
-				if (!factoryAttributes.Any()) 
-					continue;
-				var constructorInfo = factoryType.GetConstructor(new Type[] {});
-				Debug.Assert(constructorInfo != null, "constructorInfo != null");
-				var factory = (IBlockFactory) constructorInfo.Invoke(new object[] {});
-				foreach (var type in factoryAttributes.Select(ffa => ffa.CreatedType))
-					m_factories.Add(type, factory);
-			}
+			m_factories = ObjectDictionary<string, IBlockFactory, FactoryForAttribute>.FromExecutingAssembly(ffa => ffa.CreatedType);
 		}
 
 		public BaseBlock CreateBlock(XElement xBlock, Environment env)
@@ -35,7 +22,7 @@ namespace LDtoVHDL.BlockFactories
 			var elementType = elementName == "block" 
 				? (string) xBlock.Attribute("typeName") 
 				: elementName;
-			return m_factories[elementType].CreateBlock(xBlock, env);
+			return m_factories.Get(elementType).CreateBlock(xBlock, env);
 		}
 
 	}

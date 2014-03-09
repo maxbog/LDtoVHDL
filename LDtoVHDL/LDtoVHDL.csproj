@@ -79,8 +79,11 @@
     <Compile Include="CompilerPhases\P30_AccumulateOutVariables.cs" />
     <Compile Include="CompilerPhases\P40_CreateSelectors.cs" />
     <Compile Include="CompilerPhases\P50_ComputeSignalTypes.cs" />
+    <Compile Include="EnumerableEx.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="JetBrains\Annotations.cs" />
+    <Compile Include="ObjectCollection.cs" />
+    <Compile Include="ObjectDictionary.cs" />
     <Compile Include="Offset.cs" />
     <Compile Include="PLCOpen.cs" />
     <Compile Include="PLCOpenParser.cs" />
@@ -91,6 +94,7 @@
     <Compile Include="Rung.cs" />
     <Compile Include="Signal.cs" />
     <Compile Include="SignalType.cs" />
+    <Compile Include="TypeFinder.cs" />
     <Compile Include="ValidationMessage.cs" />
     <Compile Include="VhdlWriter\AddBlockWriter.cs" />
     <Compile Include="VhdlWriter\BaseBlockWriter.cs" />
