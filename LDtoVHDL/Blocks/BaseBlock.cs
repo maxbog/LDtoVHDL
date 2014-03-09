@@ -67,6 +67,11 @@ namespace LDtoVHDL.Blocks
 		{
 			get { return Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal == null ? null : port.Value.ConnectedSignal.VhdlName)); }
 		}
+		
+		protected virtual IEnumerable<Tuple<string, string>> VhdlGenericMapping
+		{
+			get { return Enumerable.Empty<Tuple<string,string>>(); }
+		}
 
 		protected virtual string VhdlName
 		{
@@ -90,7 +95,11 @@ namespace LDtoVHDL.Blocks
 			{
 				var portMapping = string.Join(", ",
 					VhdlPortMapping.Select(mapping => string.Format("{0} => {1}", mapping.Item1, mapping.Item2 ?? "open" )));
-				return string.Format("{0}: {1} port map ({2});", VhdlName, VhdlType, portMapping);
+				var genericMapping = string.Join(", ",
+					VhdlGenericMapping.Select(mapping => string.Format("{0} => {1}", mapping.Item1, mapping.Item2 ?? "open")));
+				if (genericMapping != "")
+					genericMapping = string.Format("generic map({0})", genericMapping);
+				return string.Format("{0}: {1} {2} port map ({3});", VhdlName, VhdlType, genericMapping, portMapping);
 			}
 		}
 

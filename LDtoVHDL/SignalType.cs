@@ -18,6 +18,34 @@
 		public bool IsSigned { get { return this == BuiltinType.SInt8 || this == BuiltinType.SInt16 || this == BuiltinType.SInt32; } }
 		public bool IsUnsigned { get { return this == BuiltinType.UInt8 || this == BuiltinType.UInt16 || this == BuiltinType.UInt32; } }
 		public bool IsInteger { get { return IsSigned || IsUnsigned; } }
+
+		protected bool Equals(SignalType other)
+		{
+			return false;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != GetType()) return false;
+			return Equals((SignalType) obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return 0;
+		}
+
+		public static bool operator ==(SignalType left, SignalType right)
+		{
+			return Equals(left, right);
+		}
+
+		public static bool operator !=(SignalType left, SignalType right)
+		{
+			return !Equals(left, right);
+		}
 	}
 
 	public class BuiltinType : SignalType
@@ -99,6 +127,8 @@
 			BaseType = baseType;
 			m_busWidth = busWidth;
 		}
+
+		public int SignalCount { get { return m_busWidth; } }
 
 		public override int Width
 		{

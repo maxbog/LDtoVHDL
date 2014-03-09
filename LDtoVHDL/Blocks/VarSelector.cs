@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 namespace LDtoVHDL.Blocks
@@ -7,15 +10,15 @@ namespace LDtoVHDL.Blocks
 	{
 		public VarSelector()
 		{
-			CreateOutputPort("OUT");
-			CreateInputPort("IN");
+			CreateOutputPort("Q");
+			CreateInputPort("INS");
 			CreateInputPort("CONTROL");
 			CreateInputPort("MEMORY_IN");
 		}
 
-		public Port Output { get { return Ports["OUT"]; } }
+		public Port Output { get { return Ports["Q"]; } }
 		public Port Controls { get { return Ports["CONTROL"]; } }
-		public Port Inputs { get { return Ports["IN"]; } }
+		public Port Inputs { get { return Ports["INS"]; } }
 		public Port MemoryInput { get { return Ports["MEMORY_IN"]; } }
 		public const string TYPE = "_var_selector";
 
@@ -46,13 +49,18 @@ namespace LDtoVHDL.Blocks
 			{
 				Debug.Assert(controlsBus != null);
 				Debug.Assert(controlsBus.BaseType == BuiltinType.Boolean);
-				Inputs.SignalType = new BusType(MemoryInput.SignalType, controlsBus.Width);
+				Inputs.SignalType = new BusType(MemoryInput.SignalType, controlsBus.SignalCount);
 			}
 			else
 			{
 				Debug.Assert(inputsBus != null);
-				Controls.SignalType = new BusType(BuiltinType.Boolean, inputsBus.Width);	
+				Controls.SignalType = new BusType(BuiltinType.Boolean, inputsBus.SignalCount);	
 			}
+		}
+
+		protected override IEnumerable<Tuple<string, string>> VhdlGenericMapping
+		{
+			get { yield return Tuple.Create("signal_count", ((BusType) Inputs.SignalType).SignalCount.ToString(CultureInfo.InvariantCulture)); }
 		}
 	}
 }
