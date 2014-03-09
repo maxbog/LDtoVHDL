@@ -12,7 +12,7 @@ namespace LDtoVHDL.VhdlWriter
 		{
 		}
 
-		protected override IEnumerable<Tuple<string, string>> GetVhdlPortMapping(BaseBlock block)
+		protected override IEnumerable<Tuple<string, string>> GetPortMapping(BaseBlock block)
 		{
 			var inputVar = (InputVariable)block;
 			yield return Tuple.Create(inputVar.Input.Name, inputVar.VariableName);

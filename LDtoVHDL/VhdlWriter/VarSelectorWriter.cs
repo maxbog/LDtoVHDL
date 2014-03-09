@@ -13,7 +13,7 @@ namespace LDtoVHDL.VhdlWriter
 		{
 		}
 
-		protected override IEnumerable<Tuple<string, string>> GetVhdlGenericMapping(BaseBlock block)
+		protected override IEnumerable<Tuple<string, string>> GetGenericMapping(BaseBlock block)
 		{
 			var varSelector = (VarSelector) block;
 			var inputsBus = ((BusType)varSelector.Inputs.SignalType);

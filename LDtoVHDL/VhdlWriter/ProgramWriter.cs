@@ -63,30 +63,44 @@ namespace LDtoVHDL.VhdlWriter
 		{
 			m_writer.WriteLine("architecture behavioral of vhdl_code is");
 
-			foreach (var signal in env.AllSignals)
-				WriteSignalDeclaration(signal);
-			foreach (var block in env.AllBlocks)
-				WriteBlockDeclaration(block);
+			WriteSignalDeclarations(env);
+			WriteBlockDelcarations(env);
 
 			m_writer.WriteLine("begin");
 
-			foreach (var block in env.AllBlocks)
-				WriteBlockCode(block);
-			foreach (var outputVariable in env.AllBlocks.OfType<OutputVariable>())
-				WriteOutputVariableSignalMapping(outputVariable);
+			WriteBlocksCode(env);
 
 			m_writer.WriteLine("end behavioral;");
 		}
 
-		private void WriteOutputVariableSignalMapping(OutputVariable outputVariable)
+		private void WriteBlocksCode(Environment env)
 		{
-			m_writer.WriteLine("    {0} <= {1};", outputVariable.VariableName,
-				string.Format("signal_{0}", outputVariable.Output.ConnectedSignal.Hash));
+			foreach (var block in env.AllBlocks)
+				WriteBlockCode(block);
+		}
+
+		private void WriteBlockDelcarations(Environment env)
+		{
+			foreach (var block in env.AllBlocks)
+				WriteBlockDeclaration(block);
+		}
+
+		private void WriteSignalDeclarations(Environment env)
+		{
+			foreach (var signal in env.AllSignals)
+				WriteSignalDeclaration(signal);
 		}
 
 		private void WriteEntityDeclaration(Environment env)
 		{
 			m_writer.WriteLine("entity vhdl_code is port(");
+			WritePortMappings(env);
+			m_writer.WriteLine(");");
+			m_writer.WriteLine("end vhdl_code;");
+		}
+
+		private void WritePortMappings(Environment env)
+		{
 			var inPortsSpec = string.Join(";\n", env.AllBlocks
 				.OfType<InputVariable>()
 				.Select(outVar => string.Format("    {0} : in {1}", outVar.VariableName, GetSignalTypeName(outVar.Output.SignalType))));
@@ -95,12 +109,10 @@ namespace LDtoVHDL.VhdlWriter
 				.OfType<OutputVariable>()
 				.Select(outVar => string.Format("    {0} : out {1}", outVar.VariableName, GetSignalTypeName(outVar.Output.SignalType))));
 
-			m_writer.Write(inPortsSpec);
 			if (inPortsSpec.Length > 0)
-				m_writer.Write(";\n");
-			m_writer.Write(outPortsSpec);
-			m_writer.WriteLine(");");
-			m_writer.WriteLine("end vhdl_code;");
+				m_writer.WriteLine(inPortsSpec + (outPortsSpec.Length > 0 ? ";" : ""));
+			if (outPortsSpec.Length > 0)
+				m_writer.WriteLine(outPortsSpec);
 		}
 
 		private string GetSignalTypeName(SignalType signalType)
@@ -114,7 +126,7 @@ namespace LDtoVHDL.VhdlWriter
 			m_writer.WriteLine("    signal {0} : {1};", GetSignalName(signal), GetSignalTypeName(signal.Type));
 		}
 
-		private static string GetSignalName(Signal signal)
+		public static string GetSignalName(Signal signal)
 		{
 			return string.Format("signal_{0}", signal.Hash);
 		}

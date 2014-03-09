@@ -24,17 +24,17 @@ namespace LDtoVHDL.VhdlWriter
 		
 		public virtual void WriteCode(BaseBlock block)
 		{
-			Writer.WriteLine("    {0}: {1} {2}port map ({3});", GetVhdlName(block), GetVhdlType(block), GetGenericMappingString(block), GetPortMappingStiring(block));
+			Writer.WriteLine("    {0}: {1} {2}port map ({3});", GetName(block), GetVhdlType(block), GetGenericMappingString(block), GetPortMappingStiring(block));
 		}
 
 		private string GetPortMappingStiring(BaseBlock block)
 		{
-			return string.Join(", ", GetVhdlPortMapping(block).Select(GetSingleMappingString));
+			return string.Join(", ", GetPortMapping(block).Select(GetSingleMappingString));
 		}
 
 		private string GetGenericMappingString(BaseBlock block)
 		{
-			var genericMapping = string.Join(", ", GetVhdlGenericMapping(block).Select(GetSingleMappingString));
+			var genericMapping = string.Join(", ", GetGenericMapping(block).Select(GetSingleMappingString));
 			return genericMapping != "" ? string.Format("generic map({0}) ", genericMapping) : "";
 		}
 
@@ -51,19 +51,35 @@ namespace LDtoVHDL.VhdlWriter
 			return null;
 		}
 
-		protected virtual string GetVhdlName(BaseBlock block)
+		protected virtual string GetName(BaseBlock block)
 		{
 			return string.Format("block_{0}", block.Id);
 		}
 
-		protected virtual IEnumerable<Tuple<string, string>> GetVhdlGenericMapping(BaseBlock block)
+		protected virtual IEnumerable<Tuple<string, string>> GetGenericMapping(BaseBlock block)
 		{
 			return Enumerable.Empty<Tuple<string,string>>();
 		}
 
-		protected virtual IEnumerable<Tuple<string, string>> GetVhdlPortMapping(BaseBlock block)
+		protected virtual IEnumerable<Tuple<string, string>> GetPortMapping(BaseBlock block)
 		{
 			return block.Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal == null ? null : string.Format("signal_{0}", port.Value.ConnectedSignal.Hash)));
+		}
+	}
+
+	[WriterFor(typeof(OutputVariable))]
+	class OutputVariableWriter : BaseBlockWriter
+	{
+		public OutputVariableWriter(TextWriter writer) : base(writer)
+		{
+		}
+
+		public override void WriteCode(BaseBlock block)
+		{
+			base.WriteCode(block);
+
+			var outputVariable = (OutputVariable) block;
+			Writer.WriteLine("    {0} <= {1};", outputVariable.VariableName, ProgramWriter.GetSignalName(outputVariable.Output.ConnectedSignal));
 		}
 	}
 
