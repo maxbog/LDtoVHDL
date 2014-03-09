@@ -6,7 +6,6 @@ namespace LDtoVHDL.BlockFactories
 {
 	public interface IBlockFactory
 	{
-		IEnumerable<string> BlockTypes { get; }
 		BaseBlock CreateBlock(XElement xBlock, Environment env);
 	}
 }

@@ -45,6 +45,7 @@
     <Compile Include="BlockFactories\BaseBlockFactory.cs" />
     <Compile Include="BlockFactories\CoilBlockFactory.cs" />
     <Compile Include="BlockFactories\ContactBlockFactory.cs" />
+    <Compile Include="BlockFactories\FactoryForAttribute.cs" />
     <Compile Include="BlockFactories\IBlockFactory.cs" />
     <Compile Include="BlockFactories\InVariableBlockFactory.cs" />
     <Compile Include="BlockFactories\LeftRailBlockFactory.cs" />

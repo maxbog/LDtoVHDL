@@ -5,9 +5,9 @@ using LDtoVHDL.Blocks;
 
 namespace LDtoVHDL.BlockFactories
 {
+	[FactoryFor("coil")]
 	class CoilBlockFactory : BaseBlockFactory
 	{
-		public override IEnumerable<string> BlockTypes { get { yield return CoilBlock.TYPE; } }
 		public override BaseBlock CreateBlock(XElement xBlock, Environment env)
 		{
 			var varName = GetVariableName(xBlock);

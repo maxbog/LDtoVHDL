@@ -16,12 +16,15 @@ namespace LDtoVHDL.BlockFactories
 		{
 			m_factories = new Dictionary<string, IBlockFactory>();
 			var types = Assembly.GetExecutingAssembly().GetTypes();
-			foreach (var factoryType in types.Where(type => typeof (IBlockFactory).IsAssignableFrom(type) && !type.IsAbstract).Except(Enumerable.Repeat(typeof(IBlockFactory), 1)))
+			foreach (var factoryType in types.Where(type => typeof (IBlockFactory).IsAssignableFrom(type) && !type.IsAbstract))
 			{
+				var factoryAttributes = (FactoryForAttribute[])factoryType.GetCustomAttributes(typeof(FactoryForAttribute), false);
+				if (!factoryAttributes.Any()) 
+					continue;
 				var constructorInfo = factoryType.GetConstructor(new Type[] {});
 				Debug.Assert(constructorInfo != null, "constructorInfo != null");
-				var factory = (IBlockFactory)constructorInfo.Invoke(new object[] {});
-				foreach (var type in factory.BlockTypes)
+				var factory = (IBlockFactory) constructorInfo.Invoke(new object[] {});
+				foreach (var type in factoryAttributes.Select(ffa => ffa.CreatedType))
 					m_factories.Add(type, factory);
 			}
 		}
