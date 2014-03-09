@@ -29,18 +29,6 @@ namespace LDtoVHDL.Blocks
 			Enable.SignalType = EnableOut.SignalType = BuiltinType.Boolean;
 		}
 
-		public override string VhdlType
-		{
-			get
-			{
-				if (Output.SignalType.IsSigned)
-					return "BLK_ADD_SIGNED";
-				if (Output.SignalType.IsUnsigned)
-					return "BLK_ADD_UNSIGNED";
-				throw new InvalidOperationException("ADD block can only operate on integer types");
-			}
-		}
-
 		public override List<ValidationMessage> Validate()
 		{
 			var errors = base.Validate();

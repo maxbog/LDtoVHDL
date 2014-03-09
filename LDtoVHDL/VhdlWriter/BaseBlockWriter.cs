@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using LDtoVHDL.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
@@ -23,13 +24,41 @@ namespace LDtoVHDL.VhdlWriter
 		
 		public virtual void WriteCode(BaseBlock block)
 		{
-			var portMapping = string.Join(", ",
-				GetVhdlPortMapping(block).Select(mapping => string.Format("{0} => {1}", mapping.Item1, mapping.Item2 ?? "open")));
-			var genericMapping = string.Join(", ",
-				block.VhdlGenericMapping.Select(mapping => string.Format("{0} => {1}", mapping.Item1, mapping.Item2 ?? "open")));
-			if (genericMapping != "")
-				genericMapping = string.Format("generic map({0}) ", genericMapping);
-			Writer.WriteLine("    {0}: {1} {2}port map ({3});", block.VhdlName, block.VhdlType, genericMapping, portMapping);
+			Writer.WriteLine("    {0}: {1} {2}port map ({3});", GetVhdlName(block), GetVhdlType(block), GetGenericMappingString(block), GetPortMappingStiring(block));
+		}
+
+		private string GetPortMappingStiring(BaseBlock block)
+		{
+			return string.Join(", ", GetVhdlPortMapping(block).Select(GetSingleMappingString));
+		}
+
+		private string GetGenericMappingString(BaseBlock block)
+		{
+			var genericMapping = string.Join(", ", GetVhdlGenericMapping(block).Select(GetSingleMappingString));
+			return genericMapping != "" ? string.Format("generic map({0}) ", genericMapping) : "";
+		}
+
+		private static string GetSingleMappingString(Tuple<string, string> mapping)
+		{
+			return string.Format("{0} => {1}", mapping.Item1, mapping.Item2 ?? "open");
+		}
+
+		protected virtual string GetVhdlType(BaseBlock block)
+		{
+			var fieldInfo = block.GetType().GetField("TYPE", BindingFlags.Static | BindingFlags.Public);
+			if (fieldInfo != null)
+				return fieldInfo.GetValue(null) as string;
+			return null;
+		}
+
+		protected virtual string GetVhdlName(BaseBlock block)
+		{
+			return string.Format("block_{0}", block.Id);
+		}
+
+		protected virtual IEnumerable<Tuple<string, string>> GetVhdlGenericMapping(BaseBlock block)
+		{
+			return Enumerable.Empty<Tuple<string,string>>();
 		}
 
 		protected virtual IEnumerable<Tuple<string, string>> GetVhdlPortMapping(BaseBlock block)
@@ -38,19 +67,21 @@ namespace LDtoVHDL.VhdlWriter
 		}
 	}
 
-	[WriterFor(typeof(InputVariable))]
-	class MemoryVariableWriter : BaseBlockWriter
+	[WriterFor(typeof(AddBlock))]
+	class AddBlockWriter : BaseBlockWriter
 	{
-		public MemoryVariableWriter(TextWriter writer) : base(writer)
+		public AddBlockWriter(TextWriter writer) : base(writer)
 		{
 		}
 
-		protected override IEnumerable<Tuple<string, string>> GetVhdlPortMapping(BaseBlock block)
+		protected override string GetVhdlType(BaseBlock block)
 		{
-			var inputVar = (InputVariable)block;
-			yield return Tuple.Create(inputVar.Input.Name, inputVar.VariableName);
-			yield return Tuple.Create(inputVar.Output.Name, inputVar.Output.ConnectedSignal == null ? null : inputVar.Output.ConnectedSignal.VhdlName);
-			yield return Tuple.Create(inputVar.Load.Name, inputVar.Load.ConnectedSignal == null ? null : inputVar.Load.ConnectedSignal.VhdlName);
+			var addBlock = (AddBlock) block;
+			if (addBlock.Output.SignalType.IsSigned)
+				return "BLK_ADD_SIGNED";
+			if (addBlock.Output.SignalType.IsUnsigned)
+				return "BLK_ADD_UNSIGNED";
+			throw new InvalidOperationException("ADD block can only operate on integer types");
 		}
 	}
 }

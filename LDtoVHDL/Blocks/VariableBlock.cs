@@ -20,7 +20,7 @@ namespace LDtoVHDL.Blocks
 
 		public override string ToString()
 		{
-			return String.Format("[b.{0}]{1}: {2}", Id, VhdlType, VariableName);
+			return String.Format("{0}: {1}", base.ToString(), VariableName);
 		}
 	}
 }

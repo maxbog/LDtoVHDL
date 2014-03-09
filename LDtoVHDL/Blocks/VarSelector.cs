@@ -57,10 +57,5 @@ namespace LDtoVHDL.Blocks
 				Controls.SignalType = new BusType(BuiltinType.Boolean, inputsBus.SignalCount);	
 			}
 		}
-
-		public override IEnumerable<Tuple<string, string>> VhdlGenericMapping
-		{
-			get { yield return Tuple.Create("signal_count", ((BusType) Inputs.SignalType).SignalCount.ToString(CultureInfo.InvariantCulture)); }
-		}
 	}
 }

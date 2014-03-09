@@ -60,28 +60,12 @@ namespace LDtoVHDL.Blocks
 
 		public override string ToString()
 		{
-			return String.Format("[b.{0}]{1}", Id, VhdlType);
+			return String.Format("[b.{0}]{1}", Id, GetType().Name);
 		}
 
 		public virtual IEnumerable<Tuple<string, string>> VhdlGenericMapping
 		{
 			get { return Enumerable.Empty<Tuple<string,string>>(); }
-		}
-
-		public virtual string VhdlName
-		{
-			get { return string.Format("block_{0}", Id); }
-		}
-
-		public virtual string VhdlType
-		{
-			get
-			{
-				var fieldInfo = GetType().GetField("TYPE", BindingFlags.Static | BindingFlags.Public);
-				if (fieldInfo != null)
-					return fieldInfo.GetValue(null) as string;
-				return null;
-			}
 		}
 		
 		public virtual List<ValidationMessage> Validate()
