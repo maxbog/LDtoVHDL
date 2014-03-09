@@ -58,7 +58,7 @@ namespace LDtoVHDL.Blocks
 			}
 		}
 
-		protected override IEnumerable<Tuple<string, string>> VhdlGenericMapping
+		public override IEnumerable<Tuple<string, string>> VhdlGenericMapping
 		{
 			get { yield return Tuple.Create("signal_count", ((BusType) Inputs.SignalType).SignalCount.ToString(CultureInfo.InvariantCulture)); }
 		}

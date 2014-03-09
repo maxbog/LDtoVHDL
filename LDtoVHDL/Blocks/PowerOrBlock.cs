@@ -16,14 +16,6 @@ namespace LDtoVHDL.Blocks
 		public Port Output { get { return Ports["OUT"]; } }
 		public IEnumerable<Port> Inputs { get { return Ports.Values.Where(port => port.Direction == PortDirection.Input); } }
 
-		public override string VhdlCode
-		{
-			get
-			{
-				var inputSignals = String.Join(" or ", Inputs.Select(port => port.ConnectedSignal.VhdlName));
-				return String.Format("{0} <= {1};", Output.ConnectedSignal.VhdlName, inputSignals);
-			}
-		}
 
 		public override bool CanComputePortTypes
 		{

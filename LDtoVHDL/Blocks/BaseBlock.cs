@@ -63,22 +63,17 @@ namespace LDtoVHDL.Blocks
 			return String.Format("[b.{0}]{1}", Id, VhdlType);
 		}
 
-		protected virtual IEnumerable<Tuple<string, string>> VhdlPortMapping
-		{
-			get { return Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal == null ? null : port.Value.ConnectedSignal.VhdlName)); }
-		}
-		
-		protected virtual IEnumerable<Tuple<string, string>> VhdlGenericMapping
+		public virtual IEnumerable<Tuple<string, string>> VhdlGenericMapping
 		{
 			get { return Enumerable.Empty<Tuple<string,string>>(); }
 		}
 
-		protected virtual string VhdlName
+		public virtual string VhdlName
 		{
 			get { return string.Format("block_{0}", Id); }
 		}
 
-		protected virtual string VhdlType
+		public virtual string VhdlType
 		{
 			get
 			{
@@ -88,26 +83,7 @@ namespace LDtoVHDL.Blocks
 				return null;
 			}
 		}
-
-		public virtual string VhdlCode
-		{
-			get
-			{
-				var portMapping = string.Join(", ",
-					VhdlPortMapping.Select(mapping => string.Format("{0} => {1}", mapping.Item1, mapping.Item2 ?? "open" )));
-				var genericMapping = string.Join(", ",
-					VhdlGenericMapping.Select(mapping => string.Format("{0} => {1}", mapping.Item1, mapping.Item2 ?? "open")));
-				if (genericMapping != "")
-					genericMapping = string.Format("generic map({0})", genericMapping);
-				return string.Format("{0}: {1} {2} port map ({3});", VhdlName, VhdlType, genericMapping, portMapping);
-			}
-		}
-
-		public virtual string VhdlDeclaration
-		{
-			get { return null; }
-		}
-
+		
 		public virtual List<ValidationMessage> Validate()
 		{
 			return new List<ValidationMessage>();

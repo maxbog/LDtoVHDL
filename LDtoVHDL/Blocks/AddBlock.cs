@@ -29,7 +29,7 @@ namespace LDtoVHDL.Blocks
 			Enable.SignalType = EnableOut.SignalType = BuiltinType.Boolean;
 		}
 
-		protected override string VhdlType
+		public override string VhdlType
 		{
 			get
 			{

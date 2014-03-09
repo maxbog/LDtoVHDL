@@ -58,16 +58,6 @@ namespace LDtoVHDL.Blocks
 			: base("input", variableName, signalType)
 		{
 		}
-
-		protected override IEnumerable<Tuple<string, string>> VhdlPortMapping
-		{
-			get
-			{
-				yield return Tuple.Create(Input.Name, VariableName);
-				yield return Tuple.Create(Output.Name, Output.ConnectedSignal == null ? null : Output.ConnectedSignal.VhdlName);
-				yield return Tuple.Create(Load.Name, Load.ConnectedSignal == null ? null : Load.ConnectedSignal.VhdlName);
-			}
-		}
 	}
 
 	class OutputVariable : MemoryVariable, IWritableVariable

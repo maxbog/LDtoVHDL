@@ -89,6 +89,12 @@
     <Compile Include="Signal.cs" />
     <Compile Include="SignalType.cs" />
     <Compile Include="ValidationMessage.cs" />
+    <Compile Include="VhdlWriter\BaseBlockWriter.cs" />
+    <Compile Include="VhdlWriter\BusCreatorWriter.cs" />
+    <Compile Include="VhdlWriter\PowerOrWriter.cs" />
+    <Compile Include="VhdlWriter\SignalWriter.cs" />
+    <Compile Include="VhdlWriter\WriterForAttribute.cs" />
+    <Compile Include="VhdlWriter\ProgramWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
