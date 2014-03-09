@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using LDtoVHDL.Blocks;
 
 namespace LDtoVHDL.BlockFactories
