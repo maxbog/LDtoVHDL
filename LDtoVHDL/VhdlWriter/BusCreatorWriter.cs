@@ -36,5 +36,10 @@ namespace LDtoVHDL.VhdlWriter
 				Writer.WriteLine(builder);
 			}
 		}
+
+		public override string GetVhdlType(BaseBlock block)
+		{
+			return "BLK_BUS_CREATOR";
+		}
 	}
 }

@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using LDtoVHDL.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
 {
-	[WriterFor(typeof(BaseBlock))]
-	public class BaseBlockWriter
+	public abstract class BaseBlockWriter
 	{
 		protected readonly TextWriter Writer;
 
-		public BaseBlockWriter(TextWriter writer)
+		protected BaseBlockWriter(TextWriter writer)
 		{
 			Writer = writer;
 		}
@@ -43,13 +41,7 @@ namespace LDtoVHDL.VhdlWriter
 			return string.Format("{0} => {1}", mapping.Item1, mapping.Item2 ?? "open");
 		}
 
-		protected virtual string GetVhdlType(BaseBlock block)
-		{
-			var fieldInfo = block.GetType().GetField("TYPE", BindingFlags.Static | BindingFlags.Public);
-			if (fieldInfo != null)
-				return fieldInfo.GetValue(null) as string;
-			return null;
-		}
+		public abstract string GetVhdlType(BaseBlock block);
 
 		protected virtual string GetName(BaseBlock block)
 		{
@@ -64,40 +56,6 @@ namespace LDtoVHDL.VhdlWriter
 		protected virtual IEnumerable<Tuple<string, string>> GetPortMapping(BaseBlock block)
 		{
 			return block.Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal == null ? null : string.Format("signal_{0}", port.Value.ConnectedSignal.Hash)));
-		}
-	}
-
-	[WriterFor(typeof(OutputVariable))]
-	class OutputVariableWriter : BaseBlockWriter
-	{
-		public OutputVariableWriter(TextWriter writer) : base(writer)
-		{
-		}
-
-		public override void WriteCode(BaseBlock block)
-		{
-			base.WriteCode(block);
-
-			var outputVariable = (OutputVariable) block;
-			Writer.WriteLine("    {0} <= {1};", outputVariable.VariableName, ProgramWriter.GetSignalName(outputVariable.Output.ConnectedSignal));
-		}
-	}
-
-	[WriterFor(typeof(AddBlock))]
-	class AddBlockWriter : BaseBlockWriter
-	{
-		public AddBlockWriter(TextWriter writer) : base(writer)
-		{
-		}
-
-		protected override string GetVhdlType(BaseBlock block)
-		{
-			var addBlock = (AddBlock) block;
-			if (addBlock.Output.SignalType.IsSigned)
-				return "BLK_ADD_SIGNED";
-			if (addBlock.Output.SignalType.IsUnsigned)
-				return "BLK_ADD_UNSIGNED";
-			throw new InvalidOperationException("ADD block can only operate on integer types");
 		}
 	}
 }

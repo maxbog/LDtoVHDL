@@ -82,7 +82,7 @@ namespace LDtoVHDL.CompilerPhases
 			return createdSelectors.ContainsKey(inVarBlock.VariableName);
 		}
 
-		private static VarSelector CreateSelector(List<IOutVariableBlock> writingBlocks, IReadableVariable memoryVariable, HashSet<BaseBlock> destinationBlocksCollection)
+		private static VarSelector CreateSelector(List<IOutVariableBlock> writingBlocks, IReadableVariableBlock memoryVariable, HashSet<BaseBlock> destinationBlocksCollection)
 		{
 			var selector = new VarSelector();
 			var signalBus = new BusCreator(writingBlocks.Select(blk => blk.MemoryOutput));

@@ -13,6 +13,11 @@ namespace LDtoVHDL.VhdlWriter
 		{
 		}
 
+		public override string GetVhdlType(BaseBlock block)
+		{
+			return "BLK_VAR_SELECTOR";
+		}
+
 		protected override IEnumerable<Tuple<string, string>> GetGenericMapping(BaseBlock block)
 		{
 			var varSelector = (VarSelector) block;

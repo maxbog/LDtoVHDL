@@ -74,14 +74,14 @@ namespace LDtoVHDL
 			}
 		}
 
-		private static MemoryVariable CreateMemoryVariableBlock(Tuple<string, XElement> variable, string varName)
+		private static VariableStorageBlock CreateMemoryVariableBlock(Tuple<string, XElement> variable, string varName)
 		{
 			if (variable.Item1 == "localVars")
-				return new LocalVariable(varName, GetVariableType(variable.Item2));
+				return new LocalVariableStorageBlock(varName, GetVariableType(variable.Item2));
 			if (variable.Item1 == "inputVars")
-				return new InputVariable(varName, GetVariableType(variable.Item2));
+				return new InputVariableStorageBlock(varName, GetVariableType(variable.Item2));
 			if (variable.Item1 == "outputVars")
-				return new OutputVariable(varName, GetVariableType(variable.Item2));
+				return new OutputVariableStorageBlock(varName, GetVariableType(variable.Item2));
 			throw new PlcOpenParserException("Unrecognized variable type: " + variable.Item1);
 		}
 

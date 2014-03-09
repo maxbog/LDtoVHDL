@@ -6,25 +6,25 @@ namespace LDtoVHDL
 {
 	public class Environment
 	{
-		private readonly Dictionary<string, IReadableVariable> m_readableVariables = new Dictionary<string, IReadableVariable>();
-		private readonly Dictionary<string, IWritableVariable> m_writableVariables = new Dictionary<string, IWritableVariable>();
+		private readonly Dictionary<string, IReadableVariableBlock> m_readableVariables = new Dictionary<string, IReadableVariableBlock>();
+		private readonly Dictionary<string, IWritableVariableBlock> m_writableVariables = new Dictionary<string, IWritableVariableBlock>();
 		public Environment()
 		{
 			BlocksWithoutRung = new HashSet<BaseBlock>();
 			Rungs = new List<Rung>();
 		}
 
-		public IReadOnlyDictionary<string, IReadableVariable> ReadableVariables { get { return m_readableVariables; } }
-		public IReadOnlyDictionary<string, IWritableVariable> WritableVariables { get { return m_writableVariables; } }
+		public IReadOnlyDictionary<string, IReadableVariableBlock> ReadableVariables { get { return m_readableVariables; } }
+		public IReadOnlyDictionary<string, IWritableVariableBlock> WritableVariables { get { return m_writableVariables; } }
 
-		public void AddVariable(MemoryVariable newVariable)
+		public void AddVariable(VariableStorageBlock newVariableBlock)
 		{
-			m_readableVariables.Add(newVariable.VariableName, newVariable);
-			var value = newVariable as IWritableVariable;
+			m_readableVariables.Add(newVariableBlock.VariableName, newVariableBlock);
+			var value = newVariableBlock as IWritableVariableBlock;
 			if(value != null)
-				m_writableVariables.Add(newVariable.VariableName, value);
+				m_writableVariables.Add(newVariableBlock.VariableName, value);
 
-			BlocksWithoutRung.Add(newVariable);
+			BlocksWithoutRung.Add(newVariableBlock);
 		}
 
 		public IEnumerable<BaseBlock> AllBlocks

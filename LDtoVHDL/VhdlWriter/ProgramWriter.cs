@@ -102,11 +102,11 @@ namespace LDtoVHDL.VhdlWriter
 		private void WritePortMappings(Environment env)
 		{
 			var inPortsSpec = string.Join(";\n", env.AllBlocks
-				.OfType<InputVariable>()
+				.OfType<InputVariableStorageBlock>()
 				.Select(outVar => string.Format("    {0} : in {1}", outVar.VariableName, GetSignalTypeName(outVar.Output.SignalType))));
 
 			var outPortsSpec = string.Join(";\n", env.AllBlocks
-				.OfType<OutputVariable>()
+				.OfType<OutputVariableStorageBlock>()
 				.Select(outVar => string.Format("    {0} : out {1}", outVar.VariableName, GetSignalTypeName(outVar.Output.SignalType))));
 
 			if (inPortsSpec.Length > 0)
