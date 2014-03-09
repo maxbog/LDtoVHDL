@@ -15,8 +15,8 @@ namespace LDtoVHDL.VhdlWriter
 		public override void WriteCode(BaseBlock block)
 		{
 			var powerOr = (PowerOrBlock) block;
-			var inputSignals = string.Join(" or ", powerOr.Inputs.Select(port => port.ConnectedSignal.VhdlName));
-			Writer.WriteLine("{0} <= {1};", powerOr.Output.ConnectedSignal.VhdlName, inputSignals);
+			var inputSignals = string.Join(" or ", powerOr.Inputs.Select(port => string.Format("signal_{0}", port.ConnectedSignal.Hash)));
+			Writer.WriteLine("{0} <= {1};", string.Format("signal_{0}", powerOr.Output.ConnectedSignal.Hash), inputSignals);
 		}
 	}
 }

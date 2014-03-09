@@ -74,12 +74,5 @@ namespace LDtoVHDL
 		{
 			return string.Format("[s.{0}/{1}]",Hash,Type);
 		}
-
-		public string VhdlName { get { return string.Format("signal_{0}", Hash); }}
-
-		public string VhdlDeclaration
-		{
-			get { return string.Format("signal {0} : {1};", VhdlName, Type.VhdlName); }
-		}
 	}
 }

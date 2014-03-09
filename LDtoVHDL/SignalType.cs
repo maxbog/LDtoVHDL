@@ -2,17 +2,6 @@
 {
 	public abstract class SignalType
 	{
-		public virtual string VhdlName
-		{
-			get
-			{
-				if (Width == 0)
-					return "!!!ERROR!!!";
-				if (Width == 1)
-					return "STD_LOGIC";
-				return string.Format("STD_LOGIC_VECTOR({0} downto 1)", Width);
-			}
-		}
 		public abstract int Width { get; }
 
 		public bool IsSigned { get { return this == BuiltinType.SInt8 || this == BuiltinType.SInt16 || this == BuiltinType.SInt32; } }
@@ -50,24 +39,20 @@
 
 	public class BuiltinType : SignalType
 	{
-		public static readonly SignalType Boolean = new BuiltinType("Boolean", 1, "STD_LOGIC");
-		public static readonly SignalType SInt8 = new BuiltinType("SInt8", 8, "SIGNED(7 to 0)");
-		public static readonly SignalType SInt16 = new BuiltinType("SInt16", 16, "SIGNED(15 to 0)");
-		public static readonly SignalType SInt32 = new BuiltinType("SInt32", 32, "SIGNED(31 to 0)");
-		public static readonly SignalType UInt8 = new BuiltinType("UInt8", 8, "UNSIGNED(7 to 0)");
-		public static readonly SignalType UInt16 = new BuiltinType("UInt16", 16, "UNSIGNED(15 to 0)");
-		public static readonly SignalType UInt32 = new BuiltinType("UInt32", 32, "UNSIGNED(31 to 0)");
-		public static readonly SignalType TimerOn = new BuiltinType("TON", 32, "STD_LOGIC_VECTOR(7 to 0)");
-		public static readonly SignalType Time = new BuiltinType("Time", 32, "STD_LOGIC_VECTOR(7 to 0)");
+		public static readonly BuiltinType Boolean = new BuiltinType("Boolean", 1);
+		public static readonly BuiltinType SInt8 = new BuiltinType("SInt8", 8);
+		public static readonly BuiltinType SInt16 = new BuiltinType("SInt16", 16);
+		public static readonly BuiltinType SInt32 = new BuiltinType("SInt32", 32);
+		public static readonly BuiltinType UInt8 = new BuiltinType("UInt8", 8);
+		public static readonly BuiltinType UInt16 = new BuiltinType("UInt16", 16);
+		public static readonly BuiltinType UInt32 = new BuiltinType("UInt32", 32);
+		public static readonly BuiltinType TimerOn = new BuiltinType("TON", 32);
+		public static readonly BuiltinType Time = new BuiltinType("Time", 32);
 		private readonly int m_width;
-		private readonly string m_vhdlName;
 
-		public override string VhdlName { get { return m_vhdlName; } }
-
-		private BuiltinType(string name, int width, string vhdlName)
+		private BuiltinType(string name, int width)
 		{
 			m_width = width;
-			m_vhdlName = vhdlName;
 			Name = name;
 		}
 

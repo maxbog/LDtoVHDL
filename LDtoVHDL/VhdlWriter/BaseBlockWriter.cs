@@ -63,7 +63,7 @@ namespace LDtoVHDL.VhdlWriter
 
 		protected virtual IEnumerable<Tuple<string, string>> GetVhdlPortMapping(BaseBlock block)
 		{
-			return block.Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal == null ? null : port.Value.ConnectedSignal.VhdlName));
+			return block.Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal == null ? null : string.Format("signal_{0}", port.Value.ConnectedSignal.Hash)));
 		}
 	}
 

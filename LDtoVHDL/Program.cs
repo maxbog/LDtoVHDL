@@ -37,6 +37,7 @@ namespace LDtoVHDL
 				Console.WriteLine();
 			}
 
+			Console.WriteLine("VHDL CODE:");
 			var writer = new ProgramWriter(Console.Out);
 			writer.WriteVhdlCode(environment);
 
