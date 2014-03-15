@@ -1,7 +1,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using LDtoVHDL.Blocks;
+using LDtoVHDL.Model.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
 {

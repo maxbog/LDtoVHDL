@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using LDtoVHDL.Blocks;
+using LDtoVHDL.Model;
+using LDtoVHDL.Model.Blocks;
+using LDtoVHDL.TypeFinder;
 
 namespace LDtoVHDL.VhdlWriter
 {
@@ -19,13 +21,13 @@ namespace LDtoVHDL.VhdlWriter
 			m_signalTypeWriters = ObjectDictionary<Type, SignalTypeWriter, WriterForAttribute>.FromExecutingAssembly(type => type.BaseType, ffa => ffa.FormattedType, new object[] { m_writer });
 		}
 
-		public void WriteVhdlCode(Environment env)
+		public void WriteVhdlCode(Program env)
 		{
 			WriteEntityDeclaration(env);
 			WriteArchitectureDefinition(env);
 		}
 
-		private void WriteArchitectureDefinition(Environment env)
+		private void WriteArchitectureDefinition(Program env)
 		{
 			m_writer.WriteLine("architecture behavioral of vhdl_code is");
 
@@ -39,25 +41,25 @@ namespace LDtoVHDL.VhdlWriter
 			m_writer.WriteLine("end behavioral;");
 		}
 
-		private void WriteBlocksCode(Environment env)
+		private void WriteBlocksCode(Program env)
 		{
 			foreach (var block in env.AllBlocks)
 				WriteBlockCode(block);
 		}
 
-		private void WriteBlockDelcarations(Environment env)
+		private void WriteBlockDelcarations(Program env)
 		{
 			foreach (var block in env.AllBlocks)
 				WriteBlockDeclaration(block);
 		}
 
-		private void WriteSignalDeclarations(Environment env)
+		private void WriteSignalDeclarations(Program env)
 		{
 			foreach (var signal in env.AllSignals)
 				WriteSignalDeclaration(signal);
 		}
 
-		private void WriteEntityDeclaration(Environment env)
+		private void WriteEntityDeclaration(Program env)
 		{
 			m_writer.WriteLine("entity vhdl_code is port(");
 			WritePortMappings(env);
@@ -65,7 +67,7 @@ namespace LDtoVHDL.VhdlWriter
 			m_writer.WriteLine("end vhdl_code;");
 		}
 
-		private void WritePortMappings(Environment env)
+		private void WritePortMappings(Program env)
 		{
 			var inPortsSpec = string.Join(";\n", env.AllBlocks
 				.OfType<InputVariableStorageBlock>()

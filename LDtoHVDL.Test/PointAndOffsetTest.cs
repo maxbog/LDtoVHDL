@@ -1,4 +1,5 @@
 ﻿using LDtoVHDL;
+using LDtoVHDL.Parsing;
 using NUnit.Framework;
 
 namespace LDtoHVDL.Test

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
-using LDtoVHDL.Blocks;
+using LDtoVHDL.Model.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
 {

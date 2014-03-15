@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using LDtoVHDL.Blocks;
+using LDtoVHDL.Model;
+using LDtoVHDL.Model.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
 {
