@@ -12,13 +12,11 @@ namespace LDtoVHDL.VhdlWriter
 		private readonly TextWriter m_writer;
 
 		private readonly ObjectDictionary<Type, BaseBlockWriter, WriterForAttribute> m_blockWriters;
-		private readonly ObjectDictionary<Type, SignalTypeWriter, WriterForAttribute> m_signalTypeWriters;
 
 		public ProgramWriter(TextWriter writer)
 		{
 			m_writer = writer;
 			m_blockWriters = ObjectDictionary<Type, BaseBlockWriter, WriterForAttribute>.FromExecutingAssembly(type => type.BaseType, ffa => ffa.FormattedType, new object[] { m_writer });
-			m_signalTypeWriters = ObjectDictionary<Type, SignalTypeWriter, WriterForAttribute>.FromExecutingAssembly(type => type.BaseType, ffa => ffa.FormattedType, new object[] { m_writer });
 		}
 
 		public void WriteVhdlCode(Program env)
@@ -85,8 +83,7 @@ namespace LDtoVHDL.VhdlWriter
 
 		private string GetSignalTypeName(SignalType signalType)
 		{
-			var writer = m_signalTypeWriters.Get(signalType.GetType());
-			return writer != null ? writer.GetName(signalType) : null;
+			return SignalTypeWriter.GetName(signalType);
 		}
 
 		private void WriteSignalDeclaration(Signal signal)

@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

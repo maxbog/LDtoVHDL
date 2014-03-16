@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="LDtoVHDL.Model.Blocks.BaseBlock">
+    <Position X="8.25" Y="2.25" Width="2.25" />
+    <Members>
+      <Method Name="BaseBlock" Hidden="true" />
+      <Property Name="ConnectedBlocks" Hidden="true" />
+      <Method Name="CreateInputPort" Hidden="true" />
+      <Method Name="CreateOutputPort" Hidden="true" />
+      <Property Name="Enable" Hidden="true" />
+      <Property Name="EnableOut" Hidden="true" />
+      <Method Name="GetNewPortName" Hidden="true" />
+      <Property Name="Id" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+      <Property Name="VhdlGenericMapping" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACAAQAAASAAAAEBAkACAAAQAAAAEAAQAAAAIAAAAA=</HashCode>
+      <FileName>Model\Blocks\BaseBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LDtoVHDL.Model.Port">
+    <Position X="18.75" Y="2.25" Width="1.5" />
+    <Members>
+      <Field Name="_nextId" Hidden="true" />
+      <Property Name="Id" Hidden="true" />
+      <Field Name="m_signalType" Hidden="true" />
+      <Property Name="Name" Hidden="true" />
+      <Property Name="OtherSidePorts" Hidden="true" />
+      <Method Name="Port" Hidden="true" />
+      <Property Name="SignalType" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAQCAABAAAAAAAAEACAAAIQAAIAAAAAAAAAAAAAKAEA=</HashCode>
+      <FileName>Model\Port.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LDtoVHDL.Model.Program">
+    <Position X="12.75" Y="2.25" Width="2.75" />
+    <Members>
+      <Method Name="AddVariable" Hidden="true" />
+      <Property Name="AllCompositeSignals" Hidden="true" />
+      <Property Name="BlocksWithoutRung" Hidden="true" />
+      <Field Name="m_readableVariables" Hidden="true" />
+      <Field Name="m_writableVariables" Hidden="true" />
+      <Method Name="Program" Hidden="true" />
+      <Property Name="ReadableVariables" Hidden="true" />
+      <Property Name="WritableVariables" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAACAIgAAAgApAAQIAAAAAAAAAAAAAACIA=</HashCode>
+      <FileName>Model\Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LDtoVHDL.Model.Rung">
+    <Position X="16" Y="2.25" Width="1.5" />
+    <Members>
+      <Method Name="Rung" Hidden="true" />
+      <Property Name="WritingBlocks" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Rung.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LDtoVHDL.Model.Signal">
+    <Position X="10.75" Y="2.25" Width="1.5" />
+    <Members>
+      <Field Name="_nextId" Hidden="true" />
+      <Method Name="ComputeHash" Hidden="true" />
+      <Property Name="ConnectedPorts" Hidden="true" />
+      <Property Name="Hash" Hidden="true" />
+      <Field Name="m_orredSignals" Hidden="true" />
+      <Field Name="m_type" Hidden="true" />
+      <Property Name="Name" Hidden="true" />
+      <Method Name="Signal" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AgAAIAAAAAIAAAgEAAAAAAQAAICgAIAAAQAACAAAAAQ=</HashCode>
+      <FileName>Model\Signal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LDtoVHDL.Model.SignalType">
+    <Position X="21" Y="2.5" Width="1.5" />
+    <Members>
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+      <Method Name="operator !=" Hidden="true" />
+      <Method Name="operator ==" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAYAAAAAAAQACAiA=</HashCode>
+      <FileName>Model\SignalType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LDtoVHDL.Model.BuiltinType">
+    <Position X="20.25" Y="5" Width="1.5" />
+    <Members>
+      <Method Name="BuiltinType" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+      <Method Name="operator !=" Hidden="true" />
+      <Method Name="operator ==" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <InheritanceLine Type="LDtoVHDL.Model.SignalType" FixedToPoint="true">
+      <Path>
+        <Point X="21.75" Y="3.988" />
+        <Point X="21.75" Y="4.625" />
+        <Point X="21" Y="4.625" />
+        <Point X="21" Y="5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AgAABAAAIQAAAAAFgAAIAAQAAAAAAIAACAAAAAAAAyA=</HashCode>
+      <FileName>Model\SignalType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LDtoVHDL.Model.BusType">
+    <Position X="22.75" Y="5" Width="1.5" />
+    <Members>
+      <Method Name="BusType" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+      <Field Name="m_busWidth" Hidden="true" />
+      <Method Name="operator !=" Hidden="true" />
+      <Method Name="operator ==" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAACAAAAAEgAAAAAAAAAAAAIAIAAAAAAAAAiA=</HashCode>
+      <FileName>Model\SignalType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

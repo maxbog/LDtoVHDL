@@ -17,24 +17,15 @@ namespace LDtoVHDL.VhdlWriter
 			var busCreator = (BusCreator) block;
 			if (busCreator.Output.ConnectedSignal == null)
 				return;
-			if (busCreator.Output.SignalType.Width == 1)
-			{
-				Writer.WriteLine("    {0} <= {1};", string.Format("signal_{0}", busCreator.Output.ConnectedSignal.Hash),
-					string.Format("signal_{0}", busCreator.Ports.Single(port => port.Key.StartsWith("IN")).Value.ConnectedSignal.Hash));
-			}
-			else
-			{
-				var builder = new StringBuilder();
-				var startingBit = 0;
-				foreach (var port in busCreator.Ports.Where(port => port.Key.StartsWith("IN")))
-				{
-					var endingBit = startingBit + port.Value.SignalType.Width - 1;
-					builder.AppendFormat("{0}({1} to {2}) <= {3}; ", string.Format("signal_{0}", busCreator.Output.ConnectedSignal.Hash), startingBit, endingBit,
-						string.Format("signal_{0}", port.Value.ConnectedSignal.Hash));
-					startingBit += port.Value.SignalType.Width;
-				}
-				Writer.WriteLine(builder);
-			}
+			var outputPortName = ProgramWriter.GetSignalName(busCreator.Output.ConnectedSignal);
+			var inputPorts = busCreator.Ports.Where(port => port.Key.StartsWith("IN")).Select(port => port.Value);
+
+			var builder = new StringBuilder();
+
+			foreach (var pair in inputPorts.Select((port, idx) => new {Signal = port.ConnectedSignal, Idx = idx}))
+				builder.AppendFormat("{0}({1}) <= {2}; ", outputPortName, pair.Idx, ProgramWriter.GetSignalName(pair.Signal));
+
+			Writer.WriteLine(builder);
 		}
 
 		public override string GetVhdlType(BaseBlock block)

@@ -42,14 +42,14 @@ namespace LDtoVHDL.Model.Blocks
 			{
 				return Ports.Values
 					.Select(p => p.OtherSidePorts)
-					.SelectMany(op => op.Select(p => p.ParentBaseBlock));
+					.SelectMany(op => op.Select(p => p.ParentBlock));
 			}
 		}
 
 		private void AddPort(Port port)
 		{
 			Ports.Add(port.Name, port);
-			port.ParentBaseBlock = this;
+			port.ParentBlock = this;
 		}
 
 		protected virtual string GetNewPortName(PortDirection direction)

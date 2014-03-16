@@ -1,37 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using LDtoVHDL.Model;
 
 namespace LDtoVHDL.VhdlWriter
 {
-	[WriterFor(typeof(SignalType))]
 	public class SignalTypeWriter
 	{
-		protected readonly TextWriter Writer;
-
-		public SignalTypeWriter(TextWriter writer)
-		{
-			Writer = writer;
-		}
-
-		public virtual string GetName(SignalType type)
-		{
-			if (type.Width == 0)
-				return "!!!ERROR!!!";
-			if (type.Width == 1)
-				return "STD_LOGIC";
-			return string.Format("STD_LOGIC_VECTOR({0} downto 1)", type.Width);
-		}
-	}
-
-	[WriterFor(typeof(BuiltinType))]
-	class BuiltinTypeWriter : SignalTypeWriter
-	{
-		public BuiltinTypeWriter(TextWriter writer) : base(writer)
-		{
-		}
-
-		private static readonly Dictionary<BuiltinType, string> VhdlNames = new Dictionary<BuiltinType, string>
+		private static readonly Dictionary<SignalType, string> VhdlNames = new Dictionary<SignalType, string>
 		{
 			{BuiltinType.Boolean, "STD_LOGIC"},
 			{BuiltinType.SInt8, "SIGNED(7 to 0)"},
@@ -44,9 +18,13 @@ namespace LDtoVHDL.VhdlWriter
 			{BuiltinType.Time, "STD_LOGIC_VECTOR(31 to 0)"}
 		};
 
-		public override string GetName(SignalType type)
+		public static string GetName(SignalType type)
 		{
-			return VhdlNames[(BuiltinType) type];
+			var busType = type as BusType;
+			if (busType != null)
+				return string.Format("array({0} downto 0) of {1}", busType.SignalCount-1, GetName(busType.BaseType));
+
+			return VhdlNames[type];
 		}
 	}
 }

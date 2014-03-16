@@ -19,7 +19,7 @@ namespace LDtoVHDL.Model.Blocks
 
 		public Port Input { get { return Ports.Values.Single(port => port.Direction == PortDirection.Input); } }
 		public Port MemoryOutput { get { return Ports["MEM_OUT"]; }}
-		public virtual Signal WriteCondition { get { return Input.OtherSidePorts.Single().ParentBaseBlock.Enable.ConnectedSignal; }}
+		public virtual Signal WriteCondition { get { return Input.OtherSidePorts.Single().ParentBlock.Enable.ConnectedSignal; }}
 
 		public override bool CanComputePortTypes
 		{

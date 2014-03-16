@@ -2,8 +2,6 @@
 {
 	public abstract class SignalType
 	{
-		public abstract int Width { get; }
-
 		public bool IsSigned { get { return this == BuiltinType.SInt8 || this == BuiltinType.SInt16 || this == BuiltinType.SInt32; } }
 		public bool IsUnsigned { get { return this == BuiltinType.UInt8 || this == BuiltinType.UInt16 || this == BuiltinType.UInt32; } }
 		public bool IsInteger { get { return IsSigned || IsUnsigned; } }
@@ -39,33 +37,26 @@
 
 	public class BuiltinType : SignalType
 	{
-		public static readonly BuiltinType Boolean = new BuiltinType("Boolean", 1);
-		public static readonly BuiltinType SInt8 = new BuiltinType("SInt8", 8);
-		public static readonly BuiltinType SInt16 = new BuiltinType("SInt16", 16);
-		public static readonly BuiltinType SInt32 = new BuiltinType("SInt32", 32);
-		public static readonly BuiltinType UInt8 = new BuiltinType("UInt8", 8);
-		public static readonly BuiltinType UInt16 = new BuiltinType("UInt16", 16);
-		public static readonly BuiltinType UInt32 = new BuiltinType("UInt32", 32);
-		public static readonly BuiltinType TimerOn = new BuiltinType("TON", 32);
-		public static readonly BuiltinType Time = new BuiltinType("Time", 32);
-		private readonly int m_width;
+		public static readonly BuiltinType Boolean = new BuiltinType("Boolean");
+		public static readonly BuiltinType SInt8 = new BuiltinType("SInt8");
+		public static readonly BuiltinType SInt16 = new BuiltinType("SInt16");
+		public static readonly BuiltinType SInt32 = new BuiltinType("SInt32");
+		public static readonly BuiltinType UInt8 = new BuiltinType("UInt8");
+		public static readonly BuiltinType UInt16 = new BuiltinType("UInt16");
+		public static readonly BuiltinType UInt32 = new BuiltinType("UInt32");
+		public static readonly BuiltinType TimerOn = new BuiltinType("TON");
+		public static readonly BuiltinType Time = new BuiltinType("Time");
 
-		private BuiltinType(string name, int width)
+		private BuiltinType(string name)
 		{
-			m_width = width;
 			Name = name;
-		}
-
-		public override int Width
-		{
-			get { return m_width; }
 		}
 
 		public string Name { get; private set; }
 
 		protected bool Equals(BuiltinType other)
 		{
-			return m_width == other.m_width && string.Equals(Name, other.Name);
+			return string.Equals(Name, other.Name);
 		}
 
 		public override bool Equals(object obj)
@@ -80,9 +71,7 @@
 		{
 			unchecked
 			{
-				var hashCode =  m_width;
-				hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
-				return hashCode;
+				return Name != null ? Name.GetHashCode() : 0;
 			}
 		}
 
@@ -114,11 +103,6 @@
 		}
 
 		public int SignalCount { get { return m_busWidth; } }
-
-		public override int Width
-		{
-			get { return BaseType.Width*m_busWidth; }
-		}
 
 		protected bool Equals(BusType other)
 		{
@@ -152,7 +136,7 @@
 
 		public override string ToString()
 		{
-			return string.Format("{0}[{1}]", BaseType, Width);
+			return string.Format("{0}[{1}]", BaseType, SignalCount);
 		}
 	}
 }

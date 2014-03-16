@@ -30,7 +30,7 @@ namespace LDtoVHDL
 					{
 						Console.WriteLine("    {0}", port);
 						foreach (var otherSide in port.OtherSidePorts)
-							Console.WriteLine("        --- {0}", otherSide.ParentBaseBlock);
+							Console.WriteLine("        --- {0}", otherSide.ParentBlock);
 					}
 				}
 				Console.WriteLine("WrittenVariables:");

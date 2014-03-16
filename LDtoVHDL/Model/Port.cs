@@ -28,7 +28,7 @@ namespace LDtoVHDL.Model
 		public int Id { get; private set; }
 		public Signal ConnectedSignal { get; private set; }
 		public PortDirection Direction { get; private set; }
-		public BaseBlock ParentBaseBlock { get; set; }
+		public BaseBlock ParentBlock { get; set; }
 		
 		public IEnumerable<Port> OtherSidePorts
 		{
