@@ -45,6 +45,7 @@
     <Compile Include="Model\Blocks\BaseBlock.cs" />
     <Compile Include="Model\Blocks\BusCreator.cs" />
     <Compile Include="Model\Blocks\CoilBlock.cs" />
+    <Compile Include="Model\Blocks\ConstantBlock.cs" />
     <Compile Include="Model\Blocks\ContactBlock.cs" />
     <Compile Include="Model\Blocks\InputVariableStorageBlock.cs" />
     <Compile Include="Model\Blocks\InternalBlock.cs" />

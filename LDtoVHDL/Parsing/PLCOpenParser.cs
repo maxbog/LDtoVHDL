@@ -49,7 +49,7 @@ namespace LDtoVHDL.Parsing
 			return environment;
 		}
 
-		private static readonly Dictionary<string, SignalType> VarTypes = new Dictionary<string, SignalType>
+		public static readonly Dictionary<string, SignalType> VarTypes = new Dictionary<string, SignalType>
 		{
 			{"BOOL", BuiltinType.Boolean},
 			{"SINT", BuiltinType.SInt8},
@@ -58,7 +58,8 @@ namespace LDtoVHDL.Parsing
 			{"USINT", BuiltinType.UInt8},
 			{"UINT", BuiltinType.UInt16},
 			{"UDINT", BuiltinType.UInt32},
-			{"TON", BuiltinType.TimerOn}
+			{"TON", BuiltinType.TimerOn},
+			{"TIME", BuiltinType.Time}
 		};
 
 		private readonly Dictionary<XElement, Port> m_ports = new Dictionary<XElement, Port>();

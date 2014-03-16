@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using LDtoVHDL.Model;
 
 namespace LDtoVHDL.VhdlWriter
@@ -25,6 +26,33 @@ namespace LDtoVHDL.VhdlWriter
 				return string.Format("array({0} downto 0) of {1}", busType.SignalCount-1, GetName(busType.BaseType));
 
 			return VhdlNames[type];
+		}
+
+		public static string GetValueConstructor(SignalType type, object value)
+		{
+			if (type == BuiltinType.Boolean)
+				return (bool) value ? "1" : "0";
+
+			if (type == BuiltinType.SInt8)
+				return string.Format("to_signed({0},8)", (sbyte)(long)value);
+			if (type == BuiltinType.SInt16)
+				return string.Format("to_signed({0},16)", (short)(long)value);
+			if (type == BuiltinType.SInt32)
+				return string.Format("to_signed({0},32)", (int)(long)value);
+			if (type == BuiltinType.UInt8)
+				return string.Format("to_unsigned({0},8)", (byte)(long)value);
+			if (type == BuiltinType.UInt16)
+				return string.Format("to_unsigned({0},16)", (ushort)(long)value);
+			if (type == BuiltinType.UInt32)
+				return string.Format("to_unsigned({0},32)", (uint)(long)value);
+
+			if (type == BuiltinType.Time)
+			{
+				var ts = (TimeSpan)value;
+				return string.Format("to_unsigned({0},32)", (uint)(ts.Ticks/10L));
+			}
+
+			throw new InvalidOperationException("No such type");
 		}
 	}
 }

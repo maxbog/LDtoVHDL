@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LDtoVHDL.Model;
 using LDtoVHDL.Model.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
@@ -55,7 +56,29 @@ namespace LDtoVHDL.VhdlWriter
 
 		protected virtual IEnumerable<Tuple<string, string>> GetPortMapping(BaseBlock block)
 		{
-			return block.Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal == null ? null : string.Format("signal_{0}", port.Value.ConnectedSignal.Hash)));
+			return block.Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal == null ? null : ProgramWriter.GetSignalName(port.Value.ConnectedSignal)));
+		}
+	}
+
+	[WriterFor(typeof(ConstantBlock))]
+	class ContantWriter : BaseBlockWriter
+	{
+		public ContantWriter(TextWriter writer) : base(writer)
+		{
+		}
+
+		public override string GetVhdlType(BaseBlock block)
+		{
+			return "BLK_CONST";
+		}
+
+		public override void WriteCode(BaseBlock block)
+		{
+			var constBlock = (ConstantBlock) block;
+
+			var signalName = ProgramWriter.GetSignalName(constBlock.Output.ConnectedSignal);
+			var valueConstructor = SignalTypeWriter.GetValueConstructor(constBlock.ValueType, constBlock.Value);
+			Writer.WriteLine("{0} <= {1};", signalName, valueConstructor);
 		}
 	}
 }

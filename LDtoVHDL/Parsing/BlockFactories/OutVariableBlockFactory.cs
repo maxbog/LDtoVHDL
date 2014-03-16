@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using LDtoVHDL.Model;
 using LDtoVHDL.Model.Blocks;
@@ -10,8 +11,11 @@ namespace LDtoVHDL.Parsing.BlockFactories
 	{
 		public override BaseBlock CreateBlock(XElement xBlock, Program env)
 		{
-			var varName = GetVariableName(xBlock);
-			return new OutVariableBlock(GetBlockLocalId(xBlock), varName, env.WritableVariables[varName].SignalType);
+			var expression = GetVariableName(xBlock);
+			var blockLocalId = GetBlockLocalId(xBlock);
+			if (expression[0] == '%')
+				return new OutVariableBlock(blockLocalId, expression.Substring(1), env.ReadableVariables[expression.Substring(1)].SignalType);
+			throw new InvalidOperationException("OutVariable must write to a variable");
 		}
 
 		private string GetVariableName(XElement xBlock)
