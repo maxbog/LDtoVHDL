@@ -44,6 +44,7 @@
     <Compile Include="Model\Blocks\AddBlock.cs" />
     <Compile Include="Model\Blocks\BaseBlock.cs" />
     <Compile Include="Model\Blocks\BusCreator.cs" />
+    <Compile Include="Model\Blocks\ClockBlock.cs" />
     <Compile Include="Model\Blocks\CoilBlock.cs" />
     <Compile Include="Model\Blocks\ConstantBlock.cs" />
     <Compile Include="Model\Blocks\ContactBlock.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Translation\Phases\P20_DivideBlockIntoRungs.cs" />
     <Compile Include="Translation\Phases\P30_AccumulateOutVariables.cs" />
     <Compile Include="Translation\Phases\P40_CreateSelectors.cs" />
+    <Compile Include="Translation\Phases\P45_ConnectClockToVariables.cs" />
     <Compile Include="Translation\Phases\P50_ComputeSignalTypes.cs" />
     <Compile Include="Translation\Translator.cs" />
     <Compile Include="TypeFinder\EnumerableEx.cs" />
@@ -99,8 +101,10 @@
     <Compile Include="VhdlWriter\AddBlockWriter.cs" />
     <Compile Include="VhdlWriter\BaseBlockWriter.cs" />
     <Compile Include="VhdlWriter\BusCreatorWriter.cs" />
+    <Compile Include="VhdlWriter\ClockWriter.cs" />
     <Compile Include="VhdlWriter\CoilWriter.cs" />
     <Compile Include="VhdlWriter\ContactWriter.cs" />
+    <Compile Include="VhdlWriter\ContantWriter.cs" />
     <Compile Include="VhdlWriter\InputVariableStorageWriter.cs" />
     <Compile Include="VhdlWriter\InVariableWriter.cs" />
     <Compile Include="VhdlWriter\LeftRailWriter.cs" />

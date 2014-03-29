@@ -6,25 +6,25 @@ namespace LDtoVHDL.Model
 {
 	public class Program
 	{
-		private readonly Dictionary<string, IReadableVariableBlock> m_readableVariables = new Dictionary<string, IReadableVariableBlock>();
-		private readonly Dictionary<string, IWritableVariableBlock> m_writableVariables = new Dictionary<string, IWritableVariableBlock>();
+		private readonly Dictionary<string, IVariableStorageBlock> m_readableVariables = new Dictionary<string, IVariableStorageBlock>();
+		private readonly Dictionary<string, IWritableVariableStorageBlock> m_writableVariables = new Dictionary<string, IWritableVariableStorageBlock>();
 		public Program()
 		{
 			BlocksWithoutRung = new HashSet<BaseBlock>();
 			Rungs = new List<Rung>();
 		}
 
-		public IReadOnlyDictionary<string, IReadableVariableBlock> ReadableVariables { get { return m_readableVariables; } }
-		public IReadOnlyDictionary<string, IWritableVariableBlock> WritableVariables { get { return m_writableVariables; } }
+		public IReadOnlyDictionary<string, IVariableStorageBlock> ReadableVariables { get { return m_readableVariables; } }
+		public IReadOnlyDictionary<string, IWritableVariableStorageBlock> WritableVariables { get { return m_writableVariables; } }
 
-		public void AddVariable(VariableStorageBlock newVariableBlock)
+		public void AddVariable(VariableStorageBlock newVariableStorageBlock)
 		{
-			m_readableVariables.Add(newVariableBlock.VariableName, newVariableBlock);
-			var value = newVariableBlock as IWritableVariableBlock;
+			m_readableVariables.Add(newVariableStorageBlock.VariableName, newVariableStorageBlock);
+			var value = newVariableStorageBlock as IWritableVariableStorageBlock;
 			if(value != null)
-				m_writableVariables.Add(newVariableBlock.VariableName, value);
+				m_writableVariables.Add(newVariableStorageBlock.VariableName, value);
 
-			BlocksWithoutRung.Add(newVariableBlock);
+			BlocksWithoutRung.Add(newVariableStorageBlock);
 		}
 
 		public IEnumerable<BaseBlock> AllBlocks
@@ -47,7 +47,6 @@ namespace LDtoVHDL.Model
 		}
 
 		public List<Rung> Rungs { get; private set; }
-
 		
 		public IEnumerable<Signal> AllSignals
 		{

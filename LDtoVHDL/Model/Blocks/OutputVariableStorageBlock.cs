@@ -1,6 +1,6 @@
 ﻿namespace LDtoVHDL.Model.Blocks
 {
-	class OutputVariableStorageBlock : VariableStorageBlock, IWritableVariableBlock
+	class OutputVariableStorageBlock : VariableStorageBlock, IWritableVariableStorageBlock
 	{
 		public const string TYPE = "_output_variable";
 		public OutputVariableStorageBlock(string variableName, SignalType signalType)

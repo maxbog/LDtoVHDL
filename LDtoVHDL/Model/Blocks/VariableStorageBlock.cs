@@ -1,18 +1,20 @@
 ﻿namespace LDtoVHDL.Model.Blocks
 {
-	public interface IReadableVariableBlock
+	public interface IVariableStorageBlock
 	{
 		Port Output { get; }
 		SignalType SignalType { get; }
 		string VariableName { get; }
+		Port Load { get; }
+
 	}
 
-	public interface IWritableVariableBlock : IReadableVariableBlock
+	public interface IWritableVariableStorageBlock : IVariableStorageBlock
 	{
 		Port Input { get; }
 	}
 
-	public abstract class VariableStorageBlock : VariableBlock, IReadableVariableBlock
+	public abstract class VariableStorageBlock : VariableBlock, IVariableStorageBlock
 	{
 		protected VariableStorageBlock(string variableType, string variableName, SignalType signalType)
 			: base(string.Format("_var_{0}_{1}", variableType, variableName), variableName, signalType)

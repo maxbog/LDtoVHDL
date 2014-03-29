@@ -83,12 +83,12 @@ namespace LDtoVHDL.Translation.Phases
 			return createdSelectors.ContainsKey(inVarBlock.VariableName);
 		}
 
-		private static VarSelector CreateSelector(List<IOutVariableBlock> writingBlocks, IReadableVariableBlock memoryVariable, HashSet<BaseBlock> destinationBlocksCollection)
+		private static VarSelector CreateSelector(List<IOutVariableBlock> writingBlocks, IVariableStorageBlock memoryVariableStorage, HashSet<BaseBlock> destinationBlocksCollection)
 		{
 			var selector = new VarSelector();
 			var signalBus = new BusCreator(writingBlocks.Select(blk => blk.MemoryOutput));
 			var controlBus = new BusCreator(writingBlocks.Select(blk => blk.WriteCondition.InputPort));
-			selector.MemoryInput.Connect(memoryVariable.Output);
+			selector.MemoryInput.Connect(memoryVariableStorage.Output);
 			selector.Inputs.Connect(signalBus.Output);
 			selector.Controls.Connect(controlBus.Output);
 			destinationBlocksCollection.Add(selector);

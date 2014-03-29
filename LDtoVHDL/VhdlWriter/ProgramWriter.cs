@@ -29,6 +29,7 @@ namespace LDtoVHDL.VhdlWriter
 		{
 			m_writer.WriteLine("architecture behavioral of vhdl_code is");
 
+			WriteComponentReferences(env);
 			WriteSignalDeclarations(env);
 			WriteBlockDelcarations(env);
 
@@ -39,22 +40,40 @@ namespace LDtoVHDL.VhdlWriter
 			m_writer.WriteLine("end behavioral;");
 		}
 
+		private void WriteComponentReferences(Program env)
+		{
+			foreach (var blocksOfType in env.AllBlocks.GroupBy(blk => blk.GetType()))
+			{
+				var writer = m_blockWriters.Get(blocksOfType.Key);
+				if(writer != null)
+					writer.WriteComponentReferences(blocksOfType);
+			}
+		}
+
 		private void WriteBlocksCode(Program env)
 		{
 			foreach (var block in env.AllBlocks)
-				WriteBlockCode(block);
+			{
+				var writer = m_blockWriters.Get(block.GetType());
+				if (writer != null)
+					writer.WriteCode(block);
+			}
 		}
 
 		private void WriteBlockDelcarations(Program env)
 		{
 			foreach (var block in env.AllBlocks)
-				WriteBlockDeclaration(block);
+			{
+				var writer = m_blockWriters.Get(block.GetType());
+				if(writer != null)
+					writer.WriteDeclaration(block);
+			}
 		}
 
 		private void WriteSignalDeclarations(Program env)
 		{
 			foreach (var signal in env.AllSignals)
-				WriteSignalDeclaration(signal);
+				m_writer.WriteLine("    signal {0} : {1};", GetSignalName(signal), SignalTypeWriter.GetName(signal.Type));
 		}
 
 		private void WriteEntityDeclaration(Program env)
@@ -69,45 +88,26 @@ namespace LDtoVHDL.VhdlWriter
 		{
 			var inPortsSpec = string.Join(";\n", env.AllBlocks
 				.OfType<InputVariableStorageBlock>()
-				.Select(outVar => string.Format("    {0} : in {1}", outVar.VariableName, GetSignalTypeName(outVar.Output.SignalType))));
+				.Select(outVar => string.Format("    {0} : in {1}", outVar.VariableName, SignalTypeWriter.GetName(outVar.Output.SignalType))));
 
 			var outPortsSpec = string.Join(";\n", env.AllBlocks
 				.OfType<OutputVariableStorageBlock>()
-				.Select(outVar => string.Format("    {0} : out {1}", outVar.VariableName, GetSignalTypeName(outVar.Output.SignalType))));
+				.Select(outVar => string.Format("    {0} : out {1}", outVar.VariableName, SignalTypeWriter.GetName(outVar.Output.SignalType))));
 
 			if (inPortsSpec.Length > 0)
-				m_writer.WriteLine(inPortsSpec + (outPortsSpec.Length > 0 ? ";" : ""));
+				m_writer.Write(inPortsSpec + (outPortsSpec.Length > 0 ? ";\n" : ""));
 			if (outPortsSpec.Length > 0)
-				m_writer.WriteLine(outPortsSpec);
-		}
+				m_writer.Write(outPortsSpec);
 
-		private string GetSignalTypeName(SignalType signalType)
-		{
-			return SignalTypeWriter.GetName(signalType);
-		}
+			if (env.AllBlocks.OfType<ClockBlock>().Any())
+				m_writer.Write(";\n    CLK : in std_logic");
 
-		private void WriteSignalDeclaration(Signal signal)
-		{
-			m_writer.WriteLine("    signal {0} : {1};", GetSignalName(signal), GetSignalTypeName(signal.Type));
+			m_writer.WriteLine();
 		}
 
 		public static string GetSignalName(Signal signal)
 		{
 			return string.Format("signal_{0}", signal.Hash);
-		}
-
-		private void WriteBlockDeclaration(BaseBlock block)
-		{
-			var writer = m_blockWriters.Get(block.GetType());
-			if(writer != null)
-				writer.WriteDeclaration(block);
-		}
-
-		private void WriteBlockCode(BaseBlock block)
-		{
-			var writer = m_blockWriters.Get(block.GetType());
-			if (writer != null)
-				writer.WriteCode(block);
 		}
 	}
 }

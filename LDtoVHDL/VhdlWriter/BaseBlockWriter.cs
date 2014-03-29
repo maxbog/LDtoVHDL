@@ -58,27 +58,10 @@ namespace LDtoVHDL.VhdlWriter
 		{
 			return block.Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal == null ? null : ProgramWriter.GetSignalName(port.Value.ConnectedSignal)));
 		}
-	}
 
-	[WriterFor(typeof(ConstantBlock))]
-	class ContantWriter : BaseBlockWriter
-	{
-		public ContantWriter(TextWriter writer) : base(writer)
+		public virtual void WriteComponentReferences(IEnumerable<BaseBlock> blocks)
 		{
-		}
-
-		public override string GetVhdlType(BaseBlock block)
-		{
-			return "BLK_CONST";
-		}
-
-		public override void WriteCode(BaseBlock block)
-		{
-			var constBlock = (ConstantBlock) block;
-
-			var signalName = ProgramWriter.GetSignalName(constBlock.Output.ConnectedSignal);
-			var valueConstructor = SignalTypeWriter.GetValueConstructor(constBlock.ValueType, constBlock.Value);
-			Writer.WriteLine("{0} <= {1};", signalName, valueConstructor);
+			
 		}
 	}
 }
