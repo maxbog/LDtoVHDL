@@ -115,6 +115,7 @@
     <Compile Include="VhdlWriter\PowerOrWriter.cs" />
     <Compile Include="VhdlWriter\RightRailWriter.cs" />
     <Compile Include="VhdlWriter\SignalTypeWriter.cs" />
+    <Compile Include="VhdlWriter\TemplateResolver.cs" />
     <Compile Include="VhdlWriter\TonWriter.cs" />
     <Compile Include="VhdlWriter\VariableStorageWriter.cs" />
     <Compile Include="VhdlWriter\VarSelectorWriter.cs" />
@@ -125,6 +126,12 @@
     <None Include="App.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="README.md" />
+    <None Include="Templates\BlockDefinition\BLK_VAR_SELECTOR.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\types.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

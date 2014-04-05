@@ -17,8 +17,7 @@ namespace LDtoVHDL
 			var program = parser.Parse();
 			var translator = new Translator();
 			translator.Translate(program);
-			var baseDir = Directory.CreateDirectory(outputBaseDir);
-			var writer = new ProgramWriter(baseDir);
+			var writer = new ProgramWriter(outputBaseDir);
 			writer.WriteVhdlCode(program);
 		}
 

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using LDtoVHDL.Model;
 using LDtoVHDL.Model.Blocks;
 using LDtoVHDL.TypeFinder;
@@ -11,22 +13,35 @@ namespace LDtoVHDL.VhdlWriter
 	public class ProgramWriter
 	{
 		private readonly ObjectDictionary<Type, BaseBlockWriter, WriterForAttribute> m_blockWriters;
-		private readonly DirectoryInfo m_baseDirectory;
+		private readonly string m_baseDirectory;
+		private TemplateResolver m_templateResolver;
 
-		public ProgramWriter(DirectoryInfo baseDirectory)
+		public ProgramWriter(string baseDirectory)
 		{
 			m_baseDirectory = baseDirectory;
 			m_blockWriters = ObjectDictionary<Type, BaseBlockWriter, WriterForAttribute>.FromExecutingAssembly(type => type.BaseType, ffa => ffa.FormattedType);
+			var startingDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			Debug.Assert(startingDir != null, "startingDir != null");
+			m_templateResolver = new TemplateResolver(Path.Combine(startingDir, "Templates"));
+		}
+		
+		public TextWriter GetWriterForFile(string fileName)
+		{
+			var mainFilePath = Path.Combine(m_baseDirectory, fileName);
+			return new StreamWriter(File.Open(mainFilePath, FileMode.Create));
 		}
 
 		public void WriteVhdlCode(Program program)
 		{
-			var mainFilePath = Path.Combine(m_baseDirectory.FullName, program.Name + ".vhd");
-			using (var file = File.Open(mainFilePath, FileMode.Create))
-			using (var writer = new StreamWriter(file))
+			using (var writer = GetWriterForFile(program.Name + ".vhd"))
 			{
 				WriteEntityDeclaration(writer, program);
 				WriteArchitectureDefinition(writer, program);
+			}
+
+			using (var writer = GetWriterForFile("types.vhd"))
+			{
+				writer.WriteLine(m_templateResolver.GetWithReplacements("types.vhd"));
 			}
 		}
 
