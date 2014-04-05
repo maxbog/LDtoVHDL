@@ -14,5 +14,9 @@ namespace LDtoVHDL.VhdlWriter
 		{
 			return "BLK_RIGHT_RAIL";
 		}
+
+		public override void WriteCode(BaseBlock block)
+		{
+		}
 	}
 }

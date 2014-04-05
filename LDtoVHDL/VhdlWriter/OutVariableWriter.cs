@@ -14,5 +14,9 @@ namespace LDtoVHDL.VhdlWriter
 		{
 			return "BLK_OUT_VARIABLE";
 		}
+
+		public override void WriteCode(BaseBlock block)
+		{
+		}
 	}
 }

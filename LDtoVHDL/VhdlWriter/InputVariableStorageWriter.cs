@@ -6,17 +6,12 @@ using LDtoVHDL.Model.Blocks;
 namespace LDtoVHDL.VhdlWriter
 {
 	[WriterFor(typeof(InputVariableStorageBlock))]
-	class InputVariableStorageWriter : BaseBlockWriter
+	class InputVariableStorageWriter : VariableStorageWriter
 	{
 		public InputVariableStorageWriter(TextWriter writer) : base(writer)
 		{
 		}
-
-		public override string GetVhdlType(BaseBlock block)
-		{
-			return "BLK_INPUT_VARIABLE_STORAGE";
-		}
-
+		
 		protected override IEnumerable<Tuple<string, string>> GetPortMapping(BaseBlock block)
 		{
 			var inputVar = (InputVariableStorageBlock)block;

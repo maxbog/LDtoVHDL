@@ -91,6 +91,7 @@
     <Compile Include="Translation\Phases\P20_DivideBlockIntoRungs.cs" />
     <Compile Include="Translation\Phases\P30_AccumulateOutVariables.cs" />
     <Compile Include="Translation\Phases\P40_CreateSelectors.cs" />
+    <Compile Include="Translation\Phases\P42_RemoveInOutVariableBlocks.cs" />
     <Compile Include="Translation\Phases\P45_ConnectClockToVariables.cs" />
     <Compile Include="Translation\Phases\P50_ComputeSignalTypes.cs" />
     <Compile Include="Translation\Translator.cs" />
@@ -104,7 +105,7 @@
     <Compile Include="VhdlWriter\ClockWriter.cs" />
     <Compile Include="VhdlWriter\CoilWriter.cs" />
     <Compile Include="VhdlWriter\ContactWriter.cs" />
-    <Compile Include="VhdlWriter\ContantWriter.cs" />
+    <Compile Include="VhdlWriter\ConstantWriter.cs" />
     <Compile Include="VhdlWriter\InputVariableStorageWriter.cs" />
     <Compile Include="VhdlWriter\InVariableWriter.cs" />
     <Compile Include="VhdlWriter\LeftRailWriter.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="VhdlWriter\RightRailWriter.cs" />
     <Compile Include="VhdlWriter\SignalTypeWriter.cs" />
     <Compile Include="VhdlWriter\TonWriter.cs" />
+    <Compile Include="VhdlWriter\VariableStorageWriter.cs" />
     <Compile Include="VhdlWriter\VarSelectorWriter.cs" />
     <Compile Include="VhdlWriter\WriterForAttribute.cs" />
     <Compile Include="VhdlWriter\ProgramWriter.cs" />

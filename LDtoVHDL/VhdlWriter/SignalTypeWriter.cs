@@ -8,22 +8,22 @@ namespace LDtoVHDL.VhdlWriter
 	{
 		private static readonly Dictionary<SignalType, string> VhdlNames = new Dictionary<SignalType, string>
 		{
-			{BuiltinType.Boolean, "STD_LOGIC"},
-			{BuiltinType.SInt8, "SIGNED(7 to 0)"},
-			{BuiltinType.SInt16, "SIGNED(15 to 0)"},
-			{BuiltinType.SInt32, "SIGNED(31 to 0)"},
-			{BuiltinType.UInt8, "UNSIGNED(7 to 0)"},
-			{BuiltinType.UInt16, "UNSIGNED(15 to 0)"},
-			{BuiltinType.UInt32, "UNSIGNED(31 to 0)"},
-			{BuiltinType.TimerOn, "STD_LOGIC_VECTOR(31 to 0)"},
-			{BuiltinType.Time, "STD_LOGIC_VECTOR(31 to 0)"}
+			{BuiltinType.Boolean, "std_logic"},
+			{BuiltinType.SInt8, "sint8"},
+			{BuiltinType.SInt16, "sint16"},
+			{BuiltinType.SInt32, "sint32"},
+			{BuiltinType.UInt8, "uint8"},
+			{BuiltinType.UInt16, "uint16"},
+			{BuiltinType.UInt32, "uint32"},
+			{BuiltinType.TimerOn, "timer_on"},
+			{BuiltinType.Time, "time"}
 		};
 
 		public static string GetName(SignalType type)
 		{
 			var busType = type as BusType;
-			if (busType != null)
-				return string.Format("array({0} downto 0) of {1}", busType.SignalCount-1, GetName(busType.BaseType));
+			if (busType != null) 
+				return string.Format("{0}_vector({1} downto 0)", GetName(busType.BaseType), busType.SignalCount-1);
 
 			return VhdlNames[type];
 		}

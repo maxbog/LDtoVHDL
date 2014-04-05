@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LDtoVHDL.Model;
@@ -42,11 +43,16 @@ namespace LDtoVHDL.VhdlWriter
 
 		private void WriteComponentReferences(Program env)
 		{
-			foreach (var blocksOfType in env.AllBlocks.GroupBy(blk => blk.GetType()))
+			var references = new HashSet<string>();
+			foreach (var block in env.AllBlocks)
 			{
-				var writer = m_blockWriters.Get(blocksOfType.Key);
-				if(writer != null)
-					writer.WriteComponentReferences(blocksOfType);
+				var reference = m_blockWriters.Get(block.GetType()).GetComponentReference(block);
+				if (reference == null)
+					continue;
+				if (references.Contains(reference)) 
+					continue;
+				m_writer.WriteLine(reference);
+				references.Add(reference);
 			}
 		}
 

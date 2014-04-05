@@ -18,7 +18,7 @@ namespace LDtoVHDL.VhdlWriter
 		public override void WriteCode(BaseBlock block)
 		{
 			var clockBlock = (ClockBlock) block;
-			Writer.WriteLine("{0} <= CLK;", ProgramWriter.GetSignalName(clockBlock.ClockOut.ConnectedSignal));
+			Writer.WriteLine("    {0} <= CLK;", ProgramWriter.GetSignalName(clockBlock.ClockOut.ConnectedSignal));
 		}
 	}
 }

@@ -18,32 +18,12 @@ namespace LDtoVHDL
 			var program = parser.Parse();
 			var translator = new Translator();
 			translator.Translate(program);
-
-			foreach (var rung in program.Rungs)
+			using (FileStream outputFile = File.Open(@"d:\dokumenty\copy\praca magisterska\test_ber\plc.vhd", FileMode.Create))
+			using (var streamWriter = new StreamWriter(new BufferedStream(outputFile)))
 			{
-				Console.WriteLine("Rung {0}:", program.Rungs.IndexOf(rung));
-				Console.WriteLine("Blocks:");
-				foreach (var block in rung.Blocks)
-				{
-					Console.WriteLine(block);
-					foreach (var port in block.Ports.Values)
-					{
-						Console.WriteLine("    {0}", port);
-						foreach (var otherSide in port.OtherSidePorts)
-							Console.WriteLine("        --- {0}", otherSide.ParentBlock);
-					}
-				}
-				Console.WriteLine("WrittenVariables:");
-				foreach (var variable in rung.Blocks.OfType<IOutVariableBlock>())
-					Console.WriteLine("Var: {0} Condition: {1}", variable.VariableName, variable.WriteCondition);
-				Console.WriteLine();
+				var writer = new ProgramWriter(streamWriter);
+				writer.WriteVhdlCode(program);
 			}
-
-			Console.WriteLine("VHDL CODE:");
-			var writer = new ProgramWriter(Console.Out);
-			writer.WriteVhdlCode(program);
-
-			Console.ReadKey();
 		}
 
 	}

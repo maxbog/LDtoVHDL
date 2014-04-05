@@ -59,9 +59,25 @@ namespace LDtoVHDL.VhdlWriter
 			return block.Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal == null ? null : ProgramWriter.GetSignalName(port.Value.ConnectedSignal)));
 		}
 
-		public virtual void WriteComponentReferences(IEnumerable<BaseBlock> blocks)
+		public virtual string GetComponentReference(BaseBlock block)
 		{
-			
+			return null;
+		}
+
+		public static string PrepareTemplateForOutput(string inputTemplate)
+		{
+			var trimmedTemplate = inputTemplate.Trim().Replace("\r\n", "\n");
+			return PrependIndentation(trimmedTemplate);
+		}
+
+		private static string PrependIndentation(string trimmedTemplate)
+		{
+			return "    " + trimmedTemplate.Replace("\n", "\n    ");
+		}
+
+		protected static string MakeTypedName(string untypedName, SignalType signalType)
+		{
+			return untypedName + "_" + SignalTypeWriter.GetName(signalType);
 		}
 	}
 }

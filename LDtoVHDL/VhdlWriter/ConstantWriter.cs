@@ -4,9 +4,9 @@ using LDtoVHDL.Model.Blocks;
 namespace LDtoVHDL.VhdlWriter
 {
 	[WriterFor(typeof(ConstantBlock))]
-	class ContantWriter : BaseBlockWriter
+	class ConstantWriter : BaseBlockWriter
 	{
-		public ContantWriter(TextWriter writer) : base(writer)
+		public ConstantWriter(TextWriter writer) : base(writer)
 		{
 		}
 
@@ -21,7 +21,7 @@ namespace LDtoVHDL.VhdlWriter
 
 			var signalName = ProgramWriter.GetSignalName(constBlock.Output.ConnectedSignal);
 			var valueConstructor = SignalTypeWriter.GetValueConstructor(constBlock.ValueType, constBlock.Value);
-			Writer.WriteLine("{0} <= {1};", signalName, valueConstructor);
+			Writer.WriteLine("    {0} <= {1};", signalName, valueConstructor);
 		}
 	}
 }
