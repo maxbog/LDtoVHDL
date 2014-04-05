@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using LDtoVHDL.Model.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
@@ -18,9 +14,6 @@ component BLK_ADD_{0} is
           Q    : out {0});
 end component;");
 
-		public AddBlockWriter(TextWriter writer) : base(writer)
-		{
-		}
 
 		public override string GetVhdlType(BaseBlock block)
 		{

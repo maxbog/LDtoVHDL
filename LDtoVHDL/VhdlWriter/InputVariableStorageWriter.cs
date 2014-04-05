@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using LDtoVHDL.Model.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
@@ -8,9 +7,6 @@ namespace LDtoVHDL.VhdlWriter
 	[WriterFor(typeof(InputVariableStorageBlock))]
 	class InputVariableStorageWriter : VariableStorageWriter
 	{
-		public InputVariableStorageWriter(TextWriter writer) : base(writer)
-		{
-		}
 		
 		protected override IEnumerable<Tuple<string, string>> GetPortMapping(BaseBlock block)
 		{

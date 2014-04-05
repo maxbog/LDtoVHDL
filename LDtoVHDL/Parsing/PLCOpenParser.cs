@@ -33,20 +33,26 @@ namespace LDtoVHDL.Parsing
 
 	public class PlcOpenParser
 	{
-		private readonly XDocument m_xdoc;
+		private readonly XElement m_pouRoot;
 
 		public PlcOpenParser(XDocument xdoc)
 		{
-			m_xdoc = xdoc;
+			m_pouRoot = xdoc.Descendants("pou".XName()).First();
 		}
 
 		public Program Parse()
 		{
-			var environment = new Program();
+			var programName = GetEntityName();
+			var environment = new Program(programName);
 			CreateVariableBlocks(environment);
 			CreateBlocksAndPorts(environment);
 			ConnectPorts();
 			return environment;
+		}
+
+		private string GetEntityName()
+		{
+			return (string)m_pouRoot.Attribute("name");
 		}
 
 		public static readonly Dictionary<string, SignalType> VarTypes = new Dictionary<string, SignalType>
@@ -101,7 +107,7 @@ namespace LDtoVHDL.Parsing
 
 		private IEnumerable<Tuple<string, XElement>> GetAllVariables()
 		{
-			return m_xdoc.Descendants("interface".XName()).First().Descendants("variable".XName()).Select(xelm =>
+			return m_pouRoot.Descendants("interface".XName()).First().Descendants("variable".XName()).Select(xelm =>
 			{
 				Debug.Assert(xelm.Parent != null, "xelm.Parent != null");
 				return Tuple.Create(xelm.Parent.Name.LocalName, xelm);
@@ -203,8 +209,7 @@ namespace LDtoVHDL.Parsing
 
 		private IEnumerable<XElement> GetAllBlocks()
 		{
-			Debug.Assert(m_xdoc.Root != null, "m_xdoc.Root != null");
-			return m_xdoc.Root.Descendants("LD".XName()).First().Elements();
+			return m_pouRoot.Descendants("LD".XName()).First().Elements();
 		}
 
 		private static IEnumerable<XElement> GetAllPorts(XElement xBlock)

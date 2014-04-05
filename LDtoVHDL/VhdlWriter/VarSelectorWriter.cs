@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using LDtoVHDL.Model;
 using LDtoVHDL.Model.Blocks;
 
@@ -19,9 +18,6 @@ component BLK_VAR_SELECTOR_{0} is
 		  Q          : out {0});
 end component;");
 
-		public VarSelectorWriter(TextWriter writer) : base(writer)
-		{
-		}
 
 		public override string GetVhdlType(BaseBlock block)
 		{

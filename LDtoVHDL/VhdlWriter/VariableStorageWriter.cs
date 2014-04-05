@@ -1,4 +1,3 @@
-using System.IO;
 using LDtoVHDL.Model.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
@@ -12,11 +11,7 @@ component BLK_VARIABLE_STORAGE_{0} is
           VAR_OUT : out {0};
           LOAD    : in  boolean);
 end component;");
-
-		public VariableStorageWriter(TextWriter writer) : base(writer)
-		{
-		}
-
+		
 		public override string GetComponentReference(BaseBlock block)
 		{
 			var varBlock = (VariableStorageBlock) block;

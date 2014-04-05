@@ -9,21 +9,14 @@ namespace LDtoVHDL.VhdlWriter
 {
 	public abstract class BaseBlockWriter
 	{
-		protected readonly TextWriter Writer;
-
-		protected BaseBlockWriter(TextWriter writer)
-		{
-			Writer = writer;
-		}
-
-		public virtual void WriteDeclaration(BaseBlock block)
+		public virtual void WriteDeclaration(TextWriter writer, BaseBlock block)
 		{
 
 		}
 		
-		public virtual void WriteCode(BaseBlock block)
+		public virtual void WriteCode(TextWriter writer, BaseBlock block)
 		{
-			Writer.WriteLine("    {0}: {1} {2}port map ({3});", GetName(block), GetVhdlType(block), GetGenericMappingString(block), GetPortMappingStiring(block));
+			writer.WriteLine("    {0}: {1} {2}port map ({3});", GetName(block), GetVhdlType(block), GetGenericMappingString(block), GetPortMappingStiring(block));
 		}
 
 		private string GetPortMappingStiring(BaseBlock block)

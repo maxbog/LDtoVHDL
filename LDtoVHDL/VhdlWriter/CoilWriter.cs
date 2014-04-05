@@ -1,4 +1,3 @@
-using System.IO;
 using LDtoVHDL.Model.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
@@ -12,9 +11,6 @@ component BLK_COIL is
           ENO     : out std_logic;
           MEM_OUT : out std_logic);
 end component;");
-		public CoilWriter(TextWriter writer) : base(writer)
-		{
-		}
 
 		public override string GetVhdlType(BaseBlock block)
 		{
