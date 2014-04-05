@@ -6,12 +6,12 @@ namespace LDtoVHDL.Model
 {
 	public class Program
 	{
-		public string ProgramName { get; private set; }
+		public string Name { get; private set; }
 		private readonly Dictionary<string, IVariableStorageBlock> m_readableVariables = new Dictionary<string, IVariableStorageBlock>();
 		private readonly Dictionary<string, IWritableVariableStorageBlock> m_writableVariables = new Dictionary<string, IWritableVariableStorageBlock>();
-		public Program(string programName)
+		public Program(string name)
 		{
-			ProgramName = programName;
+			Name = name;
 			BlocksWithoutRung = new HashSet<BaseBlock>();
 			Rungs = new List<Rung>();
 		}

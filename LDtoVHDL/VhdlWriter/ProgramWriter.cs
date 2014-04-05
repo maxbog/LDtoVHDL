@@ -19,36 +19,36 @@ namespace LDtoVHDL.VhdlWriter
 			m_blockWriters = ObjectDictionary<Type, BaseBlockWriter, WriterForAttribute>.FromExecutingAssembly(type => type.BaseType, ffa => ffa.FormattedType);
 		}
 
-		public void WriteVhdlCode(Program env)
+		public void WriteVhdlCode(Program program)
 		{
-			var mainFilePath = Path.Combine(m_baseDirectory.FullName, env.ProgramName + ".vhd");
+			var mainFilePath = Path.Combine(m_baseDirectory.FullName, program.Name + ".vhd");
 			using (var file = File.Open(mainFilePath, FileMode.Create))
 			using (var writer = new StreamWriter(file))
 			{
-				WriteEntityDeclaration(writer, env);
-				WriteArchitectureDefinition(writer, env);
+				WriteEntityDeclaration(writer, program);
+				WriteArchitectureDefinition(writer, program);
 			}
 		}
 
-		private void WriteArchitectureDefinition(TextWriter writer, Program env)
+		private void WriteArchitectureDefinition(TextWriter writer, Program program)
 		{
-			writer.WriteLine("architecture behavioral of vhdl_code is");
+			writer.WriteLine("architecture behavioral of {0} is", program.Name);
 
-			WriteComponentReferences(writer, env);
-			WriteSignalDeclarations(writer, env);
-			WriteBlockDelcarations(writer, env);
+			WriteComponentReferences(writer, program);
+			WriteSignalDeclarations(writer, program);
+			WriteBlockDelcarations(writer, program);
 
 			writer.WriteLine("begin");
 
-			WriteBlocksCode(writer, env);
+			WriteBlocksCode(writer, program);
 
 			writer.WriteLine("end behavioral;");
 		}
 
-		private void WriteComponentReferences(TextWriter writer, Program env)
+		private void WriteComponentReferences(TextWriter writer, Program program)
 		{
 			var references = new HashSet<string>();
-			foreach (var block in env.AllBlocks)
+			foreach (var block in program.AllBlocks)
 			{
 				var reference = m_blockWriters.Get(block.GetType()).GetComponentReference(block);
 				if (reference == null)
@@ -60,9 +60,9 @@ namespace LDtoVHDL.VhdlWriter
 			}
 		}
 
-		private void WriteBlocksCode(TextWriter writer, Program env)
+		private void WriteBlocksCode(TextWriter writer, Program program)
 		{
-			foreach (var block in env.AllBlocks)
+			foreach (var block in program.AllBlocks)
 			{
 				var blockWriter = m_blockWriters.Get(block.GetType());
 				if (blockWriter != null)
@@ -70,9 +70,9 @@ namespace LDtoVHDL.VhdlWriter
 			}
 		}
 
-		private void WriteBlockDelcarations(TextWriter writer, Program env)
+		private void WriteBlockDelcarations(TextWriter writer, Program program)
 		{
-			foreach (var block in env.AllBlocks)
+			foreach (var block in program.AllBlocks)
 			{
 				var blockWriter = m_blockWriters.Get(block.GetType());
 				if(blockWriter != null)
@@ -80,27 +80,27 @@ namespace LDtoVHDL.VhdlWriter
 			}
 		}
 
-		private void WriteSignalDeclarations(TextWriter writer, Program env)
+		private void WriteSignalDeclarations(TextWriter writer, Program program)
 		{
-			foreach (var signal in env.AllSignals)
+			foreach (var signal in program.AllSignals)
 				writer.WriteLine("    signal {0} : {1};", GetSignalName(signal), SignalTypeWriter.GetName(signal.Type));
 		}
 
-		private void WriteEntityDeclaration(TextWriter writer, Program env)
+		private void WriteEntityDeclaration(TextWriter writer, Program program)
 		{
-			writer.WriteLine("entity vhdl_code is port(");
-			WritePortMappings(writer, env);
+			writer.WriteLine("entity {0} is port(", program.Name);
+			WritePortMappings(writer, program);
 			writer.WriteLine(");");
 			writer.WriteLine("end vhdl_code;");
 		}
 
-		private void WritePortMappings(TextWriter writer, Program env)
+		private void WritePortMappings(TextWriter writer, Program program)
 		{
-			var inPortsSpec = string.Join(";\n", env.AllBlocks
+			var inPortsSpec = string.Join(";\n", program.AllBlocks
 				.OfType<InputVariableStorageBlock>()
 				.Select(outVar => string.Format("    {0} : in {1}", outVar.VariableName, SignalTypeWriter.GetName(outVar.Output.SignalType))));
 
-			var outPortsSpec = string.Join(";\n", env.AllBlocks
+			var outPortsSpec = string.Join(";\n", program.AllBlocks
 				.OfType<OutputVariableStorageBlock>()
 				.Select(outVar => string.Format("    {0} : out {1}", outVar.VariableName, SignalTypeWriter.GetName(outVar.Output.SignalType))));
 
@@ -109,7 +109,7 @@ namespace LDtoVHDL.VhdlWriter
 			if (outPortsSpec.Length > 0)
 				writer.Write(outPortsSpec);
 
-			if (env.AllBlocks.OfType<ClockBlock>().Any())
+			if (program.AllBlocks.OfType<ClockBlock>().Any())
 				writer.Write(";\n    CLK : in std_logic");
 
 			writer.WriteLine();
