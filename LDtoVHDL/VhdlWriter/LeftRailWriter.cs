@@ -7,6 +7,9 @@ namespace LDtoVHDL.VhdlWriter
 	[WriterFor(typeof(LeftRailBlock))]
 	class LeftRailWriter : BaseBlockWriter
 	{
+		public LeftRailWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
 
 		public override string GetVhdlType(BaseBlock block)
 		{

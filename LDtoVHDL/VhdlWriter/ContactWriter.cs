@@ -12,6 +12,10 @@ component BLK_CONTACT is
           MEM_IN  : in std_logic);
 end component;");
 
+		public ContactWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
+
 		public override string GetVhdlType(BaseBlock block)
 		{
 			return "BLK_CONTACT";

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace LDtoVHDL.VhdlWriter
 {
-	class TemplateResolver
+	public class TemplateResolver
 	{
 		private readonly Dictionary<string, string> m_templates = new Dictionary<string, string>();
 		public TemplateResolver(string baseDirectory)

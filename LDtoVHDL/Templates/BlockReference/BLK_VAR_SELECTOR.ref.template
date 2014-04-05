@@ -1,0 +1,7 @@
+﻿component BLK_VAR_SELECTOR_#type# is
+	generic (signal_count : integer);
+    port (INS        : in  #type#_vector(signal_count-1 downto 0);
+		  MEMORY_IN  : in  #type#;
+		  CONTROL    : in  std_logic_vector(signal_count downto 0);
+		  Q          : out #type#);
+end component;

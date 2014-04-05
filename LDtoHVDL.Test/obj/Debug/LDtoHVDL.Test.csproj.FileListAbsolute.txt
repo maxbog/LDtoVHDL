@@ -18,3 +18,4 @@ D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\obj\Debug\LDtoHVDL.Te
 D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\obj\Debug\LDtoHVDL.Test.pdb
 D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\types.vhd.template
 D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_VAR_SELECTOR.vhd.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockReference\BLK_VAR_SELECTOR.ref.template

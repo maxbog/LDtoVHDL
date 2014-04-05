@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using LDtoVHDL.Model;
 using LDtoVHDL.Model.Blocks;
 
@@ -9,15 +10,9 @@ namespace LDtoVHDL.VhdlWriter
 	[WriterFor(typeof(VarSelector))]
 	class VarSelectorWriter : BaseBlockWriter
 	{
-		private readonly string m_referenceTemplate = PrepareTemplateForOutput(@"
-component BLK_VAR_SELECTOR_{0} is
-	generic (signal_count : integer);
-    port (INS        : in  {0}_vector(signal_count-1 downto 0);
-		  MEMORY_IN  : in  {0};
-		  CONTROL    : in  std_logic_vector(signal_count downto 0);
-		  Q          : out {0});
-end component;");
-
+		public VarSelectorWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
 
 		public override string GetVhdlType(BaseBlock block)
 		{
@@ -35,7 +30,14 @@ end component;");
 		public override string GetComponentReference(BaseBlock block)
 		{
 			var varSelector = (VarSelector)block;
-			return string.Format(m_referenceTemplate, SignalTypeWriter.GetName(varSelector.Output.SignalType));
+			return PrepareTemplateForOutput(TemplateResolver.GetWithReplacements("BlockReference/BLK_VAR_SELECTOR.ref", new Dictionary<string, string> { { "type", SignalTypeWriter.GetName(varSelector.Output.SignalType) } }));
+		}
+
+		public override string GetDefinition(BaseBlock block)
+		{
+			var varSelector = (VarSelector)block;
+			return TemplateResolver.GetWithReplacements("BlockDefinition/BLK_VAR_SELECTOR.vhd",
+					new Dictionary<string, string> {{"type", SignalTypeWriter.GetName(varSelector.Output.SignalType)}});
 		}
 	}
 }

@@ -9,6 +9,12 @@ namespace LDtoVHDL.VhdlWriter
 {
 	public abstract class BaseBlockWriter
 	{
+		protected readonly TemplateResolver TemplateResolver;
+		protected BaseBlockWriter(TemplateResolver templateResolver)
+		{
+			TemplateResolver = templateResolver;
+		}
+
 		public virtual void WriteDeclaration(TextWriter writer, BaseBlock block)
 		{
 
@@ -17,6 +23,11 @@ namespace LDtoVHDL.VhdlWriter
 		public virtual void WriteCode(TextWriter writer, BaseBlock block)
 		{
 			writer.WriteLine("    {0}: {1} {2}port map ({3});", GetName(block), GetVhdlType(block), GetGenericMappingString(block), GetPortMappingStiring(block));
+		}
+
+		public virtual string GetDefinition(BaseBlock block)
+		{
+			return null;
 		}
 
 		private string GetPortMappingStiring(BaseBlock block)

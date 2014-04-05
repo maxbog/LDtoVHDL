@@ -11,7 +11,11 @@ component BLK_VARIABLE_STORAGE_{0} is
           VAR_OUT : out {0};
           LOAD    : in  boolean);
 end component;");
-		
+
+		public VariableStorageWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
+
 		public override string GetComponentReference(BaseBlock block)
 		{
 			var varBlock = (VariableStorageBlock) block;

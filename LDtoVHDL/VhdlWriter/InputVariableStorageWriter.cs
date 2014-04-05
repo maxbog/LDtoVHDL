@@ -7,7 +7,10 @@ namespace LDtoVHDL.VhdlWriter
 	[WriterFor(typeof(InputVariableStorageBlock))]
 	class InputVariableStorageWriter : VariableStorageWriter
 	{
-		
+		public InputVariableStorageWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
+
 		protected override IEnumerable<Tuple<string, string>> GetPortMapping(BaseBlock block)
 		{
 			var inputVar = (InputVariableStorageBlock)block;

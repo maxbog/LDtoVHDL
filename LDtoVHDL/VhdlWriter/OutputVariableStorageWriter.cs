@@ -6,6 +6,9 @@ namespace LDtoVHDL.VhdlWriter
 	[WriterFor(typeof(OutputVariableStorageBlock))]
 	class OutputVariableStorageWriter : VariableStorageWriter
 	{
+		public OutputVariableStorageWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
 
 		public override void WriteCode(TextWriter writer, BaseBlock block)
 		{

@@ -6,6 +6,9 @@ namespace LDtoVHDL.VhdlWriter
 	[WriterFor(typeof(ClockBlock))]
 	class ClockWriter : BaseBlockWriter
 	{
+		public ClockWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
 
 		public override string GetVhdlType(BaseBlock block)
 		{

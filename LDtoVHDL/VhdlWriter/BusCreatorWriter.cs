@@ -8,6 +8,9 @@ namespace LDtoVHDL.VhdlWriter
 	[WriterFor(typeof(BusCreator))]
 	class BusCreatorWriter : BaseBlockWriter
 	{
+		public BusCreatorWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
 
 		public override void WriteCode(TextWriter writer, BaseBlock block)
 		{

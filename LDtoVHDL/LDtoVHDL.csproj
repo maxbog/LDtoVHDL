@@ -129,6 +129,9 @@
     <None Include="Templates\BlockDefinition\BLK_VAR_SELECTOR.vhd.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\BlockReference\BLK_VAR_SELECTOR.ref.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\types.vhd.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

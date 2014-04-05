@@ -6,6 +6,10 @@ namespace LDtoVHDL.VhdlWriter
 	[WriterFor(typeof(OutVariableBlock))]
 	class OutVariableWriter : BaseBlockWriter
 	{
+		public OutVariableWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
+
 		public override string GetVhdlType(BaseBlock block)
 		{
 			return "BLK_OUT_VARIABLE";

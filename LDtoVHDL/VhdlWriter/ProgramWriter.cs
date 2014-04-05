@@ -14,15 +14,16 @@ namespace LDtoVHDL.VhdlWriter
 	{
 		private readonly ObjectDictionary<Type, BaseBlockWriter, WriterForAttribute> m_blockWriters;
 		private readonly string m_baseDirectory;
-		private TemplateResolver m_templateResolver;
+		private readonly TemplateResolver m_templateResolver;
 
 		public ProgramWriter(string baseDirectory)
 		{
 			m_baseDirectory = baseDirectory;
-			m_blockWriters = ObjectDictionary<Type, BaseBlockWriter, WriterForAttribute>.FromExecutingAssembly(type => type.BaseType, ffa => ffa.FormattedType);
 			var startingDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 			Debug.Assert(startingDir != null, "startingDir != null");
 			m_templateResolver = new TemplateResolver(Path.Combine(startingDir, "Templates"));
+
+			m_blockWriters = ObjectDictionary<Type, BaseBlockWriter, WriterForAttribute>.FromExecutingAssembly(type => type.BaseType, ffa => ffa.FormattedType, new object[] { m_templateResolver });
 		}
 		
 		public TextWriter GetWriterForFile(string fileName)
@@ -43,6 +44,8 @@ namespace LDtoVHDL.VhdlWriter
 			{
 				writer.WriteLine(m_templateResolver.GetWithReplacements("types.vhd"));
 			}
+
+			WriteBlockDefinitions(program);
 		}
 
 		private void WriteArchitectureDefinition(TextWriter writer, Program program)
@@ -72,6 +75,30 @@ namespace LDtoVHDL.VhdlWriter
 					continue;
 				writer.WriteLine(reference);
 				references.Add(reference);
+			}
+		}
+
+		private void WriteBlockDefinitions(Program program)
+		{
+			var definitions = new HashSet<string>();
+			foreach (var block in program.AllBlocks)
+			{
+				var blockWriter = m_blockWriters.Get(block.GetType());
+				var vhdlType = blockWriter.GetVhdlType(block);
+				if (vhdlType == null)
+					continue;
+				if (definitions.Contains(vhdlType))
+					continue;
+				definitions.Add(vhdlType);
+
+				var definition = blockWriter.GetDefinition(block);
+				if (definition == null) 
+					continue;
+
+				using (var writer = GetWriterForFile(vhdlType + ".vhd"))
+				{
+					writer.WriteLine(definition);
+				}
 			}
 		}
 
@@ -106,7 +133,7 @@ namespace LDtoVHDL.VhdlWriter
 			writer.WriteLine("entity {0} is port(", program.Name);
 			WritePortMappings(writer, program);
 			writer.WriteLine(");");
-			writer.WriteLine("end vhdl_code;");
+			writer.WriteLine("end {0};", program.Name);
 		}
 
 		private void WritePortMappings(TextWriter writer, Program program)

@@ -12,6 +12,10 @@ component BLK_COIL is
           MEM_OUT : out std_logic);
 end component;");
 
+		public CoilWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
+
 		public override string GetVhdlType(BaseBlock block)
 		{
 			return "BLK_COIL";

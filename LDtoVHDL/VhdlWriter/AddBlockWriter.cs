@@ -15,6 +15,10 @@ component BLK_ADD_{0} is
 end component;");
 
 
+		public AddBlockWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
+
 		public override string GetVhdlType(BaseBlock block)
 		{
 			var addBlock = (AddBlock) block;

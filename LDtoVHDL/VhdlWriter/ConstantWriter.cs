@@ -6,6 +6,9 @@ namespace LDtoVHDL.VhdlWriter
 	[WriterFor(typeof(ConstantBlock))]
 	class ConstantWriter : BaseBlockWriter
 	{
+		public ConstantWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
 
 		public override string GetVhdlType(BaseBlock block)
 		{

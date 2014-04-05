@@ -6,6 +6,9 @@ namespace LDtoVHDL.VhdlWriter
 	[WriterFor(typeof(InVariableBlock))]
 	class InVariableWriter : BaseBlockWriter
 	{
+		public InVariableWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
 
 		public override string GetVhdlType(BaseBlock block)
 		{

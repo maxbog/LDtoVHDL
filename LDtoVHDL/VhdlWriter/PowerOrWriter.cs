@@ -7,6 +7,10 @@ namespace LDtoVHDL.VhdlWriter
 	[WriterFor(typeof(PowerOrBlock))]
 	class PowerOrWriter : BaseBlockWriter
 	{
+		public PowerOrWriter(TemplateResolver templateResolver) : base(templateResolver)
+		{
+		}
+
 		public override void WriteCode(TextWriter writer, BaseBlock block)
 		{
 			var powerOr = (PowerOrBlock) block;
