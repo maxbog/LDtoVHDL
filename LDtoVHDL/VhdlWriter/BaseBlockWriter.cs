@@ -50,6 +50,8 @@ namespace LDtoVHDL.VhdlWriter
 
 		protected virtual string GetName(BaseBlock block)
 		{
+			if(block is InternalBlock)
+				return string.Format("internal_block_{0}", block.Id);
 			return string.Format("block_{0}", block.Id);
 		}
 
@@ -60,7 +62,7 @@ namespace LDtoVHDL.VhdlWriter
 
 		protected virtual IEnumerable<Tuple<string, string>> GetPortMapping(BaseBlock block)
 		{
-			return block.Ports.Select(port => Tuple.Create(port.Key, port.Value.ConnectedSignal == null ? null : ProgramWriter.GetSignalName(port.Value.ConnectedSignal)));
+			return block.Ports.Select(port => Tuple.Create(port.Key, GetSignalName(port.Value)));
 		}
 
 		public virtual string GetComponentReference(BaseBlock block)
@@ -82,6 +84,11 @@ namespace LDtoVHDL.VhdlWriter
 		protected static string MakeTypedName(string untypedName, SignalType signalType)
 		{
 			return untypedName + "_" + SignalTypeWriter.GetName(signalType);
+		}
+
+		protected static string GetSignalName(Port input1)
+		{
+			return input1.ConnectedSignal == null ? null : ProgramWriter.GetSignalName(input1.ConnectedSignal);
 		}
 	}
 }

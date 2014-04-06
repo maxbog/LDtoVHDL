@@ -2,7 +2,7 @@
 {
 	class InputVariableStorageBlock : VariableStorageBlock
 	{
-		public const string TYPE = "_input_variable";
+		public const string TYPE = "input_variable";
 		public InputVariableStorageBlock(string variableName, SignalType signalType)
 			: base("input", variableName, signalType)
 		{

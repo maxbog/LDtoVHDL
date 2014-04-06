@@ -1,0 +1,7 @@
+﻿component BLK_ADD_#type# is
+    port (EN   : in  std_logic;
+          ENO  : out std_logic;
+          A    : in  #type#;
+          B    : in  #type#;
+          Q    : out #type#);
+end component;

@@ -19,3 +19,13 @@ D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\obj\Debug\LDtoHVDL.Te
 D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\types.vhd.template
 D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_VAR_SELECTOR.vhd.template
 D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockReference\BLK_VAR_SELECTOR.ref.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_VARIABLE_STORAGE.vhd.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockReference\BLK_VARIABLE_STORAGE.ref.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockReference\BLK_ADD.ref.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockReference\BLK_TON.ref.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_ADD.vhd.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_TON.vhd.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_COIL.vhd.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_CONTACT.vhd.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockReference\BLK_COIL.ref.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockReference\BLK_CONTACT.ref.template

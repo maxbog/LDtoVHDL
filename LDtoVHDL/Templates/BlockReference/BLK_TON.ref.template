@@ -1,0 +1,8 @@
+﻿component BLK_TON is
+    port (VAR_READ : in  time;
+          VAR_WRITE  : out time;
+          EN        : in  std_logic;
+          ENO       : out std_logic;
+          PT        : in  time;
+          ET        : out time);
+end component;

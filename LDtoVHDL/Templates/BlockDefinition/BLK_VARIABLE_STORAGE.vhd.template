@@ -1,0 +1,25 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+library work;
+use work.types.all;
+
+entity BLK_VARIABLE_STORAGE_#type# is
+    port (VAR_IN  : in  #type#;
+          VAR_OUT : out #type#;
+          LOAD    : in  std_logic);
+end BLK_VARIABLE_STORAGE_#type#;
+
+architecture Behavioral of BLK_VARIABLE_STORAGE_#type# is
+    signal state : #type#;
+begin
+    process(LOAD) is
+    begin
+        if rising_edge(LOAD) then
+            state <= VAR_IN;
+        end if;
+    end process;
+
+    VAR_OUT <= state;
+end Behavioral;

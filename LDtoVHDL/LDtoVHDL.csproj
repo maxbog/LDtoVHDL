@@ -99,7 +99,7 @@
     <Compile Include="TypeFinder\ObjectCollection.cs" />
     <Compile Include="TypeFinder\ObjectDictionary.cs" />
     <Compile Include="TypeFinder\TypeFinder.cs" />
-    <Compile Include="VhdlWriter\AddBlockWriter.cs" />
+    <Compile Include="VhdlWriter\AddWriter.cs" />
     <Compile Include="VhdlWriter\BaseBlockWriter.cs" />
     <Compile Include="VhdlWriter\BusCreatorWriter.cs" />
     <Compile Include="VhdlWriter\ClockWriter.cs" />
@@ -126,7 +126,37 @@
     <None Include="App.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="README.md" />
+    <None Include="Templates\BlockDefinition\BLK_ADD.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockDefinition\BLK_COIL.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockDefinition\BLK_CONTACT.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockDefinition\BLK_TON.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockDefinition\BLK_VARIABLE_STORAGE.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\BlockDefinition\BLK_VAR_SELECTOR.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockReference\BLK_ADD.ref.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockReference\BLK_COIL.ref.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockReference\BLK_CONTACT.ref.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockReference\BLK_TON.ref.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockReference\BLK_VARIABLE_STORAGE.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\BlockReference\BLK_VAR_SELECTOR.ref.template">

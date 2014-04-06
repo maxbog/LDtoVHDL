@@ -17,7 +17,7 @@
 	public abstract class VariableStorageBlock : VariableBlock, IVariableStorageBlock
 	{
 		protected VariableStorageBlock(string variableType, string variableName, SignalType signalType)
-			: base(string.Format("_var_{0}_{1}", variableType, variableName), variableName, signalType)
+			: base(string.Format("var_{0}_{1}", variableType, variableName), variableName, signalType)
 		{
 			CreateInputPort("VAR_IN");
 			CreateInputPort("LOAD");

@@ -9,19 +9,22 @@ entity BLK_VAR_SELECTOR_#type# is
     generic (signal_count : integer);
     port (INS       : in  #type#_vector(signal_count-1 downto 0);
           MEMORY_IN : in  #type#;
-          CONTROL   : in  std_logic_vector(signal_count downto 0);
+          CONTROL   : in  std_logic_vector(signal_count-1 downto 0);
           Q         : out #type#);
 end BLK_VAR_SELECTOR_#type#;
 
 architecture Behavioral of BLK_VAR_SELECTOR_#type# is
     signal intermediate : #type#;
-    signal ins_with_memory : #type#_array(INS'Left+1 downto 0);    
+    signal ins_with_memory : #type#_vector(INS'Left+1 downto 0);
+    signal control_with_memory : std_logic_vector(INS'Left+1 downto 0);
 begin
     ins_with_memory(INS'Range) <= INS;
     ins_with_memory(ins_with_memory'Left) <= MEMORY_IN;
+
+    control_with_memory(CONTROL'Range) <= CONTROL;
+    control_with_memory(control_with_memory'Left) <= '1';
         
-    process (CONTROL) begin
-        ENO <= EN;
+    process (control_with_memory, ins_with_memory) begin
         L1: for i in CONTROL'Right to CONTROL'Left loop
             if CONTROL(i) = '1' then
                 intermediate <= ins_with_memory(i);

@@ -49,7 +49,7 @@ namespace LDtoVHDL.VhdlWriter
 			if (type == BuiltinType.Time)
 			{
 				var ts = (TimeSpan)value;
-				return string.Format("to_unsigned({0},32)", (uint)(ts.Ticks/10L));
+				return string.Format("{0} us", (uint)(ts.Ticks/10L));
 			}
 
 			throw new InvalidOperationException("No such type");

@@ -33,8 +33,8 @@ namespace LDtoVHDL.Model.Blocks
 			if (Output.SignalType == null || Input1.SignalType == null || Input2.SignalType == null) 
 				return errors;
 
-			if (Output.SignalType != Input2.SignalType || Output.SignalType != Input1.SignalType) 
-				errors.Add(ValidationMessage.Error("All ports must have the same type. IN1: {0}, IN2: {1}, OUT: {2}", Input1.SignalType, Input2.SignalType, Output.SignalType));
+			if (Output.SignalType != Input2.SignalType || Output.SignalType != Input1.SignalType)
+				errors.Add(ValidationMessage.Error("All ports must have the same type. A: {0}, B: {1}, Q: {2}", Input1.SignalType, Input2.SignalType, Output.SignalType));
 			else if(!Output.SignalType.IsInteger)
 				errors.Add(ValidationMessage.Error("ADD block can only operate on integer types"));
 

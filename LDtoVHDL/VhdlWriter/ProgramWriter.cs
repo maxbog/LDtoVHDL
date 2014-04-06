@@ -36,6 +36,7 @@ namespace LDtoVHDL.VhdlWriter
 		{
 			using (var writer = GetWriterForFile(program.Name + ".vhd"))
 			{
+				WriteUsings(writer);
 				WriteEntityDeclaration(writer, program);
 				WriteArchitectureDefinition(writer, program);
 			}
@@ -46,6 +47,18 @@ namespace LDtoVHDL.VhdlWriter
 			}
 
 			WriteBlockDefinitions(program);
+		}
+
+		private void WriteUsings(TextWriter writer)
+		{
+			writer.WriteLine("");
+			writer.WriteLine("library ieee;");
+			writer.WriteLine("use ieee.std_logic_1164.all;");
+			writer.WriteLine("use ieee.numeric_std.all;");
+			writer.WriteLine();
+			writer.WriteLine("library work;");
+			writer.WriteLine("use work.types.all;");
+			writer.WriteLine();
 		}
 
 		private void WriteArchitectureDefinition(TextWriter writer, Program program)

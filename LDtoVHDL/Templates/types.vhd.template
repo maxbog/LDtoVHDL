@@ -9,7 +9,7 @@ package types is
 	subtype uint8 is unsigned(7 downto 0);
 	subtype uint16 is unsigned(15 downto 0);
 	subtype uint32 is unsigned(31 downto 0);
-	subtype timer_on is unsigned(31 downto 0);
+	subtype timer_on is time;
 
 	type sint8_vector is array (integer range <>) of sint8;
 	type sint16_vector is array (integer range <>) of sint16;

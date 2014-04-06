@@ -5,12 +5,6 @@ namespace LDtoVHDL.VhdlWriter
 	[WriterFor(typeof(CoilBlock))]
 	class CoilWriter : BaseBlockWriter
 	{
-		private readonly string m_referenceTemplate = PrepareTemplateForOutput(@"
-component BLK_COIL is
-    port (EN      : in  std_logic;
-          ENO     : out std_logic;
-          MEM_OUT : out std_logic);
-end component;");
 
 		public CoilWriter(TemplateResolver templateResolver) : base(templateResolver)
 		{
@@ -21,9 +15,14 @@ end component;");
 			return "BLK_COIL";
 		}
 
+		public override string GetDefinition(BaseBlock block)
+		{
+			return TemplateResolver.GetWithReplacements("BlockDefinition/BLK_COIL.vhd");
+		}
+
 		public override string GetComponentReference(BaseBlock block)
 		{
-			return m_referenceTemplate;
+			return TemplateResolver.GetWithReplacements("BlockReference/BLK_COIL.ref");
 		}
 	}
 }
