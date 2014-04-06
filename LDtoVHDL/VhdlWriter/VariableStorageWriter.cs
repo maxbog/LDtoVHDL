@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LDtoVHDL.Model.Blocks;
 
@@ -26,6 +27,12 @@ namespace LDtoVHDL.VhdlWriter
 		{
 			var varBlock = (VariableStorageBlock)block;
 			return TemplateResolver.GetWithReplacements("BlockDefinition/BLK_VARIABLE_STORAGE.vhd", new Dictionary<string, string> { { "type", SignalTypeWriter.GetName(varBlock.SignalType) } });
+		}
+
+		protected override IEnumerable<Tuple<string, string>> GetGenericMapping(BaseBlock block)
+		{
+			var varBlock = (VariableStorageBlock)block;
+			yield return Tuple.Create("initial_value", SignalTypeWriter.GetValueConstructor(varBlock.SignalType, varBlock.InitialValue));
 		}
 	}
 }

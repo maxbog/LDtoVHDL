@@ -85,12 +85,24 @@ namespace LDtoVHDL.Parsing
 		private static VariableStorageBlock CreateMemoryVariableBlock(Tuple<string, XElement> variable, string varName)
 		{
 			if (variable.Item1 == "localVars")
-				return new LocalVariableStorageBlock(varName, GetVariableType(variable.Item2));
+				return new LocalVariableStorageBlock(varName, GetVariableType(variable.Item2), GetInitialValue(variable.Item2));
 			if (variable.Item1 == "inputVars")
-				return new InputVariableStorageBlock(varName, GetVariableType(variable.Item2));
+				return new InputVariableStorageBlock(varName, GetVariableType(variable.Item2), GetInitialValue(variable.Item2));
 			if (variable.Item1 == "outputVars")
-				return new OutputVariableStorageBlock(varName, GetVariableType(variable.Item2));
+				return new OutputVariableStorageBlock(varName, GetVariableType(variable.Item2), GetInitialValue(variable.Item2));
 			throw new PlcOpenParserException("Unrecognized variable type: " + variable.Item1);
+		}
+
+		private static object GetInitialValue(XElement xVar)
+		{
+			var xInitialValue = xVar.Element("initialValue".XName());
+			if (xInitialValue == null) 
+				return null;
+			var xSimpleValue = xInitialValue.Element("simpleValue".XName());
+			if (xSimpleValue == null) 
+				return null;
+
+			return ParseExpression((string)xSimpleValue.Attribute("value")).Item2;
 		}
 
 		private static SignalType GetVariableType(XElement varElem)
@@ -216,5 +228,73 @@ namespace LDtoVHDL.Parsing
 		{
 			return xBlock.Descendants("connectionPointIn".XName()).Concat(xBlock.Descendants("connectionPointOut".XName()));
 		}
+
+		public static Tuple<SignalType, object> ParseExpression(string expression)
+		{
+			bool boolValue;
+			if (bool.TryParse(expression, out boolValue))
+				return Tuple.Create<SignalType, object>(BuiltinType.Boolean, boolValue);
+
+			if (expression.StartsWith("BOOL#", StringComparison.InvariantCultureIgnoreCase))
+				return Tuple.Create<SignalType, object>(BuiltinType.Boolean, bool.Parse(expression.Substring(5)));
+
+			if (expression.StartsWith("DINT#", StringComparison.InvariantCultureIgnoreCase) ||
+				expression.StartsWith("INT#", StringComparison.InvariantCultureIgnoreCase) ||
+				expression.StartsWith("SINT#", StringComparison.InvariantCultureIgnoreCase) ||
+				expression.StartsWith("UDINT#", StringComparison.InvariantCultureIgnoreCase) ||
+				expression.StartsWith("UINT#", StringComparison.InvariantCultureIgnoreCase) ||
+				expression.StartsWith("USINT#", StringComparison.InvariantCultureIgnoreCase))
+			{
+				var type = expression.Substring(0, expression.IndexOf('#'));
+				return ParseIntExpression(expression.Substring(expression.IndexOf('#') + 1), VarTypes[type]);
+			}
+
+			if (expression.StartsWith("T#", StringComparison.InvariantCultureIgnoreCase) ||
+				expression.StartsWith("TIME#", StringComparison.InvariantCultureIgnoreCase))
+				return ParseTimeExpression(expression.Substring(expression.IndexOf('#') + 1));
+
+			return ParseIntExpression(expression.Substring(expression.IndexOf('#') + 1), null);
+		}
+
+		private static Tuple<SignalType, object> ParseIntExpression(string intValue, SignalType varType)
+		{
+			intValue = intValue.Replace("_", "");
+			if (intValue.StartsWith("2#"))
+				return Tuple.Create<SignalType, object>(varType, Convert.ToInt64(intValue, 2));
+			if (intValue.StartsWith("8#"))
+				return Tuple.Create<SignalType, object>(varType, Convert.ToInt64(intValue, 8));
+			if (intValue.StartsWith("16#"))
+				return Tuple.Create<SignalType, object>(varType, Convert.ToInt64(intValue, 16));
+
+			return Tuple.Create<SignalType, object>(varType, Convert.ToInt64(intValue, 10));
+		}
+
+		private static Tuple<SignalType, object> ParseTimeExpression(string timeValue)
+		{
+			timeValue = timeValue.Replace("_", "");
+			long ticksCount = 0;
+			int currentIndex = 0;
+			while (currentIndex < timeValue.Length)
+			{
+				int unitIdx = timeValue.IndexOfAny("abcdefghijklmnopqrstuvwxyz".ToCharArray(), currentIndex + 1);
+				var currentValue = double.Parse(timeValue.Substring(currentIndex, unitIdx));
+				int nextValueIndex = timeValue.IndexOfAny("0123456789.".ToCharArray(), unitIdx + 1);
+				var unit = nextValueIndex == -1 ? timeValue.Substring(unitIdx) : timeValue.Substring(unitIdx, nextValueIndex - 1);
+				ticksCount += (long)(currentValue * Multiplier[unit]);
+				currentIndex = nextValueIndex == -1 ? timeValue.Length : nextValueIndex;
+			}
+			return Tuple.Create<SignalType, object>(BuiltinType.Time, new TimeSpan(ticksCount));
+		}
+
+		private static readonly Dictionary<string, long> Multiplier = new Dictionary<string, long>
+		{
+			{"us", 10L},
+			{"ms", 10L*1000},
+			{"s", 10L*1000*1000},
+			{"m", 10L*1000*1000*60},
+			{"h", 10L*1000*1000*60*60},
+			{"d", 10L*1000*1000*60*60*24}
+		};
+
 	}
 }

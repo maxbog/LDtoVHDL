@@ -6,13 +6,14 @@ library work;
 use work.types.all;
 
 entity BLK_VARIABLE_STORAGE_#type# is
+	generic (initial_value : #type#);
     port (VAR_IN  : in  #type#;
           VAR_OUT : out #type#;
           LOAD    : in  std_logic);
 end BLK_VARIABLE_STORAGE_#type#;
 
 architecture Behavioral of BLK_VARIABLE_STORAGE_#type# is
-    signal state : #type#;
+    signal state : #type# := initial_value;
 begin
     process(LOAD) is
     begin

@@ -3,8 +3,8 @@
 	class OutputVariableStorageBlock : VariableStorageBlock, IWritableVariableStorageBlock
 	{
 		public const string TYPE = "output_variable";
-		public OutputVariableStorageBlock(string variableName, SignalType signalType)
-			: base("output", variableName, signalType)
+		public OutputVariableStorageBlock(string variableName, SignalType signalType, object initialValue)
+			: base("output", variableName, signalType, initialValue)
 		{
 		}
 	}

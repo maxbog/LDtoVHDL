@@ -28,25 +28,41 @@ namespace LDtoVHDL.VhdlWriter
 			return VhdlNames[type];
 		}
 
+		private static readonly Dictionary<SignalType, object> DefaultValues = new Dictionary<SignalType, object>
+		{
+			{BuiltinType.Boolean, false},
+			{BuiltinType.SInt8, 0},
+			{BuiltinType.SInt16, 0},
+			{BuiltinType.SInt32, 0},
+			{BuiltinType.UInt8, 0},
+			{BuiltinType.UInt16, 0},
+			{BuiltinType.UInt32, 0},
+			{BuiltinType.TimerOn, new TimeSpan(0)},
+			{BuiltinType.Time, new TimeSpan(0)}
+		};
+
 		public static string GetValueConstructor(SignalType type, object value)
 		{
+			if (value == null)
+				value = DefaultValues[type];
+
 			if (type == BuiltinType.Boolean)
-				return (bool) value ? "1" : "0";
+				return (bool) value ? "'1'" : "'0'";
 
 			if (type == BuiltinType.SInt8)
-				return string.Format("to_signed({0},8)", (sbyte)(long)value);
+				return string.Format("to_signed({0},8)", (sbyte)Convert.ToInt64(value));
 			if (type == BuiltinType.SInt16)
-				return string.Format("to_signed({0},16)", (short)(long)value);
+				return string.Format("to_signed({0},16)", (short)Convert.ToInt64(value));
 			if (type == BuiltinType.SInt32)
-				return string.Format("to_signed({0},32)", (int)(long)value);
+				return string.Format("to_signed({0},32)", (int)Convert.ToInt64(value));
 			if (type == BuiltinType.UInt8)
-				return string.Format("to_unsigned({0},8)", (byte)(long)value);
+				return string.Format("to_unsigned({0},8)", (byte)Convert.ToInt64(value));
 			if (type == BuiltinType.UInt16)
-				return string.Format("to_unsigned({0},16)", (ushort)(long)value);
+				return string.Format("to_unsigned({0},16)", (ushort)Convert.ToInt64(value));
 			if (type == BuiltinType.UInt32)
-				return string.Format("to_unsigned({0},32)", (uint)(long)value);
+				return string.Format("to_unsigned({0},32)", (uint)Convert.ToInt64(value));
 
-			if (type == BuiltinType.Time)
+			if (type == BuiltinType.Time || type == BuiltinType.TimerOn)
 			{
 				var ts = (TimeSpan)value;
 				return string.Format("{0} us", (uint)(ts.Ticks/10L));

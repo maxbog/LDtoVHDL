@@ -1,4 +1,5 @@
 component BLK_VARIABLE_STORAGE_#type# is
+	generic (initial_value : #type#);
     port (VAR_IN  : in  #type#;
           VAR_OUT : out #type#;
           LOAD    : in  std_logic);
