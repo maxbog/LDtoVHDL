@@ -23,7 +23,7 @@ namespace LDtoVHDL.VhdlWriter
 			var builder = new StringBuilder();
 
 			foreach (var pair in inputPorts.Select((port, idx) => new {Signal = port.ConnectedSignal, Idx = idx}))
-				builder.AppendFormat("    {0}({1}) <= {2}; ", outputPortName, pair.Idx, ProgramWriter.GetSignalName(pair.Signal));
+				builder.AppendFormat("    {0}({1}) <= {2};", outputPortName, pair.Idx, ProgramWriter.GetSignalName(pair.Signal));
 
 			writer.WriteLine(builder);
 		}

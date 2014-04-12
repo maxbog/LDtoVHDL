@@ -34,6 +34,8 @@ namespace LDtoVHDL.VhdlWriter
 
 		public void WriteVhdlCode(Program program)
 		{
+			foreach (var file in Directory.EnumerateFiles(m_baseDirectory))
+				File.Delete(file);
 			using (var writer = GetWriterForFile(program.Name + ".vhd"))
 			{
 				WriteUsings(writer);

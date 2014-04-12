@@ -45,6 +45,7 @@
 		public static readonly BuiltinType UInt16 = new BuiltinType("UInt16");
 		public static readonly BuiltinType UInt32 = new BuiltinType("UInt32");
 		public static readonly BuiltinType TimerOn = new BuiltinType("TON");
+		public static readonly BuiltinType TimerOff = new BuiltinType("TOF");
 		public static readonly BuiltinType Time = new BuiltinType("Time");
 
 		private BuiltinType(string name)

@@ -1,0 +1,5 @@
+component BLK_CONTACT is
+    port (EN      : in  std_logic;
+          ENO     : out std_logic;
+          MEM_IN  : in std_logic);
+end component;

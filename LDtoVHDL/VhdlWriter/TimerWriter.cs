@@ -5,20 +5,24 @@ using LDtoVHDL.Model.Blocks;
 namespace LDtoVHDL.VhdlWriter
 {
 	[WriterFor(typeof(TonBlock))]
-	class TonWriter : BaseBlockWriter
+	[WriterFor(typeof(TofBlock))]
+	class TimerWriter : BaseBlockWriter
 	{
-		public TonWriter(TemplateResolver templateResolver) : base(templateResolver)
+		public TimerWriter(TemplateResolver templateResolver) : base(templateResolver)
 		{
+
 		}
 
 		public override string GetVhdlType(BaseBlock block)
 		{
-			return "BLK_TON";
+			return block is TonBlock ? "BLK_TON" 
+				 : block is TofBlock ? "BLK_TOF" 
+				 : null;
 		}
 		
 		protected override IEnumerable<Tuple<string, string>> GetPortMapping(BaseBlock block)
 		{
-			var tonBlock = (TonBlock)block;
+			var tonBlock = (TimerBlock)block;
 			yield return Tuple.Create("VAR_WRITE", GetSignalName(tonBlock.MemoryOutput));
 			yield return Tuple.Create("VAR_READ", GetSignalName(tonBlock.MemoryInput));
 			yield return Tuple.Create("EN", GetSignalName(tonBlock.Input));
@@ -29,13 +33,13 @@ namespace LDtoVHDL.VhdlWriter
 
 		public override string GetComponentReference(BaseBlock block)
 		{
-			return PrepareTemplateForOutput(TemplateResolver.GetWithReplacements("BlockReference/BLK_TON.ref"));
+			return PrepareTemplateForOutput(TemplateResolver.GetWithReplacements(string.Format("BlockReference/{0}.ref", GetVhdlType(block))));
 		}
 
 
 		public override string GetDefinition(BaseBlock block)
 		{
-			return TemplateResolver.GetWithReplacements("BlockDefinition/BLK_TON.vhd");
+			return TemplateResolver.GetWithReplacements(string.Format("BlockDefinition/{0}.vhd", GetVhdlType(block)));
 		}
 	}
 }

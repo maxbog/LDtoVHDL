@@ -16,6 +16,7 @@ namespace LDtoVHDL.VhdlWriter
 			{BuiltinType.UInt16, "uint16"},
 			{BuiltinType.UInt32, "uint32"},
 			{BuiltinType.TimerOn, "timer_on"},
+			{BuiltinType.TimerOff, "timer_off"},
 			{BuiltinType.Time, "time"}
 		};
 
@@ -38,6 +39,7 @@ namespace LDtoVHDL.VhdlWriter
 			{BuiltinType.UInt16, 0},
 			{BuiltinType.UInt32, 0},
 			{BuiltinType.TimerOn, new TimeSpan(0)},
+			{BuiltinType.TimerOff, new TimeSpan(0)},
 			{BuiltinType.Time, new TimeSpan(0)}
 		};
 
@@ -62,7 +64,7 @@ namespace LDtoVHDL.VhdlWriter
 			if (type == BuiltinType.UInt32)
 				return string.Format("to_unsigned({0},32)", (uint)Convert.ToInt64(value));
 
-			if (type == BuiltinType.Time || type == BuiltinType.TimerOn)
+			if (type == BuiltinType.Time || type == BuiltinType.TimerOn || type == BuiltinType.TimerOff)
 			{
 				var ts = (TimeSpan)value;
 				return string.Format("{0} us", (uint)(ts.Ticks/10L));

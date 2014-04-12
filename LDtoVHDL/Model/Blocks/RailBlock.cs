@@ -1,6 +1,6 @@
 namespace LDtoVHDL.Model.Blocks
 {
-	abstract class RailBlock : BaseBlock
+	internal abstract class RailBlock : BaseBlock
 	{
 		protected RailBlock(string id) : base(id)
 		{

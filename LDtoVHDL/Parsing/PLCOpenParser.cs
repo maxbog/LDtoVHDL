@@ -65,6 +65,7 @@ namespace LDtoVHDL.Parsing
 			{"UINT", BuiltinType.UInt16},
 			{"UDINT", BuiltinType.UInt32},
 			{"TON", BuiltinType.TimerOn},
+			{"TON", BuiltinType.TimerOff},
 			{"TIME", BuiltinType.Time}
 		};
 

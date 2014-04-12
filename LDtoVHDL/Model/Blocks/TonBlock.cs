@@ -1,10 +1,8 @@
 ﻿namespace LDtoVHDL.Model.Blocks
 {
-	class TonBlock : BaseBlock, IInVariableBlock, IOutVariableBlock
+	public abstract class TimerBlock : BaseBlock, IInVariableBlock, IOutVariableBlock
 	{
-		public const string TYPE = "TON";
-
-		public TonBlock(string id, string variableName)
+		protected TimerBlock(string id, string variableName)
 			: base(id)
 		{
 			VariableName = variableName;
@@ -50,6 +48,23 @@
 		public Signal WriteCondition
 		{
 			get { return Input.ConnectedSignal; }
+		}
+	}
+
+	class TonBlock : TimerBlock
+	{
+		public const string TYPE = "TON";
+		public TonBlock(string id, string variableName) : base(id, variableName)
+		{
+		}
+	}
+
+	class TofBlock : TimerBlock
+	{
+		public const string TYPE = "TOF";
+		public TofBlock(string id, string variableName)
+			: base(id, variableName)
+		{
 		}
 	}
 }
