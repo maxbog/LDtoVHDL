@@ -4,3 +4,6 @@
 
 /LDtoVHDL/obj/Debug
 /LDtoVHDL/bin/Debug
+/*.psess
+/*.user
+/*.vsp
