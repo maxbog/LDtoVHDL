@@ -134,7 +134,7 @@
     <None Include="Templates\BlockDefinition\BLK_COIL.vhd.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\BlockDefinition\BLK_CONTACT.vhd.template">
+    <None Include="Templates\BlockDefinition\BLK_NOC.vhd.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\BlockDefinition\BLK_TON.vhd.template">
@@ -149,13 +149,16 @@
     <None Include="Templates\BlockDefinition\BLK_TOF.vhd.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\BlockDefinition\BLK_NCC.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\BlockReference\BLK_ADD.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\BlockReference\BLK_COIL.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\BlockReference\BLK_CONTACT.ref.template">
+    <None Include="Templates\BlockReference\BLK_NOC.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\BlockReference\BLK_TON.ref.template">
@@ -168,6 +171,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\BlockReference\BLK_TOF.ref.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockReference\BLK_NCC.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\types.vhd.template">

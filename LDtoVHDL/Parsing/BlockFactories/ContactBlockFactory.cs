@@ -11,7 +11,17 @@ namespace LDtoVHDL.Parsing.BlockFactories
 		public override BaseBlock CreateBlock(XElement xBlock, Program env)
 		{
 			var varName = GetVariableName(xBlock);
-			return new ContactBlock(GetBlockLocalId(xBlock), varName);
+			if(IsNegated(xBlock))
+				return new NccBlock(GetBlockLocalId(xBlock), varName);
+			return new NocBlock(GetBlockLocalId(xBlock), varName);
+		}
+
+		private bool IsNegated(XElement xBlock)
+		{
+			var negatedAttr = xBlock.Attribute("negated");
+			if (negatedAttr == null)
+				return false;
+			return (bool)negatedAttr;
 		}
 
 		private string GetVariableName(XElement xBlock)

@@ -2,7 +2,8 @@ using LDtoVHDL.Model.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
 {
-	[WriterFor(typeof(ContactBlock))]
+	[WriterFor(typeof(NocBlock))]
+	[WriterFor(typeof(NccBlock))]
 	class ContactWriter : BaseBlockWriter
 	{
 
@@ -12,17 +13,19 @@ namespace LDtoVHDL.VhdlWriter
 
 		public override string GetVhdlType(BaseBlock block)
 		{
-			return "BLK_CONTACT";
+			return block is NocBlock ? "BLK_NOC"
+				 : block is NccBlock ? "BLK_NCC"
+				 : null;
 		}
 
 		public override string GetDefinition(BaseBlock block)
 		{
-			return TemplateResolver.GetWithReplacements("BlockDefinition/BLK_CONTACT.vhd");
+			return TemplateResolver.GetWithReplacements(string.Format("BlockDefinition/{0}.vhd", GetVhdlType(block)));
 		}
 
 		public override string GetComponentReference(BaseBlock block)
 		{
-			return TemplateResolver.GetWithReplacements("BlockReference/BLK_CONTACT.ref");
+			return TemplateResolver.GetWithReplacements(string.Format("BlockReference/{0}.ref", GetVhdlType(block)));
 		}
 	}
 }

@@ -1,10 +1,10 @@
 namespace LDtoVHDL.Model.Blocks
 {
-	class ContactBlock : BaseBlock, IInVariableBlock
+	public abstract class ContactBlock : BaseBlock, IInVariableBlock
 	{
 		public const string TYPE = "contact";
 
-		public ContactBlock(string id, string variableName)
+		protected ContactBlock(string id, string variableName)
 			: base(id)
 		{
 			VariableName = variableName;
@@ -29,5 +29,19 @@ namespace LDtoVHDL.Model.Blocks
 
 		public string VariableName { get; private set; }
 		public Port MemoryInput { get { return Ports["MEM_IN"]; } }
+	}
+
+	class NccBlock : ContactBlock
+	{
+		public NccBlock(string id, string variableName) : base(id, variableName)
+		{
+		}
+	}
+
+	class NocBlock : ContactBlock
+	{
+		public NocBlock(string id, string variableName) : base(id, variableName)
+		{
+		}
 	}
 }
