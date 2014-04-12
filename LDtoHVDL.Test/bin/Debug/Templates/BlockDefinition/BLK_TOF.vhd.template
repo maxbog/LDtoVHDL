@@ -1,0 +1,29 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+library work;
+use work.types.all;
+
+entity BLK_TOF is
+    port (VAR_READ : in  time;
+          VAR_WRITE  : out time;
+          EN        : in  std_logic;
+          ENO       : out std_logic;
+          PT        : in  time;
+          ET        : out time);
+end BLK_TOF;
+
+architecture Behavioral of BLK_TOF is
+    constant TIMER_STEP : time := 100 ns;
+    signal cond : std_logic_vector(1 downto 0);
+begin
+    cond(0) <= '1' when EN = '1' else '0';
+    cond(1) <= '1' when VAR_READ < PT else '0';
+    ET <= 0 fs when EN = '1' else VAR_READ;
+    ENO <= '1' when (EN = '1' or VAR_READ < PT) else '0';
+    VAR_WRITE <= VAR_READ + TIMER_STEP when cond = "10" else
+                 VAR_READ              when cond = "00" else
+                 0 fs;
+end Behavioral;
+

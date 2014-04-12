@@ -10,6 +10,7 @@ package types is
 	subtype uint16 is unsigned(15 downto 0);
 	subtype uint32 is unsigned(31 downto 0);
 	subtype timer_on is time;
+	subtype timer_off is time;
 
 	type sint8_vector is array (integer range <>) of sint8;
 	type sint16_vector is array (integer range <>) of sint16;
@@ -20,4 +21,5 @@ package types is
 	type boolean_vector is array (integer range <>) of boolean;
 	type time_vector is array (integer range <>) of time;
 	type timer_on_vector is array (integer range <>) of timer_on;
+	type timer_off_vector is array (integer range <>) of timer_off;
 end types;

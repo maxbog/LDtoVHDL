@@ -25,7 +25,7 @@ namespace LDtoVHDL.VhdlWriter
 
 		public override string GetComponentReference(BaseBlock block)
 		{
-			return TemplateResolver.GetWithReplacements(string.Format("BlockReference/{0}.ref", GetVhdlType(block)));
+			return PrepareTemplateForOutput(TemplateResolver.GetWithReplacements(string.Format("BlockReference/{0}.ref", GetVhdlType(block))));
 		}
 	}
 }

@@ -10,9 +10,9 @@ namespace LDtoVHDL
 	{
 		public static void Main(string[] args)
 		{
-			const string outputBaseDir = @"d:\dokumenty\copy\praca magisterska\vhdl_output\vhd\";
+			const string outputBaseDir = @"d:\dokumenty\copy\praca magisterska\silnik_vhdl\vhd\";
 
-			var parser = new PlcOpenParser(XDocument.Load(File.OpenRead(@"d:\dokumenty\copy\praca magisterska\test_ber\plc.xml")));
+			var parser = new PlcOpenParser(XDocument.Load(File.OpenRead(@"d:\dokumenty\copy\praca magisterska\silnik\plc.xml")));
 
 			var program = parser.Parse();
 			var translator = new Translator();

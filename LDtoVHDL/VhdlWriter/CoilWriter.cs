@@ -22,7 +22,7 @@ namespace LDtoVHDL.VhdlWriter
 
 		public override string GetComponentReference(BaseBlock block)
 		{
-			return TemplateResolver.GetWithReplacements("BlockReference/BLK_COIL.ref");
+			return PrepareTemplateForOutput(TemplateResolver.GetWithReplacements("BlockReference/BLK_COIL.ref"));
 		}
 	}
 }

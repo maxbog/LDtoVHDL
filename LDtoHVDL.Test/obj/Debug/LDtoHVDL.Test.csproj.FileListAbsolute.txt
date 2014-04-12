@@ -26,6 +26,10 @@ D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\B
 D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_ADD.vhd.template
 D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_TON.vhd.template
 D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_COIL.vhd.template
-D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_CONTACT.vhd.template
 D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockReference\BLK_COIL.ref.template
-D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockReference\BLK_CONTACT.ref.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_NOC.vhd.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_TOF.vhd.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockDefinition\BLK_NCC.vhd.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockReference\BLK_NOC.ref.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockReference\BLK_TOF.ref.template
+D:\Dokumenty\Copy\praca magisterska\LDtoVHDL\LDtoHVDL.Test\bin\Debug\Templates\BlockReference\BLK_NCC.ref.template

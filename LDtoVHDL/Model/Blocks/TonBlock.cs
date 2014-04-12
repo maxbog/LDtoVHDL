@@ -39,8 +39,6 @@
 			Output.SignalType = BuiltinType.Boolean;
 			PresetTime.SignalType = BuiltinType.Time;
 			ElapsedTime.SignalType = BuiltinType.Time;
-			MemoryInput.SignalType = BuiltinType.TimerOn;
-			MemoryOutput.SignalType = BuiltinType.TimerOn;
 		}
 
 		public string VariableName { get; private set; }
@@ -57,6 +55,12 @@
 		public TonBlock(string id, string variableName) : base(id, variableName)
 		{
 		}
+
+		public override void ComputePortTypes()
+		{
+			MemoryInput.SignalType = BuiltinType.TimerOn;
+			MemoryOutput.SignalType = BuiltinType.TimerOn;
+		}
 	}
 
 	class TofBlock : TimerBlock
@@ -65,6 +69,11 @@
 		public TofBlock(string id, string variableName)
 			: base(id, variableName)
 		{
+		}
+		public override void ComputePortTypes()
+		{
+			MemoryInput.SignalType = BuiltinType.TimerOff;
+			MemoryOutput.SignalType = BuiltinType.TimerOff;
 		}
 	}
 }
