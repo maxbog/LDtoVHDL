@@ -68,6 +68,7 @@
     <Compile Include="Model\Signal.cs" />
     <Compile Include="Model\SignalType.cs" />
     <Compile Include="Model\ValidationMessage.cs" />
+    <Compile Include="Parsing\BlockFactories\AddBlockFactory.cs" />
     <Compile Include="Parsing\BlockFactories\BaseBlockFactory.cs" />
     <Compile Include="Parsing\BlockFactories\BlockBuilder.cs" />
     <Compile Include="Parsing\BlockFactories\CoilBlockFactory.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Parsing\BlockFactories\LeftRailBlockFactory.cs" />
     <Compile Include="Parsing\BlockFactories\OutVariableBlockFactory.cs" />
     <Compile Include="Parsing\BlockFactories\RightRailBlockFactory.cs" />
+    <Compile Include="Parsing\BlockFactories\TimerBlockFactory.cs" />
     <Compile Include="Parsing\Offset.cs" />
     <Compile Include="Parsing\PLCOpen.cs" />
     <Compile Include="Parsing\PLCOpenParser.cs" />
@@ -116,7 +118,7 @@
     <Compile Include="VhdlWriter\RightRailWriter.cs" />
     <Compile Include="VhdlWriter\SignalTypeWriter.cs" />
     <Compile Include="VhdlWriter\TemplateResolver.cs" />
-    <Compile Include="VhdlWriter\TonWriter.cs" />
+    <Compile Include="VhdlWriter\TimerWriter.cs" />
     <Compile Include="VhdlWriter\VariableStorageWriter.cs" />
     <Compile Include="VhdlWriter\VarSelectorWriter.cs" />
     <Compile Include="VhdlWriter\WriterForAttribute.cs" />
@@ -144,6 +146,9 @@
     <None Include="Templates\BlockDefinition\BLK_VAR_SELECTOR.vhd.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\BlockDefinition\BLK_TOF.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\BlockReference\BLK_ADD.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -160,6 +165,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\BlockReference\BLK_VAR_SELECTOR.ref.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockReference\BLK_TOF.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\types.vhd.template">

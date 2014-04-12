@@ -15,8 +15,8 @@ namespace LDtoVHDL.Translation.Phases
 
 			if (program.AllBlocks.OfType<RightRailBlock>().Count() > 1)
 				throw new InvalidOperationException("Only one right rail is allowed");
-
-			program.LeftRail = program.AllBlocks.OfType<RightRailBlock>().First();
+			
+			program.LeftRail = program.AllBlocks.OfType<LeftRailBlock>().First();
 			program.RightRail = program.AllBlocks.OfType<RightRailBlock>().First();
 		}
 	}
