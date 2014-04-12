@@ -62,10 +62,6 @@ namespace LDtoVHDL.Model.Blocks
 			return String.Format("[b.{0}]{1}", Id, GetType().Name);
 		}
 
-		public virtual IEnumerable<Tuple<string, string>> VhdlGenericMapping
-		{
-			get { return Enumerable.Empty<Tuple<string,string>>(); }
-		}
 		
 		public virtual List<ValidationMessage> Validate()
 		{
