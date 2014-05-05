@@ -21,7 +21,7 @@ namespace LDtoVHDL.Model
 		}
 
 		private static int _nextId;
-		private readonly IEnumerable<Signal> m_orredSignals;
+		private readonly List<Signal> m_orredSignals;
 		private SignalType m_type;
 
 		public Signal()
@@ -34,7 +34,7 @@ namespace LDtoVHDL.Model
 
 		public Signal(IEnumerable<Signal> orredSignals)
 		{
-			m_orredSignals = orredSignals;
+			m_orredSignals = orredSignals.ToList();
 			Hash = ComputeHash(m_orredSignals);
 			IsComposite = true;
 			OutputPorts = new List<Port>();
@@ -53,7 +53,7 @@ namespace LDtoVHDL.Model
 			{
 				if (!IsComposite)
 					throw new InvalidOperationException("cannot get orred signals on non-composite signal");
-				return m_orredSignals;
+				return m_orredSignals.Where(sig=>sig.InputPort != null);
 			}
 		}
 
@@ -73,6 +73,24 @@ namespace LDtoVHDL.Model
 		public override string ToString()
 		{
 			return string.Format("[s.{0}/{1}]",Hash,Type);
+		}
+
+		public void Disconnect(Port port)
+		{
+			if (InputPort == port)
+			{
+				InputPort = null;
+				var oldOutputPorts = new List<Port>(OutputPorts);
+				OutputPorts.Clear();
+				foreach (var oldOutputPort in oldOutputPorts)
+				{
+					oldOutputPort.Disconnect();
+				}
+			}
+			if (OutputPorts.Contains(port))
+			{
+				OutputPorts.Remove(port);
+			}
 		}
 	}
 }

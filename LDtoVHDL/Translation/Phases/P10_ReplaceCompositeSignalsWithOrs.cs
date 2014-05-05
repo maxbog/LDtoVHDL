@@ -15,7 +15,7 @@ namespace LDtoVHDL.Translation.Phases
 
 		private static void ReplaceCompositeSignal(Program program, Signal compositeSignal)
 		{
-			var orBlock = new PowerOrBlock(compositeSignal.OrredSignals);
+			var orBlock = new PowerOrBlock(compositeSignal.OrredSignals.Where(sig => sig.InputPort != null));
 
 			foreach (var signalOutputPort in compositeSignal.OutputPorts)
 			{

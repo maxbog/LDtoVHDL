@@ -100,6 +100,7 @@ namespace LDtoVHDL.Model
 
 		public void Disconnect()
 		{
+			ConnectedSignal.Disconnect(this);
 			ConnectedSignal = null;
 		}
 	}
