@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using LDtoVHDL.Model;
 using LDtoVHDL.Model.Blocks;
@@ -74,6 +76,13 @@ namespace LDtoVHDL.VhdlWriter
 				result.AppendFormat("INS({0}) when std_match(CONTROL, \"{1}\") else\n         ", signalCount - i - 1, inChooser);
 			}
 			return result.ToString();
+		}
+
+		protected override string GetName(BaseBlock block)
+		{
+			var selector = block as VarSelector;
+			Debug.Assert(selector != null, "selector != null");
+			return base.GetName(block) + "_" + string.Join("_", selector.Output.OtherSidePorts.Select(port => port.ParentBlock.Id));
 		}
 	}
 }
