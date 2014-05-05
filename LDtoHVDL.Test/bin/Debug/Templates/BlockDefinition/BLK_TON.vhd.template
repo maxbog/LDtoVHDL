@@ -1,9 +1,0 @@
-if EN='1' then
-  ENO <= '1';
-  ET <= 0 fs;
-  VAR_WRITE <= 0 fs;
-else
-  if VAR_READ < PT then
-    ENO <= '1';
-
-end if

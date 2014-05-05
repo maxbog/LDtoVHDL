@@ -1,5 +1,0 @@
-component BLK_COIL is
-    port (EN      : in  std_logic;
-          ENO     : out std_logic;
-          MEM_OUT : out std_logic);
-end component;
