@@ -1,0 +1,22 @@
+﻿library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+library work;
+use work.types.all;
+
+entity BLK_POSITIVE_EDGE_DETECTOR is
+    port (PREV_STATE_READ  : in  std_logic;
+          PREV_STATE_WRITE : out std_logic;
+          WRITE_OCCURS     : out std_logic;
+          EN               : in  std_logic;
+          ENO              : out std_logic);
+end BLK_POSITIVE_EDGE_DETECTOR;
+
+architecture Behavioral of BLK_POSITIVE_EDGE_DETECTOR is
+begin
+  ENO <= '1' when PREV_STATE_READ = '0' and EN = '1' else '0';
+  PREV_STATE_WRITE <= EN;
+  WRITE_OCCURS <= '1' when PREV_STATE_READ /= EN else '0';
+end Behavioral;
+

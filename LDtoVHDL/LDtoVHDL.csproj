@@ -51,6 +51,7 @@
     <Compile Include="Model\Blocks\CoilBlock.cs" />
     <Compile Include="Model\Blocks\ConstantBlock.cs" />
     <Compile Include="Model\Blocks\ContactBlock.cs" />
+    <Compile Include="Model\Blocks\EdgeDetectorBlock.cs" />
     <Compile Include="Model\Blocks\InputVariableStorageBlock.cs" />
     <Compile Include="Model\Blocks\InternalBlock.cs" />
     <Compile Include="Model\Blocks\InVariableBlock.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Translation\Phases\P0_IdentifyRails.cs" />
     <Compile Include="Translation\Phases\P10_ReplaceCompositeSignalsWithOrs.cs" />
     <Compile Include="Translation\Phases\P20_DivideBlockIntoRungs.cs" />
+    <Compile Include="Translation\Phases\P15_CreateEdgeDetectors.cs" />
     <Compile Include="Translation\Phases\P30_AccumulateOutVariables.cs" />
     <Compile Include="Translation\Phases\P40_CreateSelectors.cs" />
     <Compile Include="Translation\Phases\P42_RemoveInOutVariableBlocks.cs" />
@@ -113,6 +115,7 @@
     <Compile Include="VhdlWriter\CoilWriter.cs" />
     <Compile Include="VhdlWriter\ContactWriter.cs" />
     <Compile Include="VhdlWriter\ConstantWriter.cs" />
+    <Compile Include="VhdlWriter\EdgeDetectorWriter.cs" />
     <Compile Include="VhdlWriter\InputVariableStorageWriter.cs" />
     <Compile Include="VhdlWriter\InVariableWriter.cs" />
     <Compile Include="VhdlWriter\LeftRailWriter.cs" />
@@ -144,6 +147,9 @@
     <None Include="Templates\BlockDefinition\BLK_NOC.vhd.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\BlockDefinition\BLK_POSITIVE_EDGE_DETECTOR.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\BlockDefinition\BLK_TON.vhd.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -159,13 +165,22 @@
     <None Include="Templates\BlockDefinition\BLK_NCC.vhd.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\BlockDefinition\BLK_NEGATIVE_EDGE_DETECTOR.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\BlockReference\BLK_ADD.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\BlockReference\BLK_COIL.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\BlockReference\BLK_NEGATIVE_EDGE_DETECTOR.ref.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\BlockReference\BLK_NOC.ref.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockReference\BLK_POSITIVE_EDGE_DETECTOR.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\BlockReference\BLK_TON.ref.template">

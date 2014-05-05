@@ -2,21 +2,20 @@ using LDtoVHDL.Model.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
 {
-	[WriterFor(typeof(NocBlock))]
-	[WriterFor(typeof(NccBlock))]
-	[WriterFor(typeof(PcBlock))]
-	[WriterFor(typeof(NcBlock))]
-	class ContactWriter : VariableBlockWriter
+	[WriterFor(typeof(PositiveEdgeDetectorBlock))]
+	[WriterFor(typeof(NegativeEdgeDetectorBlock))]
+	class EdgeDetectorWriter : VariableBlockWriter
 	{
 
-		public ContactWriter(TemplateResolver templateResolver) : base(templateResolver)
+		public EdgeDetectorWriter(TemplateResolver templateResolver)
+			: base(templateResolver)
 		{
 		}
 
 		public override string GetVhdlType(BaseBlock block)
 		{
-			return (block is NocBlock || block is PcBlock || block is NcBlock) ? "BLK_NOC"
-				 : block is NccBlock ? "BLK_NCC"
+			return block is PositiveEdgeDetectorBlock ? "BLK_POSITIVE_EDGE_DETECTOR"
+				 : block is NegativeEdgeDetectorBlock ? "BLK_NEGATIVE_EDGE_DETECTOR"
 				 : null;
 		}
 

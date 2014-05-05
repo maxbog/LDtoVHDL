@@ -44,4 +44,20 @@ namespace LDtoVHDL.Model.Blocks
 		{
 		}
 	}
+
+	class PcBlock : ContactBlock
+	{
+		public PcBlock(string id, string variableName)
+			: base(id, variableName)
+		{
+		}
+	}
+
+	class NcBlock : ContactBlock
+	{
+		public NcBlock(string id, string variableName)
+			: base(id, variableName)
+		{
+		}
+	}
 }

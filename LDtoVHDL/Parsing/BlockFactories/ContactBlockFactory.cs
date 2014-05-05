@@ -13,7 +13,27 @@ namespace LDtoVHDL.Parsing.BlockFactories
 			var varName = GetVariableName(xBlock);
 			if(IsNegated(xBlock))
 				return new NccBlock(GetBlockLocalId(xBlock), varName);
+			if (IsRisingEdge(xBlock))
+				return new PcBlock(GetBlockLocalId(xBlock), varName);
+			if (IsFallingEdge(xBlock))
+				return new NcBlock(GetBlockLocalId(xBlock), varName);
 			return new NocBlock(GetBlockLocalId(xBlock), varName);
+		}
+
+		private bool IsRisingEdge(XElement xBlock)
+		{
+			var negatedAttr = xBlock.Attribute("edge");
+			if (negatedAttr == null)
+				return false;
+			return (string) negatedAttr == "rising";
+		}
+
+		private bool IsFallingEdge(XElement xBlock)
+		{
+			var negatedAttr = xBlock.Attribute("edge");
+			if (negatedAttr == null)
+				return false;
+			return (string)negatedAttr == "falling";
 		}
 
 		private bool IsNegated(XElement xBlock)
