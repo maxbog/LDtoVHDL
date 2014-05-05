@@ -6,14 +6,16 @@ library work;
 use work.types.all;
 
 entity BLK_COIL is
-    port (EN      : in  std_logic;
-          ENO     : out std_logic;
-          MEM_OUT : out std_logic);
+    port (EN              : in  std_logic;
+          ENO             : out std_logic;
+          MEM_OUT         : out std_logic;
+          WRITE_CONDITION : out std_logic);
 end BLK_COIL;
 
 architecture Behavioral of BLK_COIL is
 begin
     ENO <= EN;
     MEM_OUT <= EN;
+    WRITE_CONDITION <= '1';
 end Behavioral;
 

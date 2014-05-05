@@ -6,11 +6,11 @@ namespace LDtoVHDL.Model.Blocks
 	public interface IOutVariableBlock : IVariableBlock
 	{
 		Port MemoryOutput { get; }
-		Signal WriteCondition { get; }
+		Port WriteCondition { get; }
 	}
 	public class OutVariableBlock : VariableBlock, IOutVariableBlock
 	{
-		private Signal m_writeCondition;
+		private Port m_writeCondition;
 		public const string TYPE = "outVariable";
 		public OutVariableBlock(string id, string variableName, SignalType signalType)
 			: base(id, variableName, signalType)
@@ -20,7 +20,7 @@ namespace LDtoVHDL.Model.Blocks
 
 		public Port Input { get { return Ports.Values.Single(port => port.Direction == PortDirection.Input); } }
 		public Port MemoryOutput { get { return Ports["MEM_OUT"]; }}
-		public virtual Signal WriteCondition 
+		public virtual Port WriteCondition 
 		{ 
 			get
 			{
@@ -32,7 +32,7 @@ namespace LDtoVHDL.Model.Blocks
 
 		public void ComputeWriteCondition()
 		{
-			m_writeCondition = Input.OtherSidePorts.Single().ParentBlock.Enable.ConnectedSignal;
+			m_writeCondition = Input.OtherSidePorts.Single().ParentBlock.Enable.OtherSidePorts.Single();
 		}
 
 

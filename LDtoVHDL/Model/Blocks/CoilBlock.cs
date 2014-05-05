@@ -1,4 +1,6 @@
-﻿namespace LDtoVHDL.Model.Blocks
+﻿using System.Linq;
+
+namespace LDtoVHDL.Model.Blocks
 {
 	public class CoilBlock : BaseBlock, IOutVariableBlock
 	{
@@ -7,11 +9,12 @@
 			: base(id)
 		{
 			CreateOutputPort("MEM_OUT");
+			CreateOutputPort("WRITE_CONDITION");
 			VariableName = variableName;
 		}
 
 		public Port MemoryOutput { get { return Ports["MEM_OUT"]; }}
-		public Signal WriteCondition { get { return Enable.ConnectedSignal; } }
+		public Port WriteCondition { get { return Ports["WRITE_CONDITION"]; } }
 
 		protected override string GetNewPortName(PortDirection direction)
 		{

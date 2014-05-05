@@ -61,6 +61,8 @@
     <Compile Include="Model\Blocks\PowerOrBlock.cs" />
     <Compile Include="Model\Blocks\RailBlock.cs" />
     <Compile Include="Model\Blocks\RightRailBlock.cs" />
+    <Compile Include="Model\Blocks\TimerBlock.cs" />
+    <Compile Include="Model\Blocks\TofBlock.cs" />
     <Compile Include="Model\Blocks\TonBlock.cs" />
     <Compile Include="Model\Blocks\VariableBlock.cs" />
     <Compile Include="Model\Blocks\VariableStorageBlock.cs" />

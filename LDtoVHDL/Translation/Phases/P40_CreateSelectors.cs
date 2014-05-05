@@ -87,7 +87,7 @@ namespace LDtoVHDL.Translation.Phases
 		{
 			var selector = new VarSelector();
 			var signalBus = new BusCreator(writingBlocks.Select(blk => blk.MemoryOutput));
-			var controlBus = new BusCreator(writingBlocks.Select(blk => blk.WriteCondition.InputPort));
+			var controlBus = new BusCreator(writingBlocks.Select(blk => blk.WriteCondition));
 			selector.MemoryInput.Connect(memoryVariableStorage.Output);
 			selector.Inputs.Connect(signalBus.Output);
 			selector.Controls.Connect(controlBus.Output);
