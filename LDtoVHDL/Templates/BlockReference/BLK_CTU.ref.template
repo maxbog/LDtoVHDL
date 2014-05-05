@@ -1,0 +1,9 @@
+﻿component BLK_CTU is
+    port (VAR_READ  : in  counter_up;
+          VAR_WRITE : out counter_up;
+          EN        : in  std_logic;
+          ENO       : out std_logic;
+          PV        : in  sint16;
+          CV        : out sint16;
+          R         : in  std_logic := '0');
+end component;

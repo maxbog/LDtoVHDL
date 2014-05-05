@@ -51,6 +51,7 @@
     <Compile Include="Model\Blocks\CoilBlock.cs" />
     <Compile Include="Model\Blocks\ConstantBlock.cs" />
     <Compile Include="Model\Blocks\ContactBlock.cs" />
+    <Compile Include="Model\Blocks\CounterBlock.cs" />
     <Compile Include="Model\Blocks\EdgeDetectorBlock.cs" />
     <Compile Include="Model\Blocks\InputVariableStorageBlock.cs" />
     <Compile Include="Model\Blocks\InternalBlock.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Parsing\BlockFactories\BlockBuilder.cs" />
     <Compile Include="Parsing\BlockFactories\CoilBlockFactory.cs" />
     <Compile Include="Parsing\BlockFactories\ContactBlockFactory.cs" />
+    <Compile Include="Parsing\BlockFactories\CounterBlockFactory.cs" />
     <Compile Include="Parsing\BlockFactories\FactoryForAttribute.cs" />
     <Compile Include="Parsing\BlockFactories\IBlockFactory.cs" />
     <Compile Include="Parsing\BlockFactories\InVariableBlockFactory.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="VhdlWriter\CoilWriter.cs" />
     <Compile Include="VhdlWriter\ContactWriter.cs" />
     <Compile Include="VhdlWriter\ConstantWriter.cs" />
+    <Compile Include="VhdlWriter\CounterWriter.cs" />
     <Compile Include="VhdlWriter\EdgeDetectorWriter.cs" />
     <Compile Include="VhdlWriter\InputVariableStorageWriter.cs" />
     <Compile Include="VhdlWriter\InVariableWriter.cs" />
@@ -168,6 +171,12 @@
     <None Include="Templates\BlockDefinition\BLK_NEGATIVE_EDGE_DETECTOR.vhd.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\BlockDefinition\BLK_CTU.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockDefinition\BLK_CTD.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\BlockReference\BLK_ADD.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -196,6 +205,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\BlockReference\BLK_NCC.ref.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockReference\BLK_CTU.ref.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockReference\BLK_CTD.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\types.vhd.template">

@@ -11,6 +11,8 @@ package types is
 	subtype uint32 is unsigned(31 downto 0);
 	subtype timer_on is time;
 	subtype timer_off is time;
+	subtype counter_up is sint16;
+	subtype counter_down is sint16;
 
 	type sint8_vector is array (integer range <>) of sint8;
 	type sint16_vector is array (integer range <>) of sint16;
@@ -22,4 +24,6 @@ package types is
 	type time_vector is array (integer range <>) of time;
 	type timer_on_vector is array (integer range <>) of timer_on;
 	type timer_off_vector is array (integer range <>) of timer_off;
+	type counter_up_vector is array (integer range <>) of counter_up;
+	type counter_down_vector is array (integer range <>) of counter_down;
 end types;

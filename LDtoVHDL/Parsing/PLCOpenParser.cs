@@ -66,7 +66,9 @@ namespace LDtoVHDL.Parsing
 			{"UDINT", BuiltinType.UInt32},
 			{"TON", BuiltinType.TimerOn},
 			{"TOF", BuiltinType.TimerOff},
-			{"TIME", BuiltinType.Time}
+			{"TIME", BuiltinType.Time},
+			{"CTU", BuiltinType.CounterUp},
+			{"CTD", BuiltinType.CounterDown}
 		};
 
 		private readonly Dictionary<XElement, Port> m_ports = new Dictionary<XElement, Port>();

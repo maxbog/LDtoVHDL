@@ -17,7 +17,9 @@ namespace LDtoVHDL.VhdlWriter
 			{BuiltinType.UInt32, "uint32"},
 			{BuiltinType.TimerOn, "timer_on"},
 			{BuiltinType.TimerOff, "timer_off"},
-			{BuiltinType.Time, "time"}
+			{BuiltinType.Time, "time"},
+			{BuiltinType.CounterUp, "counter_up"},
+			{BuiltinType.CounterDown, "counter_down"}
 		};
 
 		public static string GetName(SignalType type)
@@ -40,7 +42,9 @@ namespace LDtoVHDL.VhdlWriter
 			{BuiltinType.UInt32, 0},
 			{BuiltinType.TimerOn, new TimeSpan(0)},
 			{BuiltinType.TimerOff, new TimeSpan(0)},
-			{BuiltinType.Time, new TimeSpan(0)}
+			{BuiltinType.Time, new TimeSpan(0)},
+			{BuiltinType.CounterUp, 0},
+			{BuiltinType.CounterDown, 0}
 		};
 
 		public static string GetValueConstructor(SignalType type, object value)
@@ -63,6 +67,8 @@ namespace LDtoVHDL.VhdlWriter
 				return string.Format("to_unsigned({0},16)", (ushort)Convert.ToInt64(value));
 			if (type == BuiltinType.UInt32)
 				return string.Format("to_unsigned({0},32)", (uint)Convert.ToInt64(value));
+			if (type == BuiltinType.CounterUp || type == BuiltinType.CounterDown)
+				return string.Format("to_signed({0},16)", (short)Convert.ToInt64(value));
 
 			if (type == BuiltinType.Time || type == BuiltinType.TimerOn || type == BuiltinType.TimerOff)
 			{
