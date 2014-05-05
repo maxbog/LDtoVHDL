@@ -28,7 +28,8 @@ namespace LDtoVHDL.Model.Blocks
 
 		public override void ComputePortTypes()
 		{
-			Output.SignalType = ValueType ?? Output.ConnectedSignal.Type;
+			ValueType = ValueType ?? Output.ConnectedSignal.Type;
+			Output.SignalType = ValueType;
 		}
 
 		protected override string GetNewPortName(PortDirection direction)
