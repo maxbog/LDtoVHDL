@@ -4,7 +4,7 @@ namespace LDtoVHDL.VhdlWriter
 {
 	[WriterFor(typeof(NocBlock))]
 	[WriterFor(typeof(NccBlock))]
-	class ContactWriter : BaseBlockWriter
+	class ContactWriter : VariableBlockWriter
 	{
 
 		public ContactWriter(TemplateResolver templateResolver) : base(templateResolver)

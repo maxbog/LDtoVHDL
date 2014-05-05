@@ -3,7 +3,7 @@ using LDtoVHDL.Model.Blocks;
 namespace LDtoVHDL.VhdlWriter
 {
 	[WriterFor(typeof(CoilBlock))]
-	class CoilWriter : BaseBlockWriter
+	class CoilWriter : VariableBlockWriter
 	{
 
 		public CoilWriter(TemplateResolver templateResolver) : base(templateResolver)

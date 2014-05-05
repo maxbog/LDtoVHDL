@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using LDtoVHDL.Model.Blocks;
 
 namespace LDtoVHDL.VhdlWriter
 {
 	[WriterFor(typeof(TonBlock))]
 	[WriterFor(typeof(TofBlock))]
-	class TimerWriter : BaseBlockWriter
+	class TimerWriter : VariableBlockWriter
 	{
 		public TimerWriter(TemplateResolver templateResolver) : base(templateResolver)
 		{
@@ -41,5 +42,6 @@ namespace LDtoVHDL.VhdlWriter
 		{
 			return TemplateResolver.GetWithReplacements(string.Format("BlockDefinition/{0}.vhd", GetVhdlType(block)));
 		}
+
 	}
 }
