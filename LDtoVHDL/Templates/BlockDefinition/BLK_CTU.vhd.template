@@ -6,23 +6,28 @@ library work;
 use work.types.all;
 
 entity BLK_CTU is
-    port (VAR_READ  : in  counter_up;
-          VAR_WRITE : out counter_up;
-          EN        : in  std_logic;
-          ENO       : out std_logic;
-          PV        : in  sint16;
-          CV        : out sint16;
-          R         : in  std_logic := '0');
+    port (VAR_READ        : in  counter_up;
+          VAR_WRITE       : out counter_up;
+          EN              : in  std_logic;
+          ENO             : out std_logic;
+          PV              : in  sint16;
+          CV              : out sint16;
+          R               : in  std_logic := '0';
+          WRITE_CONDITION : out std_logic);
 end BLK_CTU;
 
 architecture Behavioral of BLK_CTU is
+    signal temp_CV : sint16;
 begin
     ENO <= '1' when VAR_READ >= PV else '0';
-    CV <= to_signed(0,16) when R = '1' else
-          VAR_READ + 1 when EN = '1' and VAR_READ < sint16'high else
-          VAR_READ;
-    VAR_WRITE <= to_signed(0,16) when R = '1' else
-                 VAR_READ + 1    when EN = '1' and VAR_READ < sint32'high else
-                 VAR_READ;
+    
+    temp_CV <= to_signed(0,16) when R = '1' else
+               VAR_READ + 1    when EN = '1' and VAR_READ < sint16'high else
+               VAR_READ;
+
+    VAR_WRITE <= temp_CV;
+    CV <= temp_CV;
+    
+    WRITE_CONDITION <= '1' when EN = '1' or R = '1' else '0';
 end Behavioral;
 

@@ -10,6 +10,7 @@ namespace LDtoVHDL.Model.Blocks
 			VariableName = variableName;
 
 			CreateOutputPort("VAR_WRITE");
+			CreateOutputPort("WRITE_CONDITION");
 			CreateInputPort("VAR_READ");
 		}
 
@@ -17,6 +18,8 @@ namespace LDtoVHDL.Model.Blocks
 		public Port Output { get { return Ports["Q"]; } }
 		public Port PresetValue { get { return Ports["PV"]; } }
 		public Port CurrentValue { get { return Ports["CV"]; } }
+		public Port WriteCondition { get { return Ports["WRITE_CONDITION"]; } }
+
 		public override Port Enable
 		{
 			get { return Input; }
@@ -40,15 +43,12 @@ namespace LDtoVHDL.Model.Blocks
 			Input.SignalType = BuiltinType.Boolean;
 			Output.SignalType = BuiltinType.Boolean;
 			PresetValue.SignalType = BuiltinType.SInt16;
-			CurrentValue.SignalType = BuiltinType.SInt16;
+			CurrentValue.SignalType = BuiltinType.SInt16; 
+			WriteCondition.SignalType = BuiltinType.Boolean;
 		}
 
 		public string VariableName { get; private set; }
 
-		public Port WriteCondition
-		{
-			get { return Input.OtherSidePorts.Single(); }
-		}
 	}
 
 	class CtuBlock : CounterBlock

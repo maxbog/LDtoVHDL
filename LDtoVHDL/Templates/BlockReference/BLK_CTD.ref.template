@@ -1,9 +1,10 @@
 ﻿component BLK_CTD is
-    port (VAR_READ  : in  counter_down;
-          VAR_WRITE : out counter_down;
-          EN        : in  std_logic;
-          ENO       : out std_logic;
-          PV        : in  sint16;
-          CV        : out sint16;
-          LD        : in  std_logic);
+    port (VAR_READ        : in  counter_down;
+          VAR_WRITE       : out counter_down;
+          EN              : in  std_logic;
+          ENO             : out std_logic;
+          PV              : in  sint16;
+          CV              : out sint16;
+          LD              : in  std_logic;
+          WRITE_CONDITION : out std_logic);
 end component;

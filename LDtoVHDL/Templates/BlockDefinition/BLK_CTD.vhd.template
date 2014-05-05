@@ -6,24 +6,28 @@ library work;
 use work.types.all;
 
 entity BLK_CTD is
-    port (VAR_READ  : in  counter_down;
-          VAR_WRITE : out counter_down;
-          EN        : in  std_logic;
-          ENO       : out std_logic;
-          PV        : in  sint16;
-          CV        : out sint16;
-          LD        : in  std_logic);
+    port (VAR_READ        : in  counter_down;
+          VAR_WRITE       : out counter_down;
+          EN              : in  std_logic;
+          ENO             : out std_logic;
+          PV              : in  sint16;
+          CV              : out sint16;
+          LD              : in  std_logic;
+          WRITE_CONDITION : out std_logic);
 end BLK_CTD;
 
 architecture Behavioral of BLK_CTD is
+    signal temp_CV : std_logic;
 begin
     ENO <= '1' when VAR_READ >= to_signed(0,16) else '0';
-    CV <= VAR_READ;
-    CV <= PV           when R = '1' else
-          VAR_READ - 1 when EN = '1' and VAR_READ > sint16'low else
-          VAR_READ;
-    VAR_WRITE <= PV           when R = '1' else
-                 VAR_READ - 1 when EN = '1' and VAR_READ > sint16'low else
-                 VAR_READ;
+
+    temp_CV <= PV           when LD = '1' else
+               VAR_READ - 1 when EN = '1' and VAR_READ > sint16'low else
+               VAR_READ;
+
+    VAR_WRITE <= temp_CV;
+    CV <= temp_CV;
+
+    WRITE_CONDITION <= '1' when EN = '1' or LD = '1' else '0';
 end Behavioral;
 

@@ -21,6 +21,7 @@ namespace LDtoVHDL.VhdlWriter
 			yield return Tuple.Create("ENO", GetSignalName(counterBlock.Output));
 			yield return Tuple.Create("PV", GetSignalName(counterBlock.PresetValue));
 			yield return Tuple.Create("CV", GetSignalName(counterBlock.CurrentValue));
+			yield return Tuple.Create("WRITE_CONDITION", GetSignalName(counterBlock.WriteCondition));
 		}
 
 		public override string GetComponentReference(BaseBlock block)
