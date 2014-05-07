@@ -43,5 +43,10 @@ namespace LDtoVHDL.VhdlWriter
 			return TemplateResolver.GetWithReplacements(string.Format("BlockDefinition/{0}.vhd", GetVhdlType(block)));
 		}
 
+		protected override IEnumerable<Tuple<string, string>> GetGenericMapping(BaseBlock block)
+		{
+			yield return Tuple.Create("CLK_frequency", "CLK_frequency");
+		}
+
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using LDtoVHDL.Model;
 
 namespace LDtoVHDL.VhdlWriter
@@ -17,7 +18,7 @@ namespace LDtoVHDL.VhdlWriter
 			{BuiltinType.UInt32, "uint32"},
 			{BuiltinType.TimerOn, "timer_on"},
 			{BuiltinType.TimerOff, "timer_off"},
-			{BuiltinType.Time, "time"},
+			{BuiltinType.Time, "plc_time"},
 			{BuiltinType.CounterUp, "counter_up"},
 			{BuiltinType.CounterDown, "counter_down"}
 		};
@@ -40,9 +41,9 @@ namespace LDtoVHDL.VhdlWriter
 			{BuiltinType.UInt8, 0},
 			{BuiltinType.UInt16, 0},
 			{BuiltinType.UInt32, 0},
-			{BuiltinType.TimerOn, new TimeSpan(0)},
-			{BuiltinType.TimerOff, new TimeSpan(0)},
-			{BuiltinType.Time, new TimeSpan(0)},
+			{BuiltinType.TimerOn, 0},
+			{BuiltinType.TimerOff, 0},
+			{BuiltinType.Time, 0L},
 			{BuiltinType.CounterUp, 0},
 			{BuiltinType.CounterDown, 0}
 		};
@@ -56,25 +57,21 @@ namespace LDtoVHDL.VhdlWriter
 				return (bool) value ? "'1'" : "'0'";
 
 			if (type == BuiltinType.SInt8)
-				return string.Format("to_signed({0},8)", (sbyte)Convert.ToInt64(value));
+				return string.Format("x\"{0:x2}\"", (sbyte)Convert.ToInt64(value));
 			if (type == BuiltinType.SInt16)
-				return string.Format("to_signed({0},16)", (short)Convert.ToInt64(value));
+				return string.Format("x\"{0:x4}\"", (short)Convert.ToInt64(value));
 			if (type == BuiltinType.SInt32)
-				return string.Format("to_signed({0},32)", (int)Convert.ToInt64(value));
+				return string.Format("x\"{0:x8}\"", (int)Convert.ToInt64(value));
 			if (type == BuiltinType.UInt8)
-				return string.Format("to_unsigned({0},8)", (byte)Convert.ToInt64(value));
+				return string.Format("x\"{0:x2}\"", (byte)Convert.ToInt64(value));
 			if (type == BuiltinType.UInt16)
-				return string.Format("to_unsigned({0},16)", (ushort)Convert.ToInt64(value));
+				return string.Format("x\"{0:x4}\"", (ushort)Convert.ToInt64(value));
 			if (type == BuiltinType.UInt32)
-				return string.Format("to_unsigned({0},32)", (uint)Convert.ToInt64(value));
+				return string.Format("x\"{0:x8}\"", (uint)Convert.ToInt64(value));
 			if (type == BuiltinType.CounterUp || type == BuiltinType.CounterDown)
-				return string.Format("to_signed({0},16)", (short)Convert.ToInt64(value));
-
+				return string.Format("x\"{0:x4}\"", (short)Convert.ToInt64(value));
 			if (type == BuiltinType.Time || type == BuiltinType.TimerOn || type == BuiltinType.TimerOff)
-			{
-				var ts = (TimeSpan)value;
-				return string.Format("{0} us", (uint)(ts.Ticks/10L));
-			}
+				return string.Format("x\"{0:x16}\"", Convert.ToInt64(value));
 
 			throw new InvalidOperationException("No such type");
 		}

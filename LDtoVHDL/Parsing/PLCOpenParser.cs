@@ -275,7 +275,7 @@ namespace LDtoVHDL.Parsing
 		private static Tuple<SignalType, object> ParseTimeExpression(string timeValue)
 		{
 			timeValue = timeValue.Replace("_", "");
-			long ticksCount = 0;
+			long nanoseconds = 0;
 			int currentIndex = 0;
 			while (currentIndex < timeValue.Length)
 			{
@@ -283,20 +283,21 @@ namespace LDtoVHDL.Parsing
 				var currentValue = double.Parse(timeValue.Substring(currentIndex, unitIdx));
 				int nextValueIndex = timeValue.IndexOfAny("0123456789.".ToCharArray(), unitIdx + 1);
 				var unit = nextValueIndex == -1 ? timeValue.Substring(unitIdx) : timeValue.Substring(unitIdx, nextValueIndex - 1);
-				ticksCount += (long)(currentValue * Multiplier[unit]);
+				nanoseconds += (long)(currentValue * Multiplier[unit]);
 				currentIndex = nextValueIndex == -1 ? timeValue.Length : nextValueIndex;
 			}
-			return Tuple.Create<SignalType, object>(BuiltinType.Time, new TimeSpan(ticksCount));
+			return Tuple.Create<SignalType, object>(BuiltinType.Time, nanoseconds);
 		}
 
 		private static readonly Dictionary<string, long> Multiplier = new Dictionary<string, long>
 		{
-			{"us", 10L},
-			{"ms", 10L*1000},
-			{"s", 10L*1000*1000},
-			{"m", 10L*1000*1000*60},
-			{"h", 10L*1000*1000*60*60},
-			{"d", 10L*1000*1000*60*60*24}
+			{"ns", 1000L},
+			{"us", 1000L*1000},
+			{"ms", 1000L*1000*1000},
+			{"s", 1000L*1000*1000*1000},
+			{"m", 1000L*1000*1000*1000*60},
+			{"h", 1000L*1000*1000*1000*60*60},
+			{"d", 1000L*1000*1000*1000*60*60*24}
 		};
 
 	}

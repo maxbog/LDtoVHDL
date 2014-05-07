@@ -1,8 +1,9 @@
 ﻿component BLK_TOF is
-    port (VAR_READ : in  time;
-          VAR_WRITE  : out time;
+    generic (CLK_frequency : in integer);
+    port (VAR_READ  : in  plc_time;
+          VAR_WRITE : out plc_time;
           EN        : in  std_logic;
           ENO       : out std_logic;
-          PT        : in  time;
-          ET        : out time);
+          PT        : in  plc_time;
+          ET        : out plc_time);
 end component;

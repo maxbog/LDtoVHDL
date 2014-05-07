@@ -37,11 +37,16 @@ namespace LDtoVHDL.VhdlWriter
 			Directory.CreateDirectory(m_baseDirectory);
 			foreach (var file in Directory.EnumerateFiles(m_baseDirectory))
 				File.Delete(file);
+
 			using (var writer = GetWriterForFile(program.Name + ".vhd"))
 			{
 				WriteUsings(writer);
 				WriteEntityDeclaration(writer, program);
 				WriteArchitectureDefinition(writer, program);
+			}
+			using (var writer = GetWriterForFile(program.Name + ".vho"))
+			{
+				WriteEntityReference(writer, program);
 			}
 
 			using (var writer = GetWriterForFile("types.vhd"))
@@ -146,21 +151,37 @@ namespace LDtoVHDL.VhdlWriter
 
 		private void WriteEntityDeclaration(TextWriter writer, Program program)
 		{
-			writer.WriteLine("entity {0} is port(", program.Name);
+			writer.WriteLine("entity {0} is ", program.Name);
+			writer.WriteLine("    generic (");
+			writer.WriteLine("        CLK_frequency : in integer");
+			writer.WriteLine("    );");
+			writer.WriteLine("    port (");
 			WritePortMappings(writer, program);
-			writer.WriteLine(");");
+			writer.WriteLine("    );");
 			writer.WriteLine("end {0};", program.Name);
+		}
+
+		private void WriteEntityReference(TextWriter writer, Program program)
+		{
+			writer.WriteLine("component {0} is ", program.Name);
+			writer.WriteLine("    generic (");
+			writer.WriteLine("        CLK_frequency : in integer");
+			writer.WriteLine("    );");
+			writer.WriteLine("    port (");
+			WritePortMappings(writer, program);
+			writer.WriteLine("    );");
+			writer.WriteLine("end component;");
 		}
 
 		private void WritePortMappings(TextWriter writer, Program program)
 		{
 			var inPortsSpec = string.Join(";\n", program.AllBlocks
 				.OfType<InputVariableStorageBlock>()
-				.Select(outVar => string.Format("    {0} : in {1}", outVar.VariableName, SignalTypeWriter.GetName(outVar.Output.SignalType))));
+				.Select(outVar => string.Format("        {0} : in {1}", outVar.VariableName, SignalTypeWriter.GetName(outVar.Output.SignalType))));
 
 			var outPortsSpec = string.Join(";\n", program.AllBlocks
 				.OfType<OutputVariableStorageBlock>()
-				.Select(outVar => string.Format("    {0} : out {1}", outVar.VariableName, SignalTypeWriter.GetName(outVar.Output.SignalType))));
+				.Select(outVar => string.Format("        {0} : out {1}", outVar.VariableName, SignalTypeWriter.GetName(outVar.Output.SignalType))));
 
 			if (inPortsSpec.Length > 0)
 				writer.Write(inPortsSpec + (outPortsSpec.Length > 0 ? ";\n" : ""));
@@ -168,7 +189,7 @@ namespace LDtoVHDL.VhdlWriter
 				writer.Write(outPortsSpec);
 
 			if (program.AllBlocks.OfType<ClockBlock>().Any())
-				writer.Write(";\n    CLK : in std_logic");
+				writer.Write(";\n        CLK : in std_logic");
 
 			writer.WriteLine();
 		}
