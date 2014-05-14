@@ -9,6 +9,7 @@
 
 		public override void ComputePortTypes()
 		{
+			base.ComputePortTypes();
 			MemoryInput.SignalType = BuiltinType.TimerOn;
 			MemoryOutput.SignalType = BuiltinType.TimerOn;
 		}

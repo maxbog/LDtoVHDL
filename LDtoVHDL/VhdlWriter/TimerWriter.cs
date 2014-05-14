@@ -30,6 +30,7 @@ namespace LDtoVHDL.VhdlWriter
 			yield return Tuple.Create("ENO", GetSignalName(tonBlock.Output));
 			yield return Tuple.Create("PT", GetSignalName(tonBlock.PresetTime));
 			yield return Tuple.Create("ET", GetSignalName(tonBlock.ElapsedTime));
+			yield return Tuple.Create("WRITE_CONDITION", GetSignalName(tonBlock.WriteCondition));
 		}
 
 		public override string GetComponentReference(BaseBlock block)

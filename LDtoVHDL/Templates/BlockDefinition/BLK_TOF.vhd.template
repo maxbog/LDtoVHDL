@@ -7,16 +7,17 @@ use work.types.all;
 
 entity BLK_TOF is
     generic (CLK_frequency : in integer);
-    port (VAR_READ  : in  plc_time;
-          VAR_WRITE : out plc_time;
-          EN        : in  std_logic;
-          ENO       : out std_logic;
-          PT        : in  plc_time;
-          ET        : out plc_time);
+    port (VAR_READ        : in  plc_time;
+          VAR_WRITE       : out plc_time;
+          EN              : in  std_logic;
+          ENO             : out std_logic;
+          PT              : in  plc_time;
+          ET              : out plc_time;
+          WRITE_CONDITION : out std_logic);
 end BLK_TOF;
 
 architecture Behavioral of BLK_TOF is
-    constant ONE_SECOND : signed(63 downto 0) := x"000000e8d4a51000";
+    constant ONE_SECOND : plc_time := x"000000e8d4a51000";
     constant TIMER_STEP : plc_time := ONE_SECOND / CLK_frequency;
     signal cond : std_logic_vector(1 downto 0);
 begin
@@ -27,5 +28,6 @@ begin
     VAR_WRITE <= VAR_READ + TIMER_STEP when cond = "10" else
                  VAR_READ              when cond = "00" else
                  x"0000000000000000";
+    WRITE_CONDITION <= '1';
 end Behavioral;
 

@@ -9,6 +9,7 @@ namespace LDtoVHDL.Model.Blocks
 		{
 			VariableName = variableName;
 
+			CreateOutputPort("WRITE_CONDITION");
 			CreateOutputPort("VAR_WRITE");
 			CreateInputPort("VAR_READ");
 		}
@@ -41,13 +42,11 @@ namespace LDtoVHDL.Model.Blocks
 			Output.SignalType = BuiltinType.Boolean;
 			PresetTime.SignalType = BuiltinType.Time;
 			ElapsedTime.SignalType = BuiltinType.Time;
+			WriteCondition.SignalType = BuiltinType.Boolean;
 		}
 
 		public string VariableName { get; private set; }
 
-		public Port WriteCondition
-		{
-			get { return Input.OtherSidePorts.Single(); }
-		}
+		public Port WriteCondition { get { return Ports["WRITE_CONDITION"]; } }
 	}
 }

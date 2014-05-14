@@ -7,12 +7,13 @@ use work.types.all;
 
 entity BLK_TON is
     generic (CLK_frequency : in integer);
-    port (VAR_READ  : in  plc_time;
-          VAR_WRITE : out plc_time;
-          EN        : in  std_logic;
-          ENO       : out std_logic;
-          PT        : in  plc_time;
-          ET        : out plc_time);
+    port (VAR_READ        : in  plc_time;
+          VAR_WRITE       : out plc_time;
+          EN              : in  std_logic;
+          ENO             : out std_logic;
+          PT              : in  plc_time;
+          ET              : out plc_time;
+          WRITE_CONDITION : out std_logic);
 end BLK_TON;
 
 architecture Behavioral of BLK_TON is
@@ -27,5 +28,6 @@ begin
     VAR_WRITE <= VAR_READ + TIMER_STEP when cond = "10" else
                  VAR_READ              when cond = "00" else
                  x"0000000000000000";
+    WRITE_CONDITION <= '1';
 end Behavioral;
 
