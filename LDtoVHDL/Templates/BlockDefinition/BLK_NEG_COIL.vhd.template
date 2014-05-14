@@ -1,0 +1,21 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+library work;
+use work.types.all;
+
+entity BLK_NEG_COIL is
+    port (EN              : in  std_logic;
+          ENO             : out std_logic;
+          MEM_OUT         : out std_logic;
+          WRITE_CONDITION : out std_logic);
+end BLK_NEG_COIL;
+
+architecture Behavioral of BLK_NEG_COIL is
+begin
+    ENO <= EN;
+    MEM_OUT <= not EN;
+    WRITE_CONDITION <= '1';
+end Behavioral;
+

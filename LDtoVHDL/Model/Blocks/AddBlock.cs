@@ -4,8 +4,6 @@ namespace LDtoVHDL.Model.Blocks
 {
 	class AddBlock : BaseBlock
 	{
-		public const string TYPE = "ADD";
-
 		public AddBlock(string id) : base(id)
 		{
 		}

@@ -1,11 +1,8 @@
-﻿using System.Linq;
-
-namespace LDtoVHDL.Model.Blocks
+﻿namespace LDtoVHDL.Model.Blocks
 {
-	public class CoilBlock : BaseBlock, IOutVariableBlock
+	public abstract class BaseCoilBlock : BaseBlock, IOutVariableBlock
 	{
-		public const string TYPE = "coil";
-		public CoilBlock(string id, string variableName)
+		protected BaseCoilBlock(string id, string variableName)
 			: base(id)
 		{
 			CreateOutputPort("MEM_OUT");
@@ -33,5 +30,19 @@ namespace LDtoVHDL.Model.Blocks
 		}
 
 		public string VariableName { get; private set; }
+	}
+
+	class CoilBlock : BaseCoilBlock
+	{
+		public CoilBlock(string id, string variableName) : base(id, variableName)
+		{
+		}
+	}
+
+	class NegatedCoilBlock : BaseCoilBlock
+	{
+		public NegatedCoilBlock(string id, string variableName) : base(id, variableName)
+		{
+		}
 	}
 }

@@ -48,7 +48,7 @@
     <Compile Include="Model\Blocks\BaseBlock.cs" />
     <Compile Include="Model\Blocks\BusCreator.cs" />
     <Compile Include="Model\Blocks\ClockBlock.cs" />
-    <Compile Include="Model\Blocks\CoilBlock.cs" />
+    <Compile Include="Model\Blocks\BaseCoilBlock.cs" />
     <Compile Include="Model\Blocks\ConstantBlock.cs" />
     <Compile Include="Model\Blocks\ContactBlock.cs" />
     <Compile Include="Model\Blocks\CounterBlock.cs" />
@@ -177,6 +177,9 @@
     <None Include="Templates\BlockDefinition\BLK_CTD.vhd.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\BlockDefinition\BLK_NEG_COIL.vhd.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\BlockReference\BLK_ADD.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -211,6 +214,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\BlockReference\BLK_CTD.ref.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\BlockReference\BLK_NEG_COIL.ref.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\types.vhd.template">
