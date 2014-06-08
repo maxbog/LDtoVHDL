@@ -20,7 +20,7 @@ namespace LDtoVHDL.VhdlWriter
 		public override string GetVhdlType(BaseBlock block)
 		{
 			var varSelector = (VarSelector)block;
-			return MakeTypedName(string.Format("BLK_VAR_SELECTOR{0}", GetSignalCount(varSelector)), varSelector.Output.SignalType);
+			return MakeTypedName("BLK_VAR_SELECTOR", varSelector.Output.SignalType);
 		}
 
 		private static int GetSignalCount(VarSelector varSelector)
@@ -33,49 +33,21 @@ namespace LDtoVHDL.VhdlWriter
 		public override string GetComponentReference(BaseBlock block)
 		{
 			var varSelector = (VarSelector)block;
-			var signalCount = GetSignalCount(varSelector);
 			return PrepareTemplateForOutput(TemplateResolver.GetWithReplacements("BlockReference/BLK_VAR_SELECTOR.ref", 
 				new Dictionary<string, string>
 				{
 					{ "type", SignalTypeWriter.GetName(varSelector.Output.SignalType) },
-					{"signal_count", signalCount.ToString(CultureInfo.InvariantCulture)},
-					{"max_vector_idx", (signalCount-1).ToString(CultureInfo.InvariantCulture)}
 				}));
 		}
 
 		public override string GetDefinition(BaseBlock block)
 		{
 			var varSelector = (VarSelector)block;
-			var signalCount = GetSignalCount(varSelector);
 			return TemplateResolver.GetWithReplacements("BlockDefinition/BLK_VAR_SELECTOR.vhd",
 				new Dictionary<string, string>
 				{
 					{"type", SignalTypeWriter.GetName(varSelector.Output.SignalType)},
-					{"signal_count", signalCount.ToString(CultureInfo.InvariantCulture)},
-					{"max_vector_idx", (signalCount-1).ToString(CultureInfo.InvariantCulture)},
-					{"input_chooser", MakeInputChooser(varSelector)}
 				});
-		}
-
-		private string MakeInputChooser(VarSelector varSelector)
-		{
-			var signalCount = GetSignalCount(varSelector);
-			var result = new StringBuilder();
-			for (int i = 0; i < signalCount; ++i)
-			{
-				var inChooser = "";
-				for (int j = 0; j < i; ++j)
-				{
-					inChooser += '0';
-				}
-				inChooser += '1';
-				for (int j = i+1; j < signalCount; ++j)
-				{
-					inChooser += '-';
-				}
-				result.AppendFormat("INS({0}) when std_match(CONTROL, \"{1}\") else\n         ", signalCount - i - 1, inChooser);
-			}
-			return result.ToString();
 		}
 
 		protected override string GetName(BaseBlock block)
@@ -83,6 +55,12 @@ namespace LDtoVHDL.VhdlWriter
 			var selector = block as VarSelector;
 			Debug.Assert(selector != null, "selector != null");
 			return base.GetName(block) + "_" + string.Join("_", selector.Output.OtherSidePorts.Select(port => port.ParentBlock.Id));
+		}
+
+
+		protected override IEnumerable<Tuple<string, string>> GetGenericMapping(BaseBlock block)
+		{
+			yield return Tuple.Create("signal_count", SignalTypeWriter.GetValueConstructor(BuiltinType.Integer, GetSignalCount(block as VarSelector)));
 		}
 	}
 }

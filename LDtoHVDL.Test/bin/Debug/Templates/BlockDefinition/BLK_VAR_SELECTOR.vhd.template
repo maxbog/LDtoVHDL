@@ -5,14 +5,24 @@ use ieee.numeric_std.all;
 library work;
 use work.types.all;
 
-entity BLK_VAR_SELECTOR#signal_count#_#type# is
-    port (INS       : in  #type#_vector(#max_vector_idx# downto 0);
+entity BLK_VAR_SELECTOR_#type# is
+	generic (signal_count : integer);
+    port (INS       : in  #type#_vector(signal_count-1 downto 0);
           MEMORY_IN : in  #type#;
-          CONTROL   : in  std_logic_vector(#max_vector_idx# downto 0);
+          CONTROL   : in  std_logic_vector(signal_count-1 downto 0);
           Q         : out #type#);
-end BLK_VAR_SELECTOR#signal_count#_#type#;
+end BLK_VAR_SELECTOR_#type#;
 
-architecture Behavioral of BLK_VAR_SELECTOR#signal_count#_#type# is
+architecture Behavioral of BLK_VAR_SELECTOR_#type# is
 begin
-    Q <= #input_chooser#MEMORY_IN;
+	process (CONTROL, INS, MEMORY_IN) is 
+	begin
+		Q <= MEMORY_IN;
+		for i in CONTROL'high downto CONTROL'low loop
+			if CONTROL(i) = '1' then
+				Q <= INS(i);
+				exit;
+			end if;
+		end loop;
+	end process;
 end Behavioral;
