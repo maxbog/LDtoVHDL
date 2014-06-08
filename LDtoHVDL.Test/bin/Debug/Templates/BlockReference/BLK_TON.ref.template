@@ -6,5 +6,5 @@
           ENO             : out std_logic;
           PT              : in  plc_time;
           ET              : out plc_time;
-		  WRITE_CONDITION : out std_logic);
+          WRITE_CONDITION : out std_logic);
 end component;

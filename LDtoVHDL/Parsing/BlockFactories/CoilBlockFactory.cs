@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using LDtoVHDL.Model;
 using LDtoVHDL.Model.Blocks;
@@ -8,12 +9,13 @@ namespace LDtoVHDL.Parsing.BlockFactories
 	[FactoryFor("coil")]
 	class CoilBlockFactory : BaseBlockFactory
 	{
-		public override BaseBlock CreateBlock(XElement xBlock, Program env)
+		public override IEnumerable<BaseBlock> CreateBlock(XElement xBlock, Program env)
 		{
 			var varName = GetVariableName(xBlock);
 			if (IsNegated(xBlock))
-				return new NegatedCoilBlock(GetBlockLocalId(xBlock), varName);
-			return new CoilBlock(GetBlockLocalId(xBlock), varName);
+				yield return new NegatedCoilBlock(GetBlockLocalId(xBlock), varName);
+			else
+				yield return new CoilBlock(GetBlockLocalId(xBlock), varName);
 		}
 		
 		private bool IsNegated(XElement xBlock)

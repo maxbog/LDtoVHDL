@@ -131,7 +131,8 @@ namespace LDtoVHDL.Parsing
 
 		public void ConnectPorts()
 		{
-			foreach (var connection in m_ports.SelectMany(GetOtherSidePorts, (port, otherSidePort) => new {Port = port.Value, OtherSidePort = otherSidePort}))
+			var unconnectedPorts = m_ports.Where(port => port.Value.ConnectedSignal == null).ToList();
+			foreach (var connection in unconnectedPorts.SelectMany(GetOtherSidePorts, (port, otherSidePort) => new { Port = port.Value, OtherSidePort = otherSidePort }))
 			{
 				connection.Port.Connect(connection.OtherSidePort);
 			}
@@ -145,13 +146,13 @@ namespace LDtoVHDL.Parsing
 		public void CreateBlocksAndPorts(Program env)
 		{
 			var blocks = GetAllBlocks()
-				.Select(xBlock =>
+				.SelectMany(xBlock => m_blockBuilder.CreateBlock(xBlock, env).Select(createdBlock =>
 					new
 					{
 						XBlock = xBlock,
 						Position = GetBlockPosition(xBlock),
-						Block = m_blockBuilder.CreateBlock(xBlock, env)
-					});
+						Block = createdBlock
+					}));
 
 			foreach (var block in blocks)
 			{

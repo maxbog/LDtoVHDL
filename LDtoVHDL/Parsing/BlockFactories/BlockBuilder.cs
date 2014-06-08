@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using LDtoVHDL.Model;
 using LDtoVHDL.Model.Blocks;
 using LDtoVHDL.TypeFinder;
@@ -14,7 +15,7 @@ namespace LDtoVHDL.Parsing.BlockFactories
 			m_factories = ObjectDictionary<string, IBlockFactory, FactoryForAttribute>.FromExecutingAssembly(ffa => ffa.CreatedType);
 		}
 
-		public BaseBlock CreateBlock(XElement xBlock, Program env)
+		public IEnumerable<BaseBlock> CreateBlock(XElement xBlock, Program env)
 		{
 			var elementName = xBlock.Name.LocalName;
 			var elementType = elementName == "block" 

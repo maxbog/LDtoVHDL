@@ -28,14 +28,24 @@ namespace LDtoVHDL.VhdlWriter
 		public override string GetDefinition(BaseBlock block)
 		{
 			var addBlock = (AddBlock)block;
-			return TemplateResolver.GetWithReplacements("BlockDefinition/BLK_ADD.vhd", new Dictionary<string, string> { { "type", SignalTypeWriter.GetName(addBlock.Output.SignalType) } });
+			return TemplateResolver.GetWithReplacements("BlockDefinition/BLK_ADD.vhd", new Dictionary<string, string>
+			{
+				{ "type", SignalTypeWriter.GetName(addBlock.Output.SignalType) },
+				{ "zero", SignalTypeWriter.GetValueConstructor(addBlock.Output.SignalType, null) }
+			});
 		}
-		
+
+		protected override IEnumerable<Tuple<string, string>> GetGenericMapping(BaseBlock block)
+		{
+			var addBlock = (AddBlock)block;
+			yield return Tuple.Create("ins_count", SignalTypeWriter.GetValueConstructor(BuiltinType.Integer, addBlock.InputsCount));
+
+		}
+
 		protected override IEnumerable<Tuple<string, string>> GetPortMapping(BaseBlock block)
 		{
 			var addBlock = (AddBlock) block;
-			yield return Tuple.Create("A", GetSignalName(addBlock.Input1));
-			yield return Tuple.Create("B", GetSignalName(addBlock.Input2));
+			yield return Tuple.Create("INS", GetSignalName(addBlock.InputBus));
 			yield return Tuple.Create("Q", GetSignalName(addBlock.Output));
 			yield return Tuple.Create("EN", GetSignalName(addBlock.Enable));
 			yield return Tuple.Create("ENO", GetSignalName(addBlock.EnableOut));

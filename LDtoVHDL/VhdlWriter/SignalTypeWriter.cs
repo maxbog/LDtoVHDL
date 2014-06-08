@@ -45,7 +45,8 @@ namespace LDtoVHDL.VhdlWriter
 			{BuiltinType.TimerOff, 0},
 			{BuiltinType.Time, 0L},
 			{BuiltinType.CounterUp, 0},
-			{BuiltinType.CounterDown, 0}
+			{BuiltinType.CounterDown, 0},
+			{BuiltinType.Integer, 0}
 		};
 
 		public static string GetValueConstructor(SignalType type, object value)
@@ -72,6 +73,9 @@ namespace LDtoVHDL.VhdlWriter
 				return string.Format("x\"{0:x4}\"", (short)Convert.ToInt64(value));
 			if (type == BuiltinType.Time || type == BuiltinType.TimerOn || type == BuiltinType.TimerOff)
 				return string.Format("x\"{0:x16}\"", Convert.ToInt64(value));
+
+			if (type == BuiltinType.Integer)
+				return Convert.ToInt64(value).ToString(CultureInfo.InvariantCulture);
 
 			throw new InvalidOperationException("No such type");
 		}

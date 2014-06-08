@@ -6,15 +6,23 @@ library work;
 use work.types.all;
 
 entity BLK_ADD_#type# is
+	generic(ins_count : integer);
     port (EN   : in  std_logic;
           ENO  : out std_logic;
-          A    : in  #type#;
-          B    : in  #type#;
+          INS  : in  #type#_vector(ins_count-1 downto 0);
           Q    : out #type#);
 end BLK_ADD_#type#;
 
 architecture Behavioral of BLK_ADD_#type# is
 begin
     ENO <= EN;
-    Q <= A + B;
+	process (INS) is
+		variable accumulator : #type#;
+	begin
+		accumulator := #zero#;
+		for i in INS'low to INS'high loop
+			accumulator := accumulator + INS(i);
+		end loop;
+		Q <= accumulator;
+	end process;
 end Behavioral;

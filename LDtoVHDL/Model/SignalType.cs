@@ -48,6 +48,7 @@
 		public static readonly BuiltinType TimerOff = new BuiltinType("TOF");
 		public static readonly BuiltinType CounterUp = new BuiltinType("CTU");
 		public static readonly BuiltinType CounterDown = new BuiltinType("CTD");
+		public static readonly BuiltinType Integer = new BuiltinType("interger");
 		public static readonly BuiltinType Time = new BuiltinType("Time");
 
 		private BuiltinType(string name)

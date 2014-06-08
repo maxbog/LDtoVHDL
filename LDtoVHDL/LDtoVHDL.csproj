@@ -56,6 +56,7 @@
     <Compile Include="Model\Blocks\InputVariableStorageBlock.cs" />
     <Compile Include="Model\Blocks\InternalBlock.cs" />
     <Compile Include="Model\Blocks\InVariableBlock.cs" />
+    <Compile Include="Model\Blocks\IWithBuses.cs" />
     <Compile Include="Model\Blocks\LeftRailBlock.cs" />
     <Compile Include="Model\Blocks\LocalVariableStorageBlock.cs" />
     <Compile Include="Model\Blocks\OutputVariableStorageBlock.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Translation\Phases\IPhase.cs" />
     <Compile Include="Translation\Phases\P0_IdentifyRails.cs" />
     <Compile Include="Translation\Phases\P10_ReplaceCompositeSignalsWithOrs.cs" />
+    <Compile Include="Translation\Phases\P12_MakeBusCreators.cs" />
     <Compile Include="Translation\Phases\P20_DivideBlockIntoRungs.cs" />
     <Compile Include="Translation\Phases\P15_CreateEdgeDetectors.cs" />
     <Compile Include="Translation\Phases\P30_AccumulateOutVariables.cs" />

@@ -10,16 +10,18 @@ namespace LDtoVHDL.Parsing.BlockFactories
 	[FactoryFor("inVariable")]
 	class InVariableBlockFactory : BaseBlockFactory
 	{
-		public override BaseBlock CreateBlock(XElement xBlock, Program env)
+		public override IEnumerable<BaseBlock> CreateBlock(XElement xBlock, Program env)
 		{
 			var expression = GetExpression(xBlock);
 
 			var blockLocalId = GetBlockLocalId(xBlock);
 			if (expression[0] == '%')
-				return new InVariableBlock(blockLocalId, expression.Substring(1), env.ReadableVariables[expression.Substring(1)].SignalType);
-
-			var parsedExpression = PlcOpenParser.ParseExpression(expression);
-			return new ConstantBlock(blockLocalId, parsedExpression.Item1, parsedExpression.Item2);
+				yield return new InVariableBlock(blockLocalId, expression.Substring(1), env.ReadableVariables[expression.Substring(1)].SignalType);
+			else
+			{
+				var parsedExpression = PlcOpenParser.ParseExpression(expression);
+				yield return new ConstantBlock(blockLocalId, parsedExpression.Item1, parsedExpression.Item2);
+			}
 		}
 
 

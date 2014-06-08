@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using LDtoVHDL.Model;
@@ -8,16 +9,17 @@ namespace LDtoVHDL.Parsing.BlockFactories
 	[FactoryFor("contact")]
 	class ContactBlockFactory : BaseBlockFactory
 	{
-		public override BaseBlock CreateBlock(XElement xBlock, Program env)
+		public override IEnumerable<BaseBlock> CreateBlock(XElement xBlock, Program env)
 		{
 			var varName = GetVariableName(xBlock);
 			if(IsNegated(xBlock))
-				return new NccBlock(GetBlockLocalId(xBlock), varName);
-			if (IsRisingEdge(xBlock))
-				return new PcBlock(GetBlockLocalId(xBlock), varName);
-			if (IsFallingEdge(xBlock))
-				return new NcBlock(GetBlockLocalId(xBlock), varName);
-			return new NocBlock(GetBlockLocalId(xBlock), varName);
+				yield return new NccBlock(GetBlockLocalId(xBlock), varName);
+			else if (IsRisingEdge(xBlock))
+				yield return new PcBlock(GetBlockLocalId(xBlock), varName);
+			else if (IsFallingEdge(xBlock))
+				yield return new NcBlock(GetBlockLocalId(xBlock), varName);
+			else
+				yield return new NocBlock(GetBlockLocalId(xBlock), varName);
 		}
 
 		private bool IsRisingEdge(XElement xBlock)
@@ -48,5 +50,6 @@ namespace LDtoVHDL.Parsing.BlockFactories
 		{
 			return (string)xBlock.Descendants("variable".XName()).Single();
 		}
+
 	}
 }

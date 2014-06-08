@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using LDtoVHDL.Model;
@@ -9,13 +10,14 @@ namespace LDtoVHDL.Parsing.BlockFactories
 	[FactoryFor("outVariable")]
 	class OutVariableBlockFactory : BaseBlockFactory
 	{
-		public override BaseBlock CreateBlock(XElement xBlock, Program env)
+		public override IEnumerable<BaseBlock> CreateBlock(XElement xBlock, Program env)
 		{
 			var expression = GetVariableName(xBlock);
 			var blockLocalId = GetBlockLocalId(xBlock);
 			if (expression[0] == '%')
-				return new OutVariableBlock(blockLocalId, expression.Substring(1), env.ReadableVariables[expression.Substring(1)].SignalType);
-			throw new InvalidOperationException("OutVariable must write to a variable");
+				yield return new OutVariableBlock(blockLocalId, expression.Substring(1), env.ReadableVariables[expression.Substring(1)].SignalType);
+			else
+				throw new InvalidOperationException("OutVariable must write to a variable");
 		}
 
 		private string GetVariableName(XElement xBlock)

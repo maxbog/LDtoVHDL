@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using LDtoVHDL.Model;
 using LDtoVHDL.Model.Blocks;
 
@@ -7,9 +8,9 @@ namespace LDtoVHDL.Parsing.BlockFactories
 	[FactoryFor("TON")]
 	class TonBlockFactory : BaseBlockFactory
 	{
-		public override BaseBlock CreateBlock(XElement xBlock, Program env)
+		public override IEnumerable<BaseBlock> CreateBlock(XElement xBlock, Program env)
 		{
-			return new TonBlock(GetBlockLocalId(xBlock), GetInstanceName(xBlock));
+			yield return new TonBlock(GetBlockLocalId(xBlock), GetInstanceName(xBlock));
 		}
 
 		private string GetInstanceName(XElement xBlock)
@@ -21,9 +22,9 @@ namespace LDtoVHDL.Parsing.BlockFactories
 	[FactoryFor("TOF")]
 	class TofBlockFactory : BaseBlockFactory
 	{
-		public override BaseBlock CreateBlock(XElement xBlock, Program env)
+		public override IEnumerable<BaseBlock> CreateBlock(XElement xBlock, Program env)
 		{
-			return new TofBlock(GetBlockLocalId(xBlock), GetInstanceName(xBlock));
+			yield return new TofBlock(GetBlockLocalId(xBlock), GetInstanceName(xBlock));
 		}
 
 		private string GetInstanceName(XElement xBlock)

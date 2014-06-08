@@ -17,7 +17,7 @@ namespace LDtoVHDL.Translation.Phases
 		{
 			var orBlock = new PowerOrBlock(compositeSignal.OrredSignals.Where(sig => sig.InputPort != null));
 
-			foreach (var signalOutputPort in compositeSignal.OutputPorts)
+			foreach (var signalOutputPort in compositeSignal.OutputPorts.ToList())
 			{
 				signalOutputPort.Disconnect();
 				orBlock.Output.Connect(signalOutputPort);

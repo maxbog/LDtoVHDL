@@ -11,13 +11,12 @@ namespace LDtoVHDL.Translation.Phases
 		{
 			foreach (var inVariableBlock in program.AllBlocks.OfType<InVariableBlock>().Where(blk => blk.GetType() == typeof(InVariableBlock)))
 			{
-				var outputConnectedPorts = inVariableBlock.Output.OtherSidePorts;
+				var outputConnectedPorts = inVariableBlock.Output.OtherSidePorts.ToList();
 				var inputConnectedPort = inVariableBlock.MemoryInput.OtherSidePorts.Single();
 				inVariableBlock.Output.Disconnect();
 				inVariableBlock.MemoryInput.Disconnect();
 				foreach (var outputConnectedPort in outputConnectedPorts)
 				{
-					outputConnectedPort.Disconnect();
 					outputConnectedPort.Connect(inputConnectedPort);
 				}
 			}

@@ -1,42 +1,67 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace LDtoVHDL.Model.Blocks
 {
-	class AddBlock : BaseBlock
+	class AddBlock : BaseBlock, IWithBuses
 	{
 		public AddBlock(string id) : base(id)
 		{
+			CreateInputPort("BUS_IN");
 		}
 
-		public Port Input1 { get { return Ports["IN1"]; } }
-		public Port Input2 { get { return Ports["IN2"]; } }
+		public Port InputBus { get { return Ports["BUS_IN"]; } }
 		public Port Output { get { return Ports["OUT"]; } }
+		public int InputsCount { get { return ArithmeticInputPorts.Count(); } }
 
 		public override bool CanComputePortTypes
 		{
-			get { return Input1.SignalType != null || Input2.SignalType != null || Output.SignalType != null; }
+			get { return InputBus.SignalType != null || Output.SignalType != null; }
 		}
 
 		public override void ComputePortTypes()
 		{
+			if (InputBus.SignalType != null)
+			{
+				var busType = InputBus.SignalType as BusType;
+				Debug.Assert(busType != null, "busType != null");
+				Output.SignalType = busType.BaseType;
+			}
+			else if (Output.SignalType != null)
+			{
+				InputBus.SignalType = new BusType(Output.SignalType, InputsCount);
+			}
 
-			var variableWidth = Input1.SignalType ?? (Input2.SignalType ?? Output.SignalType);
-			Input1.SignalType = Input2.SignalType = Output.SignalType = variableWidth;
 			Enable.SignalType = EnableOut.SignalType = BuiltinType.Boolean;
 		}
 
 		public override List<ValidationMessage> Validate()
 		{
 			var errors = base.Validate();
-			if (Output.SignalType == null || Input1.SignalType == null || Input2.SignalType == null) 
+			if (Output.SignalType == null || Output.SignalType == null) 
 				return errors;
 
-			if (Output.SignalType != Input2.SignalType || Output.SignalType != Input1.SignalType)
-				errors.Add(ValidationMessage.Error("All ports must have the same type. A: {0}, B: {1}, Q: {2}", Input1.SignalType, Input2.SignalType, Output.SignalType));
+			var busType = InputBus.SignalType as BusType;
+			if (busType == null)
+				errors.Add(ValidationMessage.Error("Input bus must be of bus type. Is: {0}", InputBus.SignalType));
+			else if (Output.SignalType != busType.BaseType)
+				errors.Add(ValidationMessage.Error("Output type and input bust base type must be the same. InputBus: {0}, Output: {1}", InputBus.SignalType, Output.SignalType));
 			else if(!Output.SignalType.IsInteger)
 				errors.Add(ValidationMessage.Error("ADD block can only operate on integer types"));
 
 			return errors;
+		}
+
+		public IEnumerable<Port> ArithmeticInputPorts
+		{
+			get { return Ports.Where(port => port.Key.StartsWith("IN")).Select(port => port.Value); }
+		}
+		
+		public IEnumerable<Tuple<IEnumerable<Port>, Port>> GetBusesSpecification()
+		{
+			yield return Tuple.Create(ArithmeticInputPorts, InputBus);
 		}
 	}
 }
