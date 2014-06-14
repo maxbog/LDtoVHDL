@@ -5,12 +5,12 @@ using LDtoVHDL.Model.Blocks;
 
 namespace LDtoVHDL.Parsing.BlockFactories
 {
-	[FactoryFor("ADD")]
-	public class AddBlockFactory : BaseBlockFactory
+	[FactoryFor("MUL")]
+	public class MulBlockFactory : BaseBlockFactory
 	{
 		public override IEnumerable<BaseBlock> CreateBlock(XElement xBlock, Program env)
 		{
-			yield return new AddBlock(GetBlockLocalId(xBlock));
+			yield return new MulBlock(GetBlockLocalId(xBlock));
 		}
 	}
 }

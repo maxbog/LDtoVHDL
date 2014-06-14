@@ -1,0 +1,20 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+library work;
+use work.types.all;
+
+entity BLK_SUB_#type# is
+    port (EN   : in  std_logic;
+          ENO  : out std_logic;
+          IN1  : in  #type#;
+		  IN2  : in  #type#;
+          Q    : out #type#);
+end BLK_SUB_#type#;
+
+architecture Behavioral of BLK_SUB_#type# is
+begin
+    ENO <= EN;
+	Q <= IN1 - IN2;
+end Behavioral;

@@ -17,6 +17,6 @@ architecture Behavioral of BLK_POSITIVE_EDGE_DETECTOR is
 begin
   ENO <= '1' when PREV_STATE_READ = '0' and EN = '1' else '0';
   PREV_STATE_WRITE <= EN;
-  WRITE_OCCURS <= '1' when PREV_STATE_READ /= EN else '0';
+  WRITE_OCCURS <= '1';
 end Behavioral;
 

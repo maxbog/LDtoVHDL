@@ -1,0 +1,7 @@
+﻿component BLK_DIV_#type# is
+    port (EN   : in  std_logic;
+          ENO  : out std_logic;
+          IN1  : in  #type#;
+		  IN2  : in  #type#;
+          Q    : out #type#);
+end component;

@@ -1,0 +1,7 @@
+﻿component BLK_MUL_#type# is
+	generic(ins_count : integer);
+    port (EN   : in  std_logic;
+          ENO  : out std_logic;
+          INS  : in  #type#_vector(ins_count-1 downto 0);
+          Q    : out #type#);
+end component;

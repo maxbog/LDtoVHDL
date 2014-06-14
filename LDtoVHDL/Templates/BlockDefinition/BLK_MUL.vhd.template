@@ -1,0 +1,28 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+library work;
+use work.types.all;
+
+entity BLK_MUL_#type# is
+	generic(ins_count : integer);
+    port (EN   : in  std_logic;
+          ENO  : out std_logic;
+          INS  : in  #type#_vector(ins_count-1 downto 0);
+          Q    : out #type#);
+end BLK_MUL_#type#;
+
+architecture Behavioral of BLK_MUL_#type# is
+begin
+    ENO <= EN;
+	process (INS) is
+		variable accumulator : #type#;
+	begin
+		accumulator := #one#;
+		for i in INS'low to INS'high loop
+			accumulator := accumulator * INS(i);
+		end loop;
+		Q <= accumulator;
+	end process;
+end Behavioral;
